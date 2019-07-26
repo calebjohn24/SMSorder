@@ -1,6 +1,7 @@
 from fuzzywuzzy import fuzz
 import json
 import words2num
+import math
 
 import json
 userOrder = "2 Burgers with Bacon and cheese. 3 Small Iced Cofees , Cream, sugar. Chicken Burger with Avacado and bacon"
@@ -15,6 +16,8 @@ with open('menu.json') as data_file:
     data = json.load(data_file)
 
 order = []
+subtotal = 0
+orderFin = ""
 total = 0
 for n in range(len(items)):
     qty = 1
@@ -32,10 +35,18 @@ for n in range(len(items)):
         if(newScore > score):
             score = newScore
             indx = x
-    orderStr = "" + data['items'][indx]['name']
+    orderStr = str(qty) + " x " + data['items'][indx]['name'] + ", $" + str(data['items'][indx]['price']) + "x" + str(qty) + " ("+"$" + format((qty*data['items'][indx]['price']),',.2f') + ")"
     orderStr = orderStr.rstrip()
     orderStr = orderStr.lstrip()
     order.append(orderStr)
-    total += data['items'][indx]['price'] * qty
+    subtotal += data['items'][indx]['price'] * qty
+    total = (subtotal + 0.05) *1.1
+    round(total,2)
+    round(subtotal,2)
 
-print(order,total)
+for tt in range(len(order)):
+    orderFin += order[tt]
+    orderFin += "| "
+
+orderFin += "processing fee $0.05|" +" " +"subtotal $" + str(subtotal) +"| "+ "tax $" + str(round((subtotal*0.1),2))+"| " +"total $" + str(total)
+print(orderFin)
