@@ -35,7 +35,7 @@ for n in range(len(items)):
         if(newScore > score):
             score = newScore
             indx = x
-    orderStr = str(qty) + " x " + data['items'][indx]['name'] + ", $" + str(data['items'][indx]['price']) + "x" + str(qty) + " ("+"$" + format((qty*data['items'][indx]['price']),',.2f') + ")"
+    orderStr = str(qty) + " x " + data['items'][indx]['name'] + "$" + str(data['items'][indx]['price']) + "x" + str(qty) + " ("+"$" + format((qty*data['items'][indx]['price']),',.2f') + ")"
     orderStr = orderStr.rstrip()
     orderStr = orderStr.lstrip()
     order.append(orderStr)
@@ -50,3 +50,5 @@ for tt in range(len(order)):
 
 orderFin += "processing fee $0.05|" +" " +"subtotal $" + str(subtotal) +"| "+ "tax $" + str(round((subtotal*0.1),2))+"| " +"total $" + str(total)
 print(orderFin)
+print("\n")
+print(total)
