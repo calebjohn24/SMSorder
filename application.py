@@ -1,169 +1,193 @@
 from flask import Flask, request
-from twilio import twiml
-import time
+from twilio.twiml.messaging_response import Message, MessagingResponse
+import twilio
 from firebase import firebase
-import datetime
+import time
 import json
+from fuzzywuzzy import fuzz
+import datetime
 
-database = firebase.FirebaseApplication('https://cedarrestaurants-ad912.firebaseio.com/', None)
+SendNum = "+14253828604"
+
+databse = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
+estName = "NAME"
+link = "LINK"
 # set up Flask to connect this code to the local host, which will
 # later be connected to the internet through Ngrok
-EstName = "Name"
-menuLink = "url"
-with open('menu.json') as f:
-    menuFile = json.load(f)
-foodI = menuFile["Items"]
-
-def genBill(order):
-    items = []
-    order = str(order)
-    order = order.upper()
-    print(order)
-    items = [x.strip() for x in order.split(',')]
-    for indx in range(len(items)):
-        item = (items[indx])
-        max = 0
-        index = 0
-        for x in range(len(foodI)):
-            menuItem = (foodI[x]["Name"])
-            a = list(set(menuItem) & set(item))
-            if(len(a) > max):
-                max = len(a)
-                index = x
-        items.append([foodI[index]["Name"],foodI[index]["Price"]])
-
-
-
-def genPaymentLink(orderNum, total):
-    print(orderNum)
-
-
-def getReply(msg, number):
-    print(msg)
-    if (msg == "order" or msg == "oder" or msg == "prder" or msg == "ordet"):
-        reply = "Hi, welcome to " + EstName + " what would you like to order today, please use peroidsto seperate items" \
-                                              "you can view the menu here "+ menuLink
-        return reply
-    else:
-        db = database.get("/", "tickets")
-        for nums in range(len(db) - 1):
-            if (db[nums]["number"] == number and abs(int(db[nums][time]) - time.time()) < 3600):
-                stageVal = database.get("/tickets/" + str(db[nums]) + "/", "stage")
-                if (stageVal == 0):
-                    # convert string to order
-                    order = "str"
-                    total = 0
-                    reply = order + ".....enter 1 if order is to-go, or 2 if order is for here"
-                    database.put('/tickets/' + str(db[nums]) + "/", "stage", 1)
-                    database.put('/tickets/' + str(db[nums]) + "/", "subtotal", total)
-                    database.put('/tickets/' + str(db[nums]) + "/", "Total", (total * 1.1 + 0.12))
-                    database.put('/tickets/' + str(db[nums]) + "/", "stage", 1)
-                    return reply
-
-                elif (stageVal == 1):
-                    if (msg == "1"):
-                        database.put('/tickets/' + str(db[nums]) + "/", "togo", 0)
-                    elif (msg == "2"):
-                        database.put('/tickets/' + str(db[nums]) + "/", "togo", 1)
-                    database.put('/tickets/' + str(db[nums]) + "/", "stage", 2)
-                    reply = "Enter 1 to pay online and skip the line, enter 2 to pay at store"
-                    return reply
-
-                elif (stageVal == 2):
-                    togo = database.get("/tickets/" + str(db[nums]) + "/", "togo")
-                    if (msg == "1"):
-                        database.put('/tickets/' + str(db[nums]) + "/", "pay", 0)
-                        genPayment(db[nums])
-                        url = ""
-                        link = "click this link to pay " + url
-                        database.put('/tickets/' + str(db[nums]) + "/", "stage", 3)
-                        if (togo == 0):
-                            reply = "Thank you for your order, you can skip the line and take a seat." \
-                                    "Once you take a seat please enter the number at your table" + link
-                            now = datetime.datetime.now()
-                            mn = now.month
-                            yr = now.year
-                            logDate = str(mn) + "-" + str(yr)
-                            numOrders = database.get("/log/", str(logDate))
-                            database.put('/log/', str(logDate), (numOrders + 1))
-                            return reply
-                        elif (togo == 1):
-                            reply = "Thank you for your order, you can pick up your order at the counter, " \
-                                    "and skip the line!" + link
-                            now = datetime.datetime.now()
-                            mn = now.month
-                            yr = now.year
-                            logDate = str(mn) + "-" + str(yr)
-                            numOrders = database.get("/log/", str(logDate))
-                            database.put('/log/', str(logDate), (numOrders + 1))
-                            return reply
-                    elif (msg == "2"):
-                        database.put('/tickets/' + str(db[nums]) + "/", "pay", 1)
-                        database.put('/tickets/' + str(db[nums]) + "/", "stage", 3)
-                        if (togo == 0):
-                            reply = "Thank you for your order once you take a set please enter the number at your table"
-                            now = datetime.datetime.now()
-                            mn = now.month
-                            yr = now.year
-                            logDate = str(mn) + "-" + str(yr)
-                            numOrders = database.get("/log/", str(logDate))
-                            database.put('/log/', str(logDate), (numOrders + 1))
-                            return reply
-                        elif (togo == 1):
-                            reply = "Thank you for your order, please pay at the register once you have paid"
-                            now = datetime.datetime.now()
-                            mn = now.month
-                            yr = now.year
-                            logDate = str(mn) + "-" + str(yr)
-                            numOrders = database.get("/log/", str(logDate))
-                            database.put('/log/', str(logDate), (numOrders + 1))
-                            return reply
-
-                elif (stageVal == 3):
-                    print("s1")
-                    togo = database.get("/tickets/" + str(db[nums]) + "/", "togo")
-                    if (togo == 0):
-                        for tb in range(0, 101):
-                            if (str(tb) == msg):
-                                database.put('/tickets/' + str(db[nums]) + "/", "tableNum", int(tb))
-                                database.put('/tables/' + str(tb) + "/", "deliver", 1)
-                                reply = "Thank you, you will receive a text when your food is on the way"
-                                return reply
-
-
-def genTicket(number):
-    ticket = str(number) + "-" + str(int(time.time()))
-    rx = database.get("/", "tickets")
-    idNos = (len(rx))
-    database.put('/tickets/', idNos, ticket)
-    database.put('/tickets/' + str(idNos) + "/" + str(ticket) + "/", "stage", 0)
-    return ticket
-
-
 app = Flask(__name__)
 
+def transalteOrder(msg, FBtoken):
+    userOrder = msg
+    userOrder = userOrder.upper()
+    userOrder = userOrder.replace(',', '')
+    userOrder = userOrder.replace('AND', '')
+    userOrder = userOrder.replace('WITH', '')
+    userOrder = userOrder.replace('OR', '')
+    if (userOrder[-1] == "."):
+        userOrder = userOrder[:-1]
+    items = [x.strip() for x in userOrder.split('.')]
 
+    with open('menu.json') as data_file:
+        data = json.load(data_file)
+
+    order = []
+    subtotal = 0
+    orderFin = "your order" + "\n"
+    total = 0
+    if (len(items) < 1):
+        items.append(userOrder)
+    for n in range(len(items)):
+        qty = 1
+        compStr = ""
+        notes = ""
+        tokens = [z.strip() for z in items[n].split(' ')]
+        for tkn in range(len(tokens)):
+            if (tokens[tkn] == "NO"):
+                tokens[tkn] = ""
+                notes += str("NO " + tokens[tkn + 1])
+                notes += " "
+                tokens[tkn + 1] = ""
+        for tkn2 in range(len(tokens)):
+            try:
+                int(tokens[tkn2])
+                qty = int(tokens[tkn2])
+                break
+            except ValueError:
+                pass
+        for zx in range(len(tokens)):
+            compStr += tokens[zx]
+            compStr += " "
+        score = 0
+        indx = 0
+        for x in range(len(data['items'])):
+            newScore = (fuzz.token_sort_ratio(data['items'][x]['name'], compStr))
+            if (newScore > score):
+                if (notes == ""):
+                    score = newScore
+                    indx = x
+                elif (notes != ""):
+                    compScore = fuzz.partial_ratio(data['items'][x]['name'], notes)
+                    if (compScore < 50):
+                        score = newScore
+                        indx = x
+            if (newScore == score):
+                newScore = (fuzz.ratio(data['items'][x]['name'], compStr))
+                if (newScore > score):
+                    score = newScore
+                    indx = x
+        writeStr = str(data['items'][indx]['name'])
+        print(score, (fuzz.partial_ratio(data['items'][x]['name'], notes)))
+        if (score > 80):
+            orderStr = str(qty) + "x " + writeStr + " $" + str(data['items'][indx]['price']) + "x" + str(
+                qty) + "(" + "$" + format((qty * data['items'][indx]['price']), ',.2f') + ")"
+            orderStr = orderStr.rstrip()
+            orderStr = orderStr.lstrip()
+            order.append(orderStr)
+            subtotal += data['items'][indx]['price'] * qty
+            total = (subtotal + 0.20) * 1.10
+            total = round(total, 2)
+            subtotal = round(subtotal, 2)
+        else:
+            orderStr = "invalid item"
+            order.append(orderStr)
+    for tt in range(len(order)):
+        orderFin += order[tt]
+        orderFin += "\n"
+
+    orderFin += "conv. fee $0.20" + "\n" + "subtotal $" + str(subtotal) + "\n" + "tax $" + str(
+        round((subtotal * 0.1), 2)) + "\n" + "total $" + str(total) + "\n" +"pay here - " + str(genPayment(total))
+    databse.put("/tickets/" + str(FBtoken), "/processedOrder/", orderFin)
+    databse.put("/tickets/" + str(FBtoken), "/subTotal/", subtotal)
+    databse.put("/tickets/" + str(FBtoken), "/total/", total)
+    orderFin = orderFin.lower()
+    return orderFin
+
+def logOrder(tix,number):
+    logDate = (datetime.datetime.now().strftime("%Y-%m"))
+    currentVal = databse.get("/log/" + str(logDate) + "/", "orders")
+    currentacct = databse.get("/log/" + str(logDate) + "/", "acct")
+    databse.put("/log/" + str(logDate), "/orders/", (currentVal + 1))
+    databse.put("/log/" + str(logDate), "/acct/", (currentacct + 0.20))
+    databse.put("/tickets/" + str(tix), "/number/", str(number) + ".")
+
+
+def assignRobot(tableNum):
+    print(tableNum)
+def genPayment(total):
+    print(total)
+    return ("dummy link")
 # Main method. When a POST request is sent to our local host through Ngrok
 # (which creates a tunnel to the web), this code will run. The Twilio service # sends the POST request - we will set this up on the Twilio website. So when # a message is sent over SMS to our Twilio number, this code will run
+def getReply(msg,number):
+    if(msg == "ORDER" or msg == "ORDR" or msg == "ODER"):
+        response = "Welcome to " + estName + " you can view the menu here " + link + \
+                   " | to order please seperate Items with a period. like this '" \
+                   "3 Iced Coffees with Cream and sugar. Burger with Bacon.' " \
+                   "Don't forget to mention sizes!"
+        tickNum = databse.get("/", "tickets")
+        databse.put("/tickets/" + str(len(tickNum)), "/stage/", 1)
+        databse.put("/tickets/" + str(len(tickNum)), "/time/", (int(time.time())))
+        databse.put("/tickets/" + str(len(tickNum)), "/number/", number)
+        return response
+    else:
+        tickNum = databse.get("/", "tickets")
+        for tix in range(len(tickNum)):
+            if(tickNum[tix]["number"] == number):
+                stage = tickNum[tix]["stage"]
+                if(stage == 1):
+                    transalteOrder(msg, tix)
+                    respStr = "Got it! Is this order for here or to-go"
+                    databse.put("/tickets/" + str(tix), "/stage/", 2)
+                    return respStr
+                elif(stage == 2):
+                    total = tickNum[tix]["total"]
+                    if(msg == "FOR HERE" or msg == "FO HERE" or msg == "HERE" or msg == "FOR ERE"):
+                        respStr = "Thank you for your order, what's the number of the table you are sitting at?"
+                        databse.put("/tickets/" + str(tix), "/togo/", 0)
+                        databse.put("/tickets/" + str(tix), "/stage/", 3)
+                    elif(msg == "TO GO" or msg == "TOGO" or msg == "TO-GO" or msg == ""):
+                        respStr = "Thank you for your order enter 'R' to review your order and pay"
+                        databse.put("/tickets/" + str(tix), "/togo/", 1)
+                        databse.put("/tickets/" + str(tix), "/stage/", 4)
+                    else:
+                        rpStr = str(tickNum[tix]["processedOrder"])
+                        respStr = "Thank you for your order" \
+                        "enter 'r' to review your order and pay"
+                        databse.put("/tickets/" + str(tix), "/togo/", 1)
+                        databse.put("/tickets/" + str(tix), "/stage/", 4)
+                    return respStr
+                elif(stage == 3):
+                    try:
+                        rpStr = str(tickNum[tix]["processedOrder"])
+                        int(msg)
+                        tableNum = int(msg)
+                        respStr = "thank you you food will arrive soon enter 'r' to review your order and pay"
+                        databse.put("/tickets/" + str(tix), "/stage/", 4)
+                        databse.put("/tickets/" + str(tix), "/tableNum/", tableNum)
+                        assignRobot(tableNum)
+                    except ValueError:
+                        respStr = "please enter a number ex. '18'"
+                    return respStr
+                elif(stage == 4):
+                    rpStr = str(tickNum[tix]["processedOrder"])
+                    #rpStr = "test"
+                    logOrder(tix, number)
+                    databse.put("/tickets/" + str(tix), "/pay/", 0)
+                    return rpStr
+
 @app.route('/', methods=['POST'])
 def sms():
     # Get the text in the message sent
     number = request.form['From']
     message_body = request.form['Body']
-    if (message_body == "order"):
-        genTicket(number)
-    # Create a Twilio response object to be able to send a reply back (as per         # Twilio docs)
-    resp = twiml.Response()
-
-    # Send the message body to the getReply message, where
-    # we will query the String and formulate a response
-    replyText = getReply(message_body, number)
-
+    message_body = str(message_body).upper()
+    resp = MessagingResponse()
     # Text back our response!
-    resp.message(replyText)
+    reply = getReply(message_body,number)
+    resp.message(reply)
+    print(reply)
     return str(resp)
-
 
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

@@ -28,16 +28,16 @@ while True:
        priceSize = float(input("enter size price>"))
        sizes.append([nameSize,priceSize])
 
-    noExtras = int(input("enter number of customizations if none enter N>"))
+    noExtras = int(input("enter number of customizations if none enter N  >"))
     for ex in range(noExtras):
-        nameExtra = input("enter customization name >")
+        nameExtra = input("enter customization name, enter 2 word pairaing with a hyphen ex. 'hot-sauce' >")
         nameExtra = nameExtra.upper()
         if (nameExtra == "N"):
             nameExtra = ""
         priceExtra = float(input("enter customization price >"))
         extras.append([nameExtra,priceExtra])
 
-    itx = 1
+    itx = 0
     for szx in range(len(sizes)):
         while itx <= (len(extras)):
             combos = list(itertools.combinations(extras, itx))
@@ -51,12 +51,14 @@ while True:
                     writestr += arr[zx][zxx][0]
                     writestr += " "
                     writeNum += arr[zx][zxx][1]
+                    writestr.rstrip()
+                    writestr.lstrip()
                 data['items'].append({
                     'name': str(writestr),
                     'price':float(writeNum)
                 })
             itx += 1
-        itx = 1
+        itx = 0
 
 
 
