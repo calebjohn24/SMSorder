@@ -1,1 +1,16 @@
-{"people": [{"name": "Scott", "website": "stackabuse.com", "from": "Nebraska"}, {"name": "Larry", "website": "google.com", "from": "Michigan"}, {"name": "Tim", "website": "apple.com", "from": "Alabama"}]}
+curl -v https://api.paypal.com/v1/oauth2/token \
+   -H "Accept: application/json" \
+   -H "Accept-Language: en_US" \
+   -u "AacwZ9jjS9DsRvvUdHS3T5b1HjutCtUro7Vpky8opLGDwm9Rx5YbrBqDkWEbZ8WT5jIEVWTe6fr5Q86M:EJypi6G1yfgUSJmKnFLNJTsxbyj0m6AIwRF-W2jer_pK_v0mBNUC97fZ377tInigCpLU8URsetyPu13o" \
+   -d "grant_type=client_credentials" > out.json
+
+curl -v -X GET https://api.paypal.com/v2/payments/payment?count=10&start_index=0&sort_by=create_time&sort_order=desc \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer A21AAEl7u01nmFXjCQ-ph-JMrTsBjiuGKFtJClgG5QgijaFluT1OulmiXdiQptEVP6DW4DkkxzqQ2GxOuNEvFbXz5xffTkNFw"
+
+
+
+
+curl -v -X GET https://api.paypal.com/v1/reporting/transactions?start_date=2019-07-15T00:00:00-0700&end_date=2019-08-01T23:59:59-0700&transaction_id=5TY05013RG002845M&fields=all&page_size=100&page=1 \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer A21AAEl7u01nmFXjCQ-ph-JMrTsBjiuGKFtJClgG5QgijaFluT1OulmiXdiQptEVP6DW4DkkxzqQ2GxOuNEvFbXz5xffTkNFw"

@@ -1,21 +1,50 @@
 from fuzzywuzzy import fuzz
 import json
 import math
-
 import json
-userOrder = "2 Burgers with bacon and cheese. 5 medium Iced Coffee with 10 no sugar cream. Fried Fish"
-#userOrder = "3 medium iced coffee."
-userOrder = userOrder.upper()
-userOrder = userOrder.replace(',', '')
-userOrder = userOrder.replace('AND', '')
-userOrder = userOrder.replace('WITH', '')
-if(userOrder[-1] == "."):
-        userOrder = userOrder[:-1]
-items = [x.strip() for x in userOrder.split('.')]
-
+import nltk
+from words2num import w2n
 with open('menu.json') as data_file:
     data = json.load(data_file)
 
+foodItems = (data['items'])
+items = []
+userOrder = "2 Burgers with bacon and no cheese. 5 medium Iced Coffee with no sugar and cream. four medium coffee's cream, espresso, no sugar"
+
+userOrder = userOrder.lower()
+
+userOrder = userOrder.replace(',', '')
+userOrder = userOrder.replace("'", "")
+if(userOrder[-1] == "."):
+        userOrder = userOrder[:-1]
+
+
+
+items = [x.strip() for x in userOrder.split('.')]
+if (len(items) < 1):
+    items.append(userOrder)
+
+order = []
+subtotal = 0
+orderFin = "You ordered "
+for item in range(len(items)):
+    quantity = 1
+    itemStr = (items[item])
+    tokens = nltk.word_tokenize(itemStr)
+    pos = nltk.pos_tag(tokens)
+    for tkn in range(len(tokens)):
+        print(pos[tkn][0], "POS.",pos[tkn][1])
+        part = pos[tkn][1]
+        word = pos[tkn][0]
+        if(part == "CD"):
+            try:
+                quantity = int(word)
+            except ValueError:
+                wordConv = w2n(word)
+                quantity = int(wordConv)
+    print(quantity)
+    print("\n")
+'''
 order = []
 subtotal = 0
 orderFin = "your order "
@@ -82,3 +111,5 @@ orderFin += "conv.fee$0.05|" +" " +"subtotal$" + str(subtotal) +"| "+ "tax$" + s
 print(orderFin)
 print("\n")
 print(total)
+
+'''
