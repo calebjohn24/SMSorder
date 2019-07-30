@@ -3,104 +3,214 @@ from twilio.twiml.messaging_response import Message, MessagingResponse
 import twilio
 from firebase import firebase
 import time
+import nltk
 import json
-from fuzzywuzzy import fuzz
 import datetime
+from fuzzywuzzy import fuzz
+from words2num import w2n
 
 SendNum = "+14253828604"
 
 databse = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
 estName = "NAME"
 link = "LINK"
+with open('menu.json') as data_file:
+    data = json.load(data_file)
+foodItems = (data['items'])
 # set up Flask to connect this code to the local host, which will
 # later be connected to the internet through Ngrok
 app = Flask(__name__)
 
 def transalteOrder(msg, FBtoken):
+
     userOrder = msg
-    userOrder = userOrder.upper()
-    userOrder = userOrder.replace(',', '')
-    userOrder = userOrder.replace('AND', '')
-    userOrder = userOrder.replace('WITH', '')
-    userOrder = userOrder.replace('OR', '')
+    removelex = ["without", "no", "remove", "take out", "w/o", "take off"]
+    addlex = ["with", "add", "more", "w/", "include"]
+    userOrder = userOrder.lower()
+    userOrder = userOrder.replace('oz.', '')
+    userOrder = userOrder.replace('ounce', '')
+    userOrder = userOrder.replace('oz', '')
+    userOrder = userOrder.replace('ounces', '')
+
+    # userOrder = userOrder.replace(',', '')
+    userOrder = userOrder.replace("'", "")
     if (userOrder[-1] == "."):
         userOrder = userOrder[:-1]
+
     items = [x.strip() for x in userOrder.split('.')]
-
-    with open('menu.json') as data_file:
-        data = json.load(data_file)
-
-    order = []
-    subtotal = 0
-    orderFin = "your order" + "\n"
-    total = 0
     if (len(items) < 1):
         items.append(userOrder)
-    for n in range(len(items)):
-        qty = 1
-        compStr = ""
-        notes = ""
-        tokens = [z.strip() for z in items[n].split(' ')]
-        for tkn in range(len(tokens)):
-            if (tokens[tkn] == "NO"):
-                tokens[tkn] = ""
-                notes += str("NO " + tokens[tkn + 1])
-                notes += " "
-                tokens[tkn + 1] = ""
-        for tkn2 in range(len(tokens)):
-            try:
-                int(tokens[tkn2])
-                qty = int(tokens[tkn2])
+
+    order = ""
+    subtotal = 0
+    orderFin = "You ordered "
+    for item in range(len(items)):
+        price = 0
+        quantity = 1
+        size = "u"
+        itemStr = (items[item])
+        tokens = nltk.word_tokenize(itemStr)
+        pos = nltk.pos_tag(tokens)
+        for tknQty in range(len(tokens)):
+            part = pos[tknQty][1]
+            word = pos[tknQty][0]
+            if (part == "CD"):
+                try:
+                    quantity = int(word)
+                    pos.pop(tknQty)
+                    break
+                except ValueError:
+                    wordConv = w2n(word)
+                    quantity = int(wordConv)
+                    pos.pop(tknQty)
+                    break
+        # print(quantity,pos)
+        sizeFlag = 0
+        sizeIndx = 0
+        while sizeFlag != 1:
+            # print(pos[tkns][0], "POS.", pos[tkns][1])
+            wordX = pos[sizeIndx][0]
+            posX = pos[sizeIndx][1]
+            if (quantity > 1):
+                if (pos[sizeIndx][1] == "CD" or pos[sizeIndx][1] == "NN" or pos[sizeIndx][1] == "JJ"):
+                    size = pos[sizeIndx][0]
+                    pos.pop(sizeIndx)
+                    sizeFlag = 1
+                    break
+            elif (quantity == 1):
+                if (pos[sizeIndx][1] == "CD" or pos[sizeIndx][1] == "JJ"):
+                    size = pos[sizeIndx][0]
+                    pos.pop(sizeIndx)
+                    sizeFlag = 1
+                    break
+            sizeFlag += 1
+        name = ""
+        nameFlag = 0
+        nameIndx = 0
+        while (nameFlag == 0):
+            itemXtag = pos[nameIndx][1]
+            itemX = pos[nameIndx][0]
+            # print(itemX)
+            if (itemXtag == "NN" or itemXtag == "NNS"):
+                name += itemX
+                nameFlag = 1
+                pos.pop(nameIndx)
                 break
-            except ValueError:
-                pass
-        for zx in range(len(tokens)):
-            compStr += tokens[zx]
-            compStr += " "
+            elif (itemXtag == "JJ"):
+                name += itemX
+                # nameIndx += 1
+                name += " "
+                pos.pop(nameIndx)
+            else:
+                nameIndx += 1
+        # print(name)
         score = 0
         indx = 0
         for x in range(len(data['items'])):
-            newScore = (fuzz.token_sort_ratio(data['items'][x]['name'], compStr))
+            newScore = (fuzz.token_sort_ratio(data['items'][x]['name'], name))
             if (newScore > score):
-                if (notes == ""):
-                    score = newScore
-                    indx = x
-                elif (notes != ""):
-                    compScore = fuzz.partial_ratio(data['items'][x]['name'], notes)
-                    if (compScore < 50):
-                        score = newScore
-                        indx = x
+                score = newScore
+                indx = x
             if (newScore == score):
-                newScore = (fuzz.ratio(data['items'][x]['name'], compStr))
+                newScore = (fuzz.ratio(data['items'][x]['name'], name))
                 if (newScore > score):
                     score = newScore
                     indx = x
-        writeStr = str(data['items'][indx]['name'])
-        print(score, (fuzz.partial_ratio(data['items'][x]['name'], notes)))
-        if (score > 80):
-            orderStr = str(qty) + "x " + writeStr + " $" + str(data['items'][indx]['price']) + "x" + str(
-                qty) + "(" + "$" + format((qty * data['items'][indx]['price']), ',.2f') + ")"
-            orderStr = orderStr.rstrip()
-            orderStr = orderStr.lstrip()
-            order.append(orderStr)
-            subtotal += data['items'][indx]['price'] * qty
-            total = (subtotal + 0.20) * 1.10
-            total = round(total, 2)
-            subtotal = round(subtotal, 2)
+        nameMatch = str(data['items'][indx]['name']).lower()
+        nosSizes = len(data['items'][indx]['sizes'])
+        sizeScore = 0
+        sizeIndx = 0
+        for sizeX in range(len(data['items'][indx]['sizes'])):
+            newScore = (fuzz.token_sort_ratio(str(data['items'][indx]['sizes'][sizeX][0]).lower(), size))
+            if (newScore > sizeScore):
+                sizeScore = newScore
+                sizeIndx = sizeX
+            if (newScore == sizeScore):
+                newScore = (fuzz.ratio(str(data['items'][indx]['sizes'][sizeX][0]).lower(), size))
+                if (newScore > sizeScore):
+                    sizeScore = newScore
+                    sizeIndx = sizeX
+        sizeMatch = str(data['items'][indx]['sizes'][sizeIndx][0]).lower()
+        if (quantity > 1):
+            nameMatch = str(nameMatch) + "s"
+        if (str(sizeMatch) != "u"):
+            itemStr = (str(quantity) + "x " + str(sizeMatch) + " " + str(nameMatch) + " ")
         else:
-            orderStr = "invalid item"
-            order.append(orderStr)
-    for tt in range(len(order)):
-        orderFin += order[tt]
-        orderFin += "\n"
+            itemStr = (str(quantity) + "x " + str(nameMatch) + " ")
+        price += float(data['items'][indx]['sizes'][sizeIndx][1])
+        remIndx = []
+        notes = ""
+        for extrasWords in range(len(pos)):
+            if (pos[extrasWords][1] != "NN" or pos[extrasWords][1] != "NNS" or pos[extrasWords][1] != "JJ"):
+                for remLex in range(len(removelex)):
+                    negScore = fuzz.partial_ratio(pos[extrasWords], removelex[remLex])
+                    if (negScore > 75):
+                        indxEx = 1
+                        remIndx.append(pos[extrasWords])
+                        while (pos[extrasWords + indxEx][1] == "NN" or pos[extrasWords + indxEx][1] == "NNS" or
+                               pos[extrasWords + indxEx][1] == "RB"
+                               or pos[extrasWords + indxEx][1] == "JJ" or pos[extrasWords + indxEx][1] == "CC" or
+                               pos[extrasWords + indxEx][0] == ","
+                               or pos[extrasWords + indxEx][1] == "RBR" or pos[extrasWords + indxEx][1] == "RBS"):
+                            if (pos[extrasWords + indxEx][0] != ","):
+                                notes += pos[extrasWords + indxEx][0]
+                                notes += " "
+                            remIndx.append(pos[indxEx + extrasWords])
+                            indxEx += 1
+                            if ((extrasWords + indxEx) == (len(pos))):
+                                break
+                        indxEx = 1
+                        if (notes != ""):
+                            notesStr = "no " + notes
+                            itemStr += notesStr
+                            notes = ""
+        # pos.remove(remIndx[0])
+        ignoreindx = []
+        for remX in range(len(remIndx)):
+            pos.remove(remIndx[remX])
+        # print(pos)
+        for itx in range(len(pos)):
+            for rem in range(len(addlex)):
+                addScore = fuzz.partial_ratio(pos[itx][0], addlex[rem])
+                if (addScore > 75):
+                    ignoreindx.append(pos[itx])
+        for adX in range(len(ignoreindx)):
+            pos.remove(pos[adX])
+        extras = []
+        for cv in range(len(pos) - 1):
+            if (pos[cv][1] != "CC" and pos[cv][1] != "IN"):
+                extraStr = ""
+                extraStr += pos[cv][0]
+                exScore = 0
+                exIndx = 0
+                for xm in range(len(data['items'][indx]['extras'])):
+                    newScore = (fuzz.token_sort_ratio(data['items'][indx]["extras"][xm], extraStr))
+                    if (newScore > exScore):
+                        exScore = newScore
+                        exIndx = xm
+                    if (newScore == exScore):
+                        newScore = (fuzz.ratio(data['items'][indx]["extras"][xm], extraStr))
+                        if (newScore > exScore):
+                            score = newScore
+                            exIndx = xm
+                itemStr += "add "
+                itemStr += str((data['items'][indx]["extras"][exIndx][0])).lower()
+                itemStr += " "
+                price += float(data['items'][indx]["extras"][exIndx][1])
 
-    orderFin += "conv. fee $0.20" + "\n" + "subtotal $" + str(subtotal) + "\n" + "tax $" + str(
-        round((subtotal * 0.1), 2)) + "\n" + "total $" + str(total) + "\n" +"pay here - " + str(genPayment(total))
-    databse.put("/tickets/" + str(FBtoken), "/processedOrder/", orderFin)
-    databse.put("/tickets/" + str(FBtoken), "/subTotal/", subtotal)
-    databse.put("/tickets/" + str(FBtoken), "/total/", total)
-    orderFin = orderFin.lower()
-    return orderFin
+        itemStr = itemStr[:-1]
+        subtotal += (quantity * price)
+        order += str(itemStr + " $" + str(price) + " x " + str(quantity) + "\n")
+    subtotal += 0.20
+    fee = 0.2
+    order += ('subtotal ${0}'.format(format(subtotal, ',.2f'))) + "\n"
+    tax = subtotal * 0.1
+    order += ('tax ${0}'.format(format(tax, ',.2f'))) + "\n"
+    total = subtotal + tax
+    order += ('proces. fee ${0}'.format(format(fee, ',.2f'))) + "\n"
+    order += ('total ${0}'.format(format(total, ',.2f')))
+    print(order)
+    return order
 
 def logOrder(tix,number):
     logDate = (datetime.datetime.now().strftime("%Y-%m"))
@@ -122,7 +232,7 @@ def getReply(msg,number):
     if(msg == "ORDER" or msg == "ORDR" or msg == "ODER"):
         response = "Welcome to " + estName + " you can view the menu here " + link + \
                    " | to order please seperate Items with a period. like this '" \
-                   "3 Iced Coffees with Cream and sugar. Burger with Bacon.' " \
+                   "3 12 oz Iced Coffees with Cream and sugar. Burger with Bacon.' " \
                    "Don't forget to mention sizes!"
         tickNum = databse.get("/", "tickets")
         databse.put("/tickets/" + str(len(tickNum)), "/stage/", 1)

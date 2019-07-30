@@ -1,98 +1,12 @@
-import imaplib
-import time
-import uuid
-import email
-email_user = "payments@cedarrobots.com"
-email_pass = "CedarPayments1!"
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-IMAP_SERVER = 'imappro.zoho.com'
-IMAP_PORT = '993'
-IMAP_USE_SSL = True
+hotel_rev = ["with no"]
 
+sid = SentimentIntensityAnalyzer()
+for sentence in hotel_rev:
+    print(sentence)
+    ss = sid.polarity_scores(sentence)
+    for k in ss:
+        print((k, ss[k]))
 
-class MailBox(object):
-
-    def __init__(self, user, password):
-        self.user = user
-        self.password = password
-        if IMAP_USE_SSL:
-            self.imap = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT)
-        else:
-            self.imap = imaplib.IMAP4(IMAP_SERVER, IMAP_PORT)
-
-    def __enter__(self):
-        self.imap.login(self.user, self.password)
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.imap.close()
-        self.imap.logout()
-
-    def get_count(self):
-        self.imap.select('Inbox')
-        status, data = self.imap.search(None, 'ALL')
-        return sum(1 for num in data[0].split())
-
-    def fetch_message(self, num):
-        self.imap.select('Inbox')
-        status, data = self.imap.fetch(str(num), '(RFC822)')
-        email_msg = email.message_from_string(data[0][1])
-        return email_msg
-
-    def delete_message(self, num):
-        self.imap.select('Inbox')
-        self.imap.store(num, '+FLAGS', r'\Deleted')
-        self.imap.expunge()
-
-    def delete_all(self):
-        self.imap.select('Inbox')
-        status, data = self.imap.search(None, 'ALL')
-        for num in data[0].split():
-            self.imap.store(num, '+FLAGS', r'\Deleted')
-        self.imap.expunge()
-
-    def print_msgs(self):
-        self.imap.select('Inbox')
-        status, data = self.imap.search(None, 'ALL')
-        for num in reversed(data[0].split()):
-            status, data = self.imap.fetch(num, '(RFC822)')
-            print('Message %s\n%s\n' % (num, data[0][1]))
-
-    def get_latest_email_sent_to(self, email_address, timeout=300, poll=1):
-        start_time = time.time()
-        while ((time.time() - start_time) < timeout):
-            # It's no use continuing until we've successfully selected
-            # the inbox. And if we don't select it on each iteration
-            # before searching, we get intermittent failures.
-            status, data = self.imap.select('Inbox')
-            if status != 'OK':
-                time.sleep(poll)
-                continue
-            status, data = self.imap.search(None, 'TO', email_address)
-            data = [d for d in data if d is not None]
-            if status == 'OK' and data:
-                for num in reversed(data[0].split()):
-                    status, data = self.imap.fetch(num, '(RFC822)')
-                    email_msg = email.message_from_string(data[0][1])
-                    return email_msg
-            time.sleep(poll)
-        raise AssertionError("No email sent to '%s' found in inbox "
-                             "after polling for %s seconds." % (email_address, timeout))
-
-    def delete_msgs_sent_to(self, email_address):
-        self.imap.select('Inbox')
-        status, data = self.imap.search(None, 'TO', email_address)
-        if status == 'OK':
-            for num in reversed(data[0].split()):
-                status, data = self.imap.fetch(num, '(RFC822)')
-                self.imap.store(num, '+FLAGS', r'\Deleted')
-        self.imap.expunge()
-
-
-if __name__ == '__main__':
-    # example:
-    imap_username = "payments@cedarrobots.com"
-    imap_password = "CedarPayments1!"
-    with MailBox(imap_username, imap_password) as mbox:
-        print(mbox.get_count())
-        print(mbox.print_msgs())
