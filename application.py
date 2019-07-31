@@ -1,28 +1,86 @@
 from flask import Flask, request
-from twilio.twiml.messaging_response import Message, MessagingResponse
-import twilio
+import nexmo
 from firebase import firebase
-import time
-import nltk
-import json
 import datetime
+import json
+import nltk
 from fuzzywuzzy import fuzz
 from words2num import w2n
+import easyimap
 
-SendNum = "+14253828604"
+with open('menu.json') as data_file:
+    data = json.load(data_file)
 
+foodItems = (data['items'])
+items = []
+login = "payments@cedarrobots.com"
+password = "CedarPayments1!"
+
+client = nexmo.Client(key='8558cb90', secret='PeRbp1ciHeqS8sDI')
+
+NexmoNumber = '13166009096'
 databse = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
 estName = "NAME"
 link = "LINK"
-with open('menu.json') as data_file:
-    data = json.load(data_file)
-foodItems = (data['items'])
-# set up Flask to connect this code to the local host, which will
-# later be connected to the internet through Ngrok
+
 app = Flask(__name__)
 
-def transalteOrder(msg, FBtoken):
+def verifyPayment(name,time,date,month,year):
+    nameArr = []
+    addressArr = []
+    emailArr = []
+    dateTimeArr = []
+    imapper = easyimap.connect('imappro.zoho.com', login, password)
+    for mail_id in imapper.listids(limit=100):
+        mail = imapper.mail(mail_id)
+        nameSTR = (mail.from_addr).lower()
+        nameEnd = nameSTR.find("via") - 1
+        name = nameSTR[0:nameEnd]
+        nameArr.append(name)
+        emailSTR = mail.title
+        emailEnd = emailSTR.find("from") + 5
+        email = emailSTR[emailEnd::]
+        emailArr.append(email)
+        dateTimeSTR = mail.date
+        dateTimeZoneEnd = dateTimeSTR.find("-")
+        timeZone = dateTimeSTR[dateTimeZoneEnd::]
+        dateTimeDayEnd = dateTimeSTR.find(",")
+        day = dateTimeSTR[0:dateTimeDayEnd]
+        timeEnd = dateTimeSTR.find(":")
+        time = dateTimeSTR[(timeEnd - 2):(timeEnd + 6)]
+        year = dateTimeSTR[(timeEnd - 7):(timeEnd - 3)]
+        month = dateTimeSTR[(timeEnd - 11):(timeEnd - 8)]
+        date = dateTimeSTR[(timeEnd - 14):(timeEnd - 12)]
+        dateTimeArr.append(
+            [["timezone", timeZone], ["day", day], ["time", time], ["year", year], ["month", month], ["date", date]])
+        bodyText = (mail.body)
+        bodyText = bodyText.lower()
+        ship = (bodyText.find("shipping information"))
+        shipEnd = (bodyText.find("end -->"))
+        shippingInfo = (bodyText[ship:shipEnd])
+        shippingInfo = shippingInfo.replace("<", "")
+        shippingInfo = shippingInfo.replace("/", "")
+        shippingInfo = shippingInfo.replace(">", "")
+        shippingInfo = shippingInfo.replace('style="display:inline;"', "")
+        shippingInfo = shippingInfo.replace("br", "")
+        shippingInfo = shippingInfo.replace("span", "")
+        shippingInfo = shippingInfo.replace('style="display: inline;"', "")
+        shippingInfo = shippingInfo.replace("-- addressdisplaywrapper : start --  ", "")
+        shippingInfo = shippingInfo.replace("!", "")
+        shippingInfo = shippingInfo.replace("-", "")
+        shippingInfo = shippingInfo.replace("addressdisplaywrapper", "")
+        addrBegin = shippingInfo.find(name) + (len(name)) + 3
+        shippingInfo = (shippingInfo[addrBegin::])
+        commaSplicer = shippingInfo.find(",")
+        state = shippingInfo[(commaSplicer + 5): (commaSplicer + 7)]
+        zipCode = shippingInfo[(commaSplicer + 11):(commaSplicer + 16)]
+        addrEnd = shippingInfo.find("  ")
+        streetAdr = (shippingInfo[0:addrEnd])
+        city = shippingInfo[(addrEnd + 3):(commaSplicer - 3)]
+        addressArr.append([["state", state], ["zipCode", zipCode], ["city", city], ["streetAdr", streetAdr]])
+        for payments in range(len(addressArr))
 
+def transalteOrder(msg, FBtoken):
     userOrder = msg
     removelex = ["without", "no", "remove", "take out", "w/o", "take off"]
     addlex = ["with", "add", "more", "w/", "include"]
@@ -177,13 +235,15 @@ def transalteOrder(msg, FBtoken):
         for adX in range(len(ignoreindx)):
             pos.remove(pos[adX])
         extras = []
-        for cv in range(len(pos) - 1):
-            if (pos[cv][1] != "CC" and pos[cv][1] != "IN"):
+        cv = 0
+        while cv < len(pos):
+            if (pos[cv][1] != "CC" and pos[cv][1] != "IN" and pos[cv][0] != ","):
                 extraStr = ""
                 extraStr += pos[cv][0]
                 exScore = 0
                 exIndx = 0
                 for xm in range(len(data['items'][indx]['extras'])):
+                    # print(pos[cv][0], pos[cv][1])
                     newScore = (fuzz.token_sort_ratio(data['items'][indx]["extras"][xm], extraStr))
                     if (newScore > exScore):
                         exScore = newScore
@@ -193,14 +253,21 @@ def transalteOrder(msg, FBtoken):
                         if (newScore > exScore):
                             score = newScore
                             exIndx = xm
+                extraFind = str(data['items'][indx]["extras"][exIndx])
+                if (extraFind.find("-") != -1):
+                    cv += 2
                 itemStr += "add "
                 itemStr += str((data['items'][indx]["extras"][exIndx][0])).lower()
+                # print(len(data['items'][indx]["extras"][exIndx][0]))
+                # print(itemStr)
                 itemStr += " "
                 price += float(data['items'][indx]["extras"][exIndx][1])
+            cv += 1
 
         itemStr = itemStr[:-1]
         subtotal += (quantity * price)
         order += str(itemStr + " $" + str(price) + " x " + str(quantity) + "\n")
+
     subtotal += 0.20
     fee = 0.2
     order += ('subtotal ${0}'.format(format(subtotal, ',.2f'))) + "\n"
@@ -210,6 +277,9 @@ def transalteOrder(msg, FBtoken):
     order += ('proces. fee ${0}'.format(format(fee, ',.2f'))) + "\n"
     order += ('total ${0}'.format(format(total, ',.2f')))
     print(order)
+    databse.put("/tickets/" + str(FBtoken), "/processedOrder/", orderFin)
+    databse.put("/tickets/" + str(FBtoken), "/subTotal/", subtotal)
+    databse.put("/tickets/" + str(FBtoken), "/total/", total)
     return order
 
 def logOrder(tix,number):
@@ -221,83 +291,34 @@ def logOrder(tix,number):
     databse.put("/tickets/" + str(tix), "/number/", str(number) + ".")
 
 
-def assignRobot(tableNum):
-    print(tableNum)
-def genPayment(total):
-    print(total)
-    return ("dummy link")
+def genPayment(total,name):
+    paymentLink = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alan.john@cedarrobots.com&currency_code=USD&amount=' \
+                  '' + str(total) + '&return=http://cedarrobots.com&item_name=' + str(name)
+    return paymentLink
 # Main method. When a POST request is sent to our local host through Ngrok
 # (which creates a tunnel to the web), this code will run. The Twilio service # sends the POST request - we will set this up on the Twilio website. So when # a message is sent over SMS to our Twilio number, this code will run
 def getReply(msg,number):
-    if(msg == "ORDER" or msg == "ORDR" or msg == "ODER"):
-        response = "Welcome to " + estName + " you can view the menu here " + link + \
-                   " | to order please seperate Items with a period. like this '" \
-                   "3 12 oz Iced Coffees with Cream and sugar. Burger with Bacon.' " \
-                   "Don't forget to mention sizes!"
-        tickNum = databse.get("/", "tickets")
-        databse.put("/tickets/" + str(len(tickNum)), "/stage/", 1)
-        databse.put("/tickets/" + str(len(tickNum)), "/time/", (int(time.time())))
-        databse.put("/tickets/" + str(len(tickNum)), "/number/", number)
-        return response
-    else:
-        tickNum = databse.get("/", "tickets")
-        for tix in range(len(tickNum)):
-            if(tickNum[tix]["number"] == number):
-                stage = tickNum[tix]["stage"]
-                if(stage == 1):
-                    transalteOrder(msg, tix)
-                    respStr = "Got it! Is this order for here or to-go"
-                    databse.put("/tickets/" + str(tix), "/stage/", 2)
-                    return respStr
-                elif(stage == 2):
-                    total = tickNum[tix]["total"]
-                    if(msg == "FOR HERE" or msg == "FO HERE" or msg == "HERE" or msg == "FOR ERE"):
-                        respStr = "Thank you for your order, what's the number of the table you are sitting at?"
-                        databse.put("/tickets/" + str(tix), "/togo/", 0)
-                        databse.put("/tickets/" + str(tix), "/stage/", 3)
-                    elif(msg == "TO GO" or msg == "TOGO" or msg == "TO-GO" or msg == ""):
-                        respStr = "Thank you for your order enter 'R' to review your order and pay"
-                        databse.put("/tickets/" + str(tix), "/togo/", 1)
-                        databse.put("/tickets/" + str(tix), "/stage/", 4)
-                    else:
-                        rpStr = str(tickNum[tix]["processedOrder"])
-                        respStr = "Thank you for your order" \
-                        "enter 'r' to review your order and pay"
-                        databse.put("/tickets/" + str(tix), "/togo/", 1)
-                        databse.put("/tickets/" + str(tix), "/stage/", 4)
-                    return respStr
-                elif(stage == 3):
-                    try:
-                        rpStr = str(tickNum[tix]["processedOrder"])
-                        int(msg)
-                        tableNum = int(msg)
-                        respStr = "thank you you food will arrive soon enter 'r' to review your order and pay"
-                        databse.put("/tickets/" + str(tix), "/stage/", 4)
-                        databse.put("/tickets/" + str(tix), "/tableNum/", tableNum)
-                        assignRobot(tableNum)
-                    except ValueError:
-                        respStr = "please enter a number ex. '18'"
-                    return respStr
-                elif(stage == 4):
-                    rpStr = str(tickNum[tix]["processedOrder"])
-                    #rpStr = "test"
-                    logOrder(tix, number)
-                    databse.put("/tickets/" + str(tix), "/pay/", 0)
-                    return rpStr
+    if()
+    return reply
 
-@app.route('/', methods=['POST'])
-def sms():
-    # Get the text in the message sent
-    number = request.form['From']
-    message_body = request.form['Body']
-    message_body = str(message_body).upper()
-    resp = MessagingResponse()
-    # Text back our response!
-    reply = getReply(message_body,number)
-    resp.message(reply)
-    print(reply)
-    return str(resp)
+@app.route('/sms', methods=['GET', 'POST'])
+def inbound_sms():
+    data = dict(request.form) or dict(request.args)
+    print(data["text"])
+    number = str(data['msisdn'][0])
+    msg = str(data["text"][0])
+    print(number,msg)
+    response = getReply(msg,number)
+
+    client.send_message({
+        'from': NexmoNumber,
+        'to': number,
+        'text': response
+    })
+
+
+    return ('', 200)
 
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=3000,debug=True)

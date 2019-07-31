@@ -1,7 +1,24 @@
 import easyimap
 
+from datetime import datetime
+print(datetime.utcnow().hour)
+currentSecond= datetime.now().second
+currentMinute = datetime.now().minute
+currentHour = datetime.now().hour
+
+currentMonth = datetime.now().month
+currentYear = datetime.now().year
+currentDate = datetime.now().day
+months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"]
+print(currentHour,currentMinute,months[(currentMonth - 1)],currentDate,currentYear)
+nameFIND = "caleb john"
+dateFIND = "29"
+monthFIND = "Jul"
+year = "2019"
+time = ""
 login = "payments@cedarrobots.com"
 password = "CedarPayments1!"
+number = "720-326-9719"
 nameArr = []
 addressArr = []
 emailArr = []
@@ -58,4 +75,5 @@ for names in range(len(nameArr)):
     print(nameArr[names])
     print(emailArr[names])
     print(dateTimeArr[names])
+    print(((int(dateTimeArr[names][0][1])*-1)/100))
     print(addressArr[names])

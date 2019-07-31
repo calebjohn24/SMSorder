@@ -1,23 +1,14 @@
 import json
-
 import nltk
 from fuzzywuzzy import fuzz
 from words2num import w2n
-from twilio.rest import Client
-
-
-# Your Account Sid and Auth Token from twilio.com/console
-# DANGER! This is insecure. See http://twil.io/secure
-account_sid = 'AC94b7b349a46b465fdbbf5ac96751f307'
-auth_token = 'ea1399fcefbb293f5ab25254535d3a8a'
-client = Client(account_sid, auth_token)
 
 with open('menu.json') as data_file:
     data = json.load(data_file)
 
 foodItems = (data['items'])
 items = []
-userOrder = "Burger without honey mustard and bacon. 5 12 oz. Iced Coffee's with chocolate sauce and no caramel sauce or cream. four medium coffee's with no cream espresso, or sugar. " \
+userOrder = "2 Burgers with honey mustard no bacon. five 8 oz. Iced Coffee's with chocolate sauce, caramel sauce, no cream. 5 med coffee's with no cream espresso, or sugar. " \
             "Chicken Burger with Hot Sauce and avacado, no bacon"
 removelex = ["without", "no", "remove", "take out", "w/o", "take off"]
 addlex = ["with", "add", "more", "w/", "include"]
@@ -174,13 +165,13 @@ for item in range(len(items)):
     extras = []
     cv = 0
     while cv < len(pos):
-        if(pos[cv][1] != "CC" and pos[cv][1] != "IN"):
+        if(pos[cv][1] != "CC" and pos[cv][1] != "IN" and pos[cv][0] != ","):
             extraStr = ""
             extraStr += pos[cv][0]
             exScore = 0
             exIndx = 0
             for xm in range(len(data['items'][indx]['extras'])):
-                print(pos[cv][0], pos[cv][1])
+                #print(pos[cv][0], pos[cv][1])
                 newScore = (fuzz.token_sort_ratio(data['items'][indx]["extras"][xm], extraStr))
                 if (newScore > exScore):
                     exScore = newScore
@@ -190,10 +181,13 @@ for item in range(len(items)):
                     if (newScore > exScore):
                         score = newScore
                         exIndx = xm
+            extraFind = str(data['items'][indx]["extras"][exIndx])
+            if(extraFind.find("-") != -1):
+                cv +=1
             itemStr += "add "
             itemStr += str((data['items'][indx]["extras"][exIndx][0])).lower()
-            print(len(data['items'][indx]["extras"][exIndx][0]))
-            print(itemStr)
+            #print(len(data['items'][indx]["extras"][exIndx][0]))
+            #print(itemStr)
             itemStr += " "
             price += float(data['items'][indx]["extras"][exIndx][1])
         cv += 1
@@ -212,7 +206,5 @@ order += ('tax ${0}'.format(format(tax, ',.2f'))) + "\n"
 total = subtotal +tax
 order += ('proces. fee ${0}'.format(format(fee, ',.2f'))) + "\n"
 order += ('total ${0}'.format(format(total, ',.2f')))
-
-
 print(order)
 
