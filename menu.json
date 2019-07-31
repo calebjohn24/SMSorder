@@ -1,5 +1,5 @@
 {"items": [
-  {"name": "BURGER", "sizes": [["U", 6.55]], "extras": [["BACON", 1.5], ["CHEESE", 0.5], ["HONEY-MUSTARD", 0.75]]},
+  {"name": "BURGER", "sizes": [["U", 6.55]], "extras": [["BACON", 1.5], ["CHEESE", 0.5], ["HONEY-MUSTARD", 0.75], ["AVACADO",0.85]]},
   {"name": "ICED COFFEE", "sizes": [["8 oz", 2.5], ["12 oz", 2.75], ["16 oz", 3.0]], "extras": [["CREAM", 0.0], ["CHOCOLATE-SAUCE", 1.0], ["CARAMEL-SAUCE", 0.5]]},
   {"name": "CHICKEN BURGER", "sizes": [["U", 5.45]], "extras": [["HOT-SAUCE", 0.25], ["BACON", 0.75], ["AVACADO", 1.25]]},
   {"name": "COFFEE", "sizes": [["SMALL", 2.0], ["MEDIUM", 2.75], ["LARGE", 3.5]], "extras": [["CREAM", 0.0], ["SUGAR", 0.0], ["ESPRESSO", 1.0]]},

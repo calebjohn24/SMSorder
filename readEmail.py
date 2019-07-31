@@ -49,6 +49,8 @@ for mail_id in imapper.listids(limit=100):
     bodyText = bodyText.lower()
     ship = (bodyText.find("shipping information"))
     shipEnd = (bodyText.find("end -->"))
+    UUID = (bodyText[(bodyText.find("uuid")+5) : ((bodyText.find("uuid")) + 9)])
+    print(UUID)
     shippingInfo = (bodyText[ship:shipEnd])
     shippingInfo =shippingInfo.replace("<","")
     shippingInfo =shippingInfo.replace("/", "")

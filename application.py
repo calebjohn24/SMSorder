@@ -1,13 +1,16 @@
-from flask import Flask, request
-import nexmo
-from firebase import firebase
 import datetime
 import json
+import time
+import easyimap
+import nexmo
 import nltk
+from firebase import firebase
+from flask import Flask, request
 from fuzzywuzzy import fuzz
 from words2num import w2n
-import easyimap
+import random
 
+database = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
 with open('menu.json') as data_file:
     data = json.load(data_file)
 
@@ -20,71 +23,91 @@ client = nexmo.Client(key='8558cb90', secret='PeRbp1ciHeqS8sDI')
 
 NexmoNumber = '13166009096'
 databse = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
-estName = "NAME"
+estName = "TestRaunt"
 link = "LINK"
 
 app = Flask(__name__)
 
-def verifyPayment(name,time,date,month,year):
-    nameArr = []
-    addressArr = []
-    emailArr = []
-    dateTimeArr = []
-    imapper = easyimap.connect('imappro.zoho.com', login, password)
-    for mail_id in imapper.listids(limit=100):
-        mail = imapper.mail(mail_id)
-        nameSTR = (mail.from_addr).lower()
-        nameEnd = nameSTR.find("via") - 1
-        name = nameSTR[0:nameEnd]
-        nameArr.append(name)
-        emailSTR = mail.title
-        emailEnd = emailSTR.find("from") + 5
-        email = emailSTR[emailEnd::]
-        emailArr.append(email)
-        dateTimeSTR = mail.date
-        dateTimeZoneEnd = dateTimeSTR.find("-")
-        timeZone = dateTimeSTR[dateTimeZoneEnd::]
-        dateTimeDayEnd = dateTimeSTR.find(",")
-        day = dateTimeSTR[0:dateTimeDayEnd]
-        timeEnd = dateTimeSTR.find(":")
-        time = dateTimeSTR[(timeEnd - 2):(timeEnd + 6)]
-        year = dateTimeSTR[(timeEnd - 7):(timeEnd - 3)]
-        month = dateTimeSTR[(timeEnd - 11):(timeEnd - 8)]
-        date = dateTimeSTR[(timeEnd - 14):(timeEnd - 12)]
-        dateTimeArr.append(
-            [["timezone", timeZone], ["day", day], ["time", time], ["year", year], ["month", month], ["date", date]])
-        bodyText = (mail.body)
-        bodyText = bodyText.lower()
-        ship = (bodyText.find("shipping information"))
-        shipEnd = (bodyText.find("end -->"))
-        shippingInfo = (bodyText[ship:shipEnd])
-        shippingInfo = shippingInfo.replace("<", "")
-        shippingInfo = shippingInfo.replace("/", "")
-        shippingInfo = shippingInfo.replace(">", "")
-        shippingInfo = shippingInfo.replace('style="display:inline;"', "")
-        shippingInfo = shippingInfo.replace("br", "")
-        shippingInfo = shippingInfo.replace("span", "")
-        shippingInfo = shippingInfo.replace('style="display: inline;"', "")
-        shippingInfo = shippingInfo.replace("-- addressdisplaywrapper : start --  ", "")
-        shippingInfo = shippingInfo.replace("!", "")
-        shippingInfo = shippingInfo.replace("-", "")
-        shippingInfo = shippingInfo.replace("addressdisplaywrapper", "")
-        addrBegin = shippingInfo.find(name) + (len(name)) + 3
-        shippingInfo = (shippingInfo[addrBegin::])
-        commaSplicer = shippingInfo.find(",")
-        state = shippingInfo[(commaSplicer + 5): (commaSplicer + 7)]
-        zipCode = shippingInfo[(commaSplicer + 11):(commaSplicer + 16)]
-        addrEnd = shippingInfo.find("  ")
-        streetAdr = (shippingInfo[0:addrEnd])
-        city = shippingInfo[(addrEnd + 3):(commaSplicer - 3)]
-        addressArr.append([["state", state], ["zipCode", zipCode], ["city", city], ["streetAdr", streetAdr]])
-        for payments in range(len(addressArr))
 
-def transalteOrder(msg, FBtoken):
+def verifyPayment(UUIDcode,indxFB):
+    DBdata = database.get("/restaurants/" + estName, "orders")
+    code = DBdata[indxFB]["paid"]
+    UUIDflag = 0
+    while(UUIDflag == 0 and code != 1):
+        DBdata = database.get("/restaurants/" + estName, "orders")
+        code = DBdata[indxFB]["cash"]
+        nameArr = []
+        addressArr = []
+        emailArr = []
+        dateTimeArr = []
+        imapper = easyimap.connect('imappro.zoho.com', login, password)
+        for mail_id in imapper.listids(limit=100):
+            mail = imapper.mail(mail_id)
+            nameSTR = (mail.from_addr).lower()
+            nameEnd = nameSTR.find("via") - 1
+            name = nameSTR[0:nameEnd]
+            nameArr.append(name)
+            emailSTR = mail.title
+            emailEnd = emailSTR.find("from") + 5
+            email = emailSTR[emailEnd::]
+            emailArr.append(email)
+            dateTimeSTR = mail.date
+            dateTimeZoneEnd = dateTimeSTR.find("-")
+            timeZone = dateTimeSTR[dateTimeZoneEnd::]
+            dateTimeDayEnd = dateTimeSTR.find(",")
+            day = dateTimeSTR[0:dateTimeDayEnd]
+            timeEnd = dateTimeSTR.find(":")
+            time = dateTimeSTR[(timeEnd - 2):(timeEnd + 6)]
+            year = dateTimeSTR[(timeEnd - 7):(timeEnd - 3)]
+            month = dateTimeSTR[(timeEnd - 11):(timeEnd - 8)]
+            date = dateTimeSTR[(timeEnd - 14):(timeEnd - 12)]
+            dateTimeArr.append(
+                [["timezone", timeZone], ["day", day], ["time", time], ["year", year], ["month", month], ["date", date]])
+            bodyText = (mail.body)
+            bodyText = bodyText.lower()
+            ship = (bodyText.find("shipping information"))
+            shipEnd = (bodyText.find("end -->"))
+            shippingInfo = (bodyText[ship:shipEnd])
+            UUID = (bodyText[(bodyText.find("uuid") + 5): ((bodyText.find("uuid")) + 9)])
+            shippingInfo = shippingInfo.replace("<", "")
+            shippingInfo = shippingInfo.replace("/", "")
+            shippingInfo = shippingInfo.replace(">", "")
+            shippingInfo = shippingInfo.replace('style="display:inline;"', "")
+            shippingInfo = shippingInfo.replace("br", "")
+            shippingInfo = shippingInfo.replace("span", "")
+            shippingInfo = shippingInfo.replace('style="display: inline;"', "")
+            shippingInfo = shippingInfo.replace("-- addressdisplaywrapper : start --  ", "")
+            shippingInfo = shippingInfo.replace("!", "")
+            shippingInfo = shippingInfo.replace("-", "")
+            shippingInfo = shippingInfo.replace("addressdisplaywrapper", "")
+            addrBegin = shippingInfo.find(name) + (len(name)) + 3
+            shippingInfo = (shippingInfo[addrBegin::])
+            commaSplicer = shippingInfo.find(",")
+            state = shippingInfo[(commaSplicer + 5): (commaSplicer + 7)]
+            zipCode = shippingInfo[(commaSplicer + 11):(commaSplicer + 16)]
+            addrEnd = shippingInfo.find("  ")
+            streetAdr = (shippingInfo[0:addrEnd])
+            city = shippingInfo[(addrEnd + 3):(commaSplicer - 3)]
+            addressArr.append([["state", state], ["zipCode", zipCode], ["city", city], ["streetAdr", streetAdr]])
+            # for payments in range(len(addressArr))
+            print(UUID,UUIDcode)
+            if(UUID == UUIDcode):
+                print("order found")
+                database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "/paid/", 1)
+                UUIDflag = 1
+                break
+        return "found"
+
+
+
+def translateOrder(msg,indxFB):
     userOrder = msg
+    print(msg)
     removelex = ["without", "no", "remove", "take out", "w/o", "take off"]
     addlex = ["with", "add", "more", "w/", "include"]
     userOrder = userOrder.lower()
+    userOrder = userOrder.replace('...', '.')
+    userOrder = userOrder.replace('..', '.')
     userOrder = userOrder.replace('oz.', '')
     userOrder = userOrder.replace('ounce', '')
     userOrder = userOrder.replace('oz', '')
@@ -255,11 +278,9 @@ def transalteOrder(msg, FBtoken):
                             exIndx = xm
                 extraFind = str(data['items'][indx]["extras"][exIndx])
                 if (extraFind.find("-") != -1):
-                    cv += 2
+                    cv += 1
                 itemStr += "add "
                 itemStr += str((data['items'][indx]["extras"][exIndx][0])).lower()
-                # print(len(data['items'][indx]["extras"][exIndx][0]))
-                # print(itemStr)
                 itemStr += " "
                 price += float(data['items'][indx]["extras"][exIndx][1])
             cv += 1
@@ -275,31 +296,254 @@ def transalteOrder(msg, FBtoken):
     order += ('tax ${0}'.format(format(tax, ',.2f'))) + "\n"
     total = subtotal + tax
     order += ('proces. fee ${0}'.format(format(fee, ',.2f'))) + "\n"
-    order += ('total ${0}'.format(format(total, ',.2f')))
+    order += ('total ${0}'.format(format(total, ',.2f'))) + "\n"
     print(order)
-    databse.put("/tickets/" + str(FBtoken), "/processedOrder/", orderFin)
-    databse.put("/tickets/" + str(FBtoken), "/subTotal/", subtotal)
-    databse.put("/tickets/" + str(FBtoken), "/total/", total)
+    order += 'if everything looks good enter "ok" otherwise enter "help" \n'
+    total = 0.01
+    database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "total/", total)
     return order
 
-def logOrder(tix,number):
+
+def logOrder(tix, number):
     logDate = (datetime.datetime.now().strftime("%Y-%m"))
-    currentVal = databse.get("/log/" + str(logDate) + "/", "orders")
-    currentacct = databse.get("/log/" + str(logDate) + "/", "acct")
-    databse.put("/log/" + str(logDate), "/orders/", (currentVal + 1))
-    databse.put("/log/" + str(logDate), "/acct/", (currentacct + 0.20))
-    databse.put("/tickets/" + str(tix), "/number/", str(number) + ".")
+    currentVal = databse.get("/log/" + estName + "/" + str(logDate) + "/", "orders")
+    currentacct = databse.get("/log/" + estName + "/" + str(logDate) + "/", "acct")
+    databse.put("/log/"+ estName + "/" + str(logDate), "/orders/", (currentVal + 1))
+    databse.put("/log/" +estName+"/"+ str(logDate), "/acct/", (currentacct + 0.20))
+    database.put("/restaurants/" + estName + "/orders/" + str(tix) + "/", "/number/", str(number)+".")
 
 
-def genPayment(total,name):
+def genPayment(total, name, UUIDcode):
+    print(UUIDcode)
     paymentLink = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alan.john@cedarrobots.com&currency_code=USD&amount=' \
-                  '' + str(total) + '&return=http://cedarrobots.com&item_name=' + str(name)
+                  '' + str(total) + '&return=http://cedarrobots.com&item_name=' + str(name) + "-UUID-"+str(UUIDcode)
     return paymentLink
-# Main method. When a POST request is sent to our local host through Ngrok
-# (which creates a tunnel to the web), this code will run. The Twilio service # sends the POST request - we will set this up on the Twilio website. So when # a message is sent over SMS to our Twilio number, this code will run
-def getReply(msg,number):
-    if()
-    return reply
+
+
+def getReply(msg, number):
+    msg = msg.lower()
+    indx = 0
+    usrIndx = 0
+    DBdata = database.get("/restaurants/" + estName, "orders")
+    UserData = database.get("/", "users")
+    for db in range(len(DBdata)):
+        phoneNumDB = DBdata[db]['number']
+        print(db,len(DBdata))
+        if (phoneNumDB == number):
+            indx = db
+            break
+        if((len(DBdata)-db) == 1):
+            DBdata = database.get("/restaurants/TestRaunt", "orders")
+            for usr in range(len(UserData)):
+                userNumDB = UserData[usr]["number"]
+                if (userNumDB == number):
+                    usrIndx = usr
+                    break
+                if(((len(UserData)) - usr) == 1):
+                    database.put("/users/", "/" + str(len(UserData)) + "/name/", "")
+                    database.put("/users/", "/" + str(len(UserData)) + "/number/", number)
+                    database.put("/users/", "/" + str(len(UserData)) + "/restaurants/" +estName+"/", 0)
+                    break
+            UUID = random.randint(999, 10000)
+            for users in range(len(UserData)):
+                usersNum = UserData[users]["number"]
+                if (usersNum == number):
+                    name = UserData[users]["name"]
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", name)
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/",
+                                 str(UUID))
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/number/",
+                                 str(number))
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/",
+                                 "/unprocessedOrder/", "")
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 2)
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/paid/", 0)
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/cash/", 0)
+                    reply = "Hi, "+ name +" welcome to " + estName + " is this order for-here or to-go"
+                    client.send_message({
+                        'from': NexmoNumber,
+                        'to': number,
+                        'text': reply
+                    })
+                    return reply
+            reply = "Hi welcome to " + estName + " please enter your name to continue"
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", "")
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/number/", str(number))
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/unprocessedOrder/", "")
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 1)
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/paid/", 0)
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/cash/", 0)
+
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': reply
+            })
+            return reply
+    if(DBdata[indx]['stage'] == 1):
+        database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/name/", str(msg))
+        database.put("/users/", "/" + str(len(UserData)-1) + "/name/", str(msg))
+        database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 2)
+        reply = "Hi, " + str(msg).capitalize() + " is this order for-here or to-go?"
+        client.send_message({
+            'from': NexmoNumber,
+            'to': number,
+            'text': reply
+        })
+    elif(DBdata[indx]['stage'] == 2):
+        if(msg == "for here" or msg == "fo here" or msg == "for her" or msg == "for herw" or msg == "for herr" or msg == "here"):
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", 0)
+            tickets = database.get("/users/" + str(usrIndx) +"/restaurant/", estName)
+            database.put("/users/", "/" + str(usrIndx) + "/restaurants/" + estName + "/" + str(len(tickets)-1)+"/to-go/", [0])
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': "Sounds good! your order will be " + "for-here\n" + " Do you have a loyalty card?"
+            })
+        else:
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", 1)
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
+            tickets = database.get("/users/" + str(usrIndx) + "/restaurant/", estName)
+            database.put("/users/",
+                         "/" + str(usrIndx) + "/restaurants/" + estName + "/" + str(len(tickets) - 1) + "/to-go/", 1)
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': "Sounds good! your order will be "+ "to-go\n"+"Do you have a loyalty card?"
+            })
+    elif (DBdata[indx]['stage'] == 3):
+        if(msg == "yes" or msg == "yep" or msg == "yup" or msg == "y" or msg == "ye" or msg == "i do"):
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/loyaltyCard/", 1)
+        else:
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/loyaltyCard/", 0)
+        database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
+        reply = "Got it!, you can " \
+                                                 "view the menu here " + link + " please " \
+                                                 "enter you order now \n" + "text us items " \
+                                                 "one by one like this"
+
+        client.send_message({
+            'from': NexmoNumber,
+            'to': number,
+            'text': reply
+        })
+        print("m0")
+        time.sleep(0.25)
+        print("m1")
+        client.send_message({
+            'from': NexmoNumber,
+            'to': number,
+            'text': "Burger with bacon and cheese, no avacado"
+        })
+        time.sleep(0.25)
+        print("m2")
+        client.send_message({
+            'from': NexmoNumber,
+            'to': number,
+            'text': "3 large Coffees with cream, no sugar \n" + "enter " +'"done"'+" once you're finished"
+        })
+        print("m3")
+        time.sleep(0.5)
+        return reply
+
+    elif (DBdata[indx]['stage'] == 4):
+        if(msg == "done"):
+            database.get("/restaurants/" + estName + "/orders/" + str(indx) + "/",
+                         "unprocessedOrder")
+            reply = translateOrder(DBdata[indx]['unprocessedOrder'],indx)
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': reply
+            })
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 5)
+            return reply
+        else:
+            msgData = str(
+                database.get("/restaurants/" + estName + "/orders/" + str(indx) + "/",
+                             "unprocessedOrder"))
+            print(msgData)
+            if(msg[-1] != "."):
+                msgData += str(msg)
+                msgData += "."
+            else:
+                msgData += str(msg)
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/unprocessedOrder/", msgData)
+            return
+    elif (DBdata[indx]['stage'] == 5):
+        if(msg == "ok"):
+            total = DBdata[indx]['total']
+            UUID =  DBdata[indx]['UUID']
+            name = DBdata[indx]['name']
+            reply = 'thanks, please click the link below to pay if you want to pay cash enter "cash"\n ' \
+                    ""+ genPayment(total,name,UUID)
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': reply
+            })
+            verifyPayment(UUID,indx)
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 6)
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/paid/", 1)
+            loyaltyCard = DBdata[indx]["loyaltyCard"]
+            cash = DBdata[indx]["loyaltyCard"]
+            if(cash != 1):
+                if(loyaltyCard == 0):
+                    client.send_message({
+                        'from': NexmoNumber,
+                        'to': number,
+                        'text': "your order has been processed and will be ready shortly, thank you!\n would you like me to register you for a loyalty card?"
+                    })
+                else:
+                    client.send_message({
+                        'from': NexmoNumber,
+                        'to': number,
+                        'text': "your order has been processed and will be ready shortly!"
+                    })
+                    logOrder(indx,number)
+            return reply
+
+        elif(msg == "help"):
+            reply = "Sorry about that, please try re-entering your items, please text me items in this format\n "+ "" \
+                    ' "Quantity, Item Name, toppings to add, "no" toppings to remove"'
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/unprocessedOrder/", "")
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': reply
+            })
+            return reply
+    elif(DBdata[indx]['stage'] == 6):
+        if(msg == "cash"):
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/cash/", 1)
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/paid/", 1)
+            reply = "No problem! enjoy your order, the staff will take your cash payment when you pick up your order"
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': reply
+            })
+        elif(msg == "ok" or msg == "yes" or msg == "ye" or msg == "yep" or msg =="yup"or msg =="i do"or msg == "y"or msg == "i do want one"):
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/loyaltyCard/", 2)
+            reply = "Thanks! we'll sign you up, enjoy your order"
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': reply
+            })
+        else:
+            reply = "No problem! enjoy your order, the staff will take your cash payment when you pick up your order"
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': reply
+            })
+        logOrder(indx,number)
+        return reply
+
 
 @app.route('/sms', methods=['GET', 'POST'])
 def inbound_sms():
@@ -307,18 +551,15 @@ def inbound_sms():
     print(data["text"])
     number = str(data['msisdn'][0])
     msg = str(data["text"][0])
-    print(number,msg)
-    response = getReply(msg,number)
+    print(number, msg)
 
-    client.send_message({
-        'from': NexmoNumber,
-        'to': number,
-        'text': response
-    })
+    getReply(msg, number)
+
 
 
     return ('', 200)
 
+
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
-    app.run(port=3000,debug=True)
+    app.run(port=5000, debug=True)

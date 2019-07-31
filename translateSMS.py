@@ -7,9 +7,7 @@ with open('menu.json') as data_file:
     data = json.load(data_file)
 
 foodItems = (data['items'])
-items = []
-userOrder = "2 Burgers with honey mustard no bacon. five 8 oz. Iced Coffee's with chocolate sauce, caramel sauce, no cream. 5 med coffee's with no cream espresso, or sugar. " \
-            "Chicken Burger with Hot Sauce and avacado, no bacon"
+userOrder = "4 burgers with bacon, no honey mustard."
 removelex = ["without", "no", "remove", "take out", "w/o", "take off"]
 addlex = ["with", "add", "more", "w/", "include"]
 userOrder = userOrder.lower()
@@ -186,8 +184,6 @@ for item in range(len(items)):
                 cv +=1
             itemStr += "add "
             itemStr += str((data['items'][indx]["extras"][exIndx][0])).lower()
-            #print(len(data['items'][indx]["extras"][exIndx][0]))
-            #print(itemStr)
             itemStr += " "
             price += float(data['items'][indx]["extras"][exIndx][1])
         cv += 1

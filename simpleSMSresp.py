@@ -19,7 +19,7 @@ def inbound_sms():
     client.send_message({
         'from': NexmoNumber,
         'to': number,
-        'text': 'gbnv'
+        'text': 'Hi'
     })
 
 
