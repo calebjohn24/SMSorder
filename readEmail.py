@@ -1,7 +1,9 @@
 import easyimap
 from bs4 import BeautifulSoup
+import uszipcode
 from datetime import datetime
-print(datetime.utcnow().hour)
+
+from fuzzywuzzy import fuzz
 currentSecond= datetime.now().second
 currentMinute = datetime.now().minute
 currentHour = datetime.now().hour
@@ -10,8 +12,6 @@ currentMonth = datetime.now().month
 currentYear = datetime.now().year
 currentDate = datetime.now().day
 months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"]
-print(currentHour,currentMinute,months[(currentMonth - 1)],currentDate,currentYear)
-print(datetime.today())
 nameFIND = "caleb john"
 dateFIND = "29"
 monthFIND = "Jul"
@@ -27,31 +27,54 @@ dateTimeArr = []
 imapper = easyimap.connect('imappro.zoho.com', login, password)
 for mail_id in imapper.listids(limit=100):
     mail = imapper.mail(mail_id)
-    nameSTR = (mail.from_addr).lower()
-    nameEnd = nameSTR.find("via") - 1
-    name = nameSTR[0:nameEnd]
-    nameArr.append(name)
-    emailSTR = mail.title
-    emailEnd = emailSTR.find("from")+5
-    email = emailSTR[emailEnd::]
-    emailArr.append(email)
-    dateTimeSTR = mail.date
-    dateTimeZoneEnd = dateTimeSTR.find("-")
-    timeZone = dateTimeSTR[dateTimeZoneEnd::]
-    dateTimeDayEnd = dateTimeSTR.find(",")
-    day = dateTimeSTR[0:dateTimeDayEnd]
-    timeEnd = dateTimeSTR.find(":")
-    time = dateTimeSTR[(timeEnd-2):(timeEnd+6)]
-    year = dateTimeSTR[(timeEnd-7):(timeEnd-3)]
-    month = dateTimeSTR[(timeEnd-11):(timeEnd-8)]
-    date = dateTimeSTR[(timeEnd-14):(timeEnd-12)]
-    dateTimeArr.append([["timezone",timeZone],["day", day],["time",time],["year",year],["month",month],["date",date]])
     bodyText = (mail.body)
-    #soup = BeautifulSoup(bodyText)
     soup = BeautifulSoup(bodyText, 'lxml')
     bodyText = (soup.get_text())
-    ship = (bodyText.find("Shipping address"))
-    print(bodyText[ship:()])
+    strStart = bodyText.find("Hello")
+    bodyText = str(bodyText[strStart:])
+    bodyText = bodyText.replace("  ", "")
+    bodyText = bodyText.replace("\n", "")
+    #print(bodyText)
+    emailStart = bodyText.find("(")
+    emailEnd = bodyText.find(")")
+    email = (bodyText[(emailStart + 1):emailEnd])
+    ship = (bodyText.find("Shipping"))
+    shipEnd = (bodyText.find("United States"))
+    adrText = str(bodyText[ship + (len("shipping")):(shipEnd)])
+    adrText = adrText.replace("  ","")
+    adrText = adrText.replace("confirmed","")
+    adrText = adrText.replace(" address -","")
+    adrText = adrText.replace(" information:", "")
+    adrText = adrText.rstrip()
+    adrText = adrText.lstrip()
+    adrText = adrText.upper()
+    name = ""
+    streetAdrIndx = 0
+    for ltr in range(len(adrText)):
+        try:
+            testStr = int(adrText[ltr])
+            streetAdrIndx = ltr
+            break
+        except ValueError:
+            name += adrText[ltr]
+    name = name.upper()
+    streetAdrFull = adrText[streetAdrIndx:]
+    zipCode = (streetAdrFull[-5:])
+    streetAdrCity = (streetAdrFull[:-5])
+    search = uszipcode.SearchEngine(simple_zipcode=True)
+    zipCitySearch = search.by_zipcode(zipCode).common_city_list
+    score = 0
+    city = ""
+    for cities in range(len(zipCitySearch)):
+        newScore = fuzz.partial_ratio(streetAdrCity,str(zipCitySearch[cities]).upper())
+        if(newScore > score):
+            score = newScore
+            city = str(zipCitySearch[cities]).upper()
+    cityIndx = streetAdrCity.find(city)
+    streetAdr = streetAdrCity[:cityIndx]
+    print(streetAdr,city,zipCode,name,email)
+
+
     ''' 
     ship = (bodyText.find("shipping information"))
     shipEnd = (bodyText.find("end -->"))
