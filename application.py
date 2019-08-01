@@ -96,7 +96,7 @@ def verifyPayment(UUIDcode,indxFB):
                 database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "/paid/", 1)
                 UUIDflag = 1
                 break
-        return "found"
+    return "found"
 
 
 
@@ -480,8 +480,8 @@ def getReply(msg, number):
                 'to': number,
                 'text': reply
             })
-            verifyPayment(UUID,indx)
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 6)
+            verifyPayment(UUID,indx)
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/paid/", 1)
             loyaltyCard = DBdata[indx]["loyaltyCard"]
             cash = DBdata[indx]["cash"]
@@ -490,7 +490,7 @@ def getReply(msg, number):
                     client.send_message({
                         'from': NexmoNumber,
                         'to': number,
-                        'text': "your order has been processed and will be ready shortly, thank you!\n would you like me to register you for a loyalty card?"
+                        'text': "your order has been processed and will be ready shortly, thank you!\n would you like to be registered you for a loyalty card?"
                     })
                 else:
                     client.send_message({
