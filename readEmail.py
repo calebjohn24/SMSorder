@@ -1,5 +1,5 @@
 import easyimap
-
+from bs4 import BeautifulSoup
 from datetime import datetime
 print(datetime.utcnow().hour)
 currentSecond= datetime.now().second
@@ -47,13 +47,17 @@ for mail_id in imapper.listids(limit=100):
     date = dateTimeSTR[(timeEnd-14):(timeEnd-12)]
     dateTimeArr.append([["timezone",timeZone],["day", day],["time",time],["year",year],["month",month],["date",date]])
     bodyText = (mail.body)
-    bodyText = bodyText.lower()
+    #soup = BeautifulSoup(bodyText)
+    soup = BeautifulSoup(bodyText, 'lxml')
+    bodyText = (soup.get_text())
+    ship = (bodyText.find("Shipping address"))
+    print(bodyText[ship:()])
+    ''' 
     ship = (bodyText.find("shipping information"))
     shipEnd = (bodyText.find("end -->"))
     UUID = (bodyText[(bodyText.find("uuid")+5) : ((bodyText.find("uuid")) + 9)])
-    print(UUID)
+    #print(UUID)
     shippingInfo = (bodyText[ship:shipEnd])
-
     shippingInfo =shippingInfo.replace("<","")
     shippingInfo =shippingInfo.replace("/", "")
     shippingInfo =shippingInfo.replace(">", "")
@@ -65,6 +69,7 @@ for mail_id in imapper.listids(limit=100):
     shippingInfo = shippingInfo.replace("!", "")
     shippingInfo = shippingInfo.replace("-", "")
     shippingInfo = shippingInfo.replace("addressdisplaywrapper", "")
+    #print(shippingInfo)
     addrBegin = shippingInfo.find(name) + (len(name)) + 3
     shippingInfo = (shippingInfo[addrBegin::])
     commaSplicer = shippingInfo.find(",")
@@ -74,11 +79,11 @@ for mail_id in imapper.listids(limit=100):
     streetAdr = (shippingInfo[0:addrEnd])
     city = shippingInfo[(addrEnd+3):(commaSplicer-3)]
     addressArr.append([["state",state],["zipCode",zipCode],["city",city],["streetAdr",streetAdr]])
-
+    '''
+''' 
 for names in range(len(nameArr)):
-    print(nameArr[names])
-    print(emailArr[names])
-    print(dateTimeArr[names])
+    print(nameArr[names], "name")
+    print(emailArr[names], "email")
     for adr in range(len(addressArr[names])):
-        print(addressArr[names][adr][0])
-        print(addressArr[names][adr][1])
+        print(addressArr[names][adr][0], addressArr[names][adr][1])
+'''
