@@ -1,0 +1,7 @@
+- scrape paypal emails
+- save new users
+- find old users in DB
+- add coupons(load)
+- add coupns (apply
+- save easy order
+4.81740 - 4.74300

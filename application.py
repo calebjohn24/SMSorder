@@ -347,9 +347,10 @@ def getReply(msg, number):
         if (phoneNumDB == number):
             indx = db
             break
+        elif((len(DBdata)-db) == 1):
+            return "null"
     if(DBdata[indx]['stage'] == 1):
-        database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/name/", str(msg))
-        database.put("/users/", "/" + str(len(UserData)-1) + "/name/", str(msg))
+        database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/name/", str(msg).capitalize())
         database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 2)
         reply = "Hi, " + str(msg).capitalize() + " is this order for-here or to-go?"
         client.send_message({
@@ -391,21 +392,13 @@ def getReply(msg, number):
             'text': reply
         })
         print("m0")
-        time.sleep(0.25)
+        time.sleep(0.5)
         print("m1")
         client.send_message({
             'from': NexmoNumber,
             'to': number,
-            'text': "Burger with bacon and cheese, no avacado"
+            'text': "Burger with bacon and cheese, no avacado \n" + "3 large Coffees with cream, no sugar \n" + "enter " +'"done"'+" once you're finished"
         })
-        time.sleep(0.75)
-        print("m2")
-        client.send_message({
-            'from': NexmoNumber,
-            'to': number,
-            'text': "3 large Coffees with cream, no sugar \n" + "enter " +'"done"'+" once you're finished"
-        })
-        print("m3")
         time.sleep(0.5)
         return reply
 
@@ -448,6 +441,7 @@ def getReply(msg, number):
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 6)
             verifyPayment(UUID,indx)
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/paid/", 1)
+            DBdata = database.get("/restaurants/" + estName, "orders")
             loyaltyCard = DBdata[indx]["loyaltyCard"]
             cash = DBdata[indx]["cash"]
             if(cash != 1):
@@ -487,7 +481,7 @@ def getReply(msg, number):
                 'to': number,
                 'text': reply
             })
-        elif(msg == "ok" or msg == "yes" or msg == "ye" or msg == "yep" or msg =="yup"or msg =="i do"or msg == "y"or msg == "i do want one"):
+        elif(msg == "ok" or msg == "yes" or msg == "sure" or msg == "ye" or msg == "yep" or msg =="yup"or msg =="i do"or msg == "y"or msg == "i do want one"):
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/loyaltyCard/", 2)
             reply = "Thanks! we'll sign you up, enjoy your order"
             client.send_message({
@@ -503,6 +497,7 @@ def getReply(msg, number):
                 'text': reply
             })
         logOrder(indx,number)
+
         return reply
 
 
