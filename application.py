@@ -299,7 +299,7 @@ def translateOrder(msg,indxFB):
     order += ('total ${0}'.format(format(total, ',.2f'))) + "\n"
     print(order)
     order += 'if everything looks good enter "ok" otherwise enter "help" \n'
-    total = 0.01
+    total = 0.01 #delete line
     database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "total/", total)
     return order
 
@@ -418,7 +418,7 @@ def getReply(msg, number):
         reply = "Got it!, you can " \
                                                  "view the menu here " + link + " please " \
                                                  "enter you order now \n" + "text us items " \
-                                                 "one by one like this"
+                                                 "one by one in different texts like this"
 
         client.send_message({
             'from': NexmoNumber,
