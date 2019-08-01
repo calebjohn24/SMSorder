@@ -11,6 +11,7 @@ currentYear = datetime.now().year
 currentDate = datetime.now().day
 months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"]
 print(currentHour,currentMinute,months[(currentMonth - 1)],currentDate,currentYear)
+print(datetime.today())
 nameFIND = "caleb john"
 dateFIND = "29"
 monthFIND = "Jul"
@@ -52,6 +53,7 @@ for mail_id in imapper.listids(limit=100):
     UUID = (bodyText[(bodyText.find("uuid")+5) : ((bodyText.find("uuid")) + 9)])
     print(UUID)
     shippingInfo = (bodyText[ship:shipEnd])
+
     shippingInfo =shippingInfo.replace("<","")
     shippingInfo =shippingInfo.replace("/", "")
     shippingInfo =shippingInfo.replace(">", "")
@@ -77,5 +79,6 @@ for names in range(len(nameArr)):
     print(nameArr[names])
     print(emailArr[names])
     print(dateTimeArr[names])
-    print(((int(dateTimeArr[names][0][1])*-1)/100))
-    print(addressArr[names])
+    for adr in range(len(addressArr[names])):
+        print(addressArr[names][adr][0])
+        print(addressArr[names][adr][1])

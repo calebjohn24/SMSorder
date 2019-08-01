@@ -328,7 +328,6 @@ def getReply(msg, number):
     UserData = database.get("/", "users")
     for db in range(len(DBdata)):
         phoneNumDB = DBdata[db]['number']
-        print(db,len(DBdata))
         if (phoneNumDB == number):
             indx = db
             break
@@ -405,9 +404,6 @@ def getReply(msg, number):
         else:
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", 1)
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
-            tickets = database.get("/users/" + str(usrIndx) + "/restaurant/", estName)
-            database.put("/users/",
-                         "/" + str(usrIndx) + "/restaurants/" + estName + "/" + str(len(tickets) - 1) + "/to-go/", 1)
             client.send_message({
                 'from': NexmoNumber,
                 'to': number,
@@ -488,7 +484,7 @@ def getReply(msg, number):
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 6)
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/paid/", 1)
             loyaltyCard = DBdata[indx]["loyaltyCard"]
-            cash = DBdata[indx]["loyaltyCard"]
+            cash = DBdata[indx]["cash"]
             if(cash != 1):
                 if(loyaltyCard == 0):
                     client.send_message({
