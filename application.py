@@ -90,7 +90,6 @@ def verifyPayment(UUIDcode,indxFB):
             city = shippingInfo[(addrEnd + 3):(commaSplicer - 3)]
             addressArr.append([["state", state], ["zipCode", zipCode], ["city", city], ["streetAdr", streetAdr]])
             # for payments in range(len(addressArr))
-            print(UUID,UUIDcode)
             if(UUID == UUIDcode):
                 print("order found")
                 database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "/paid/", 1)
@@ -326,60 +325,28 @@ def getReply(msg, number):
     usrIndx = 0
     DBdata = database.get("/restaurants/" + estName, "orders")
     UserData = database.get("/", "users")
+    if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr"):
+        UUID = random.randint(999, 10000)
+        reply = "Hi welcome to " + estName + " please enter your name to continue"
+        database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
+        database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", "")
+        database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/number/", str(number))
+        database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/unprocessedOrder/", "")
+        database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 1)
+        database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/paid/", 0)
+        database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/cash/", 0)
+
+        client.send_message({
+            'from': NexmoNumber,
+            'to': number,
+            'text': reply
+        })
+        return reply
     for db in range(len(DBdata)):
         phoneNumDB = DBdata[db]['number']
         if (phoneNumDB == number):
             indx = db
             break
-        if((len(DBdata)-db) == 1):
-            DBdata = database.get("/restaurants/TestRaunt", "orders")
-            for usr in range(len(UserData)):
-                userNumDB = UserData[usr]["number"]
-                if (userNumDB == number):
-                    usrIndx = usr
-                    break
-                if(((len(UserData)) - usr) == 1):
-                    database.put("/users/", "/" + str(len(UserData)) + "/name/", "")
-                    database.put("/users/", "/" + str(len(UserData)) + "/number/", number)
-                    database.put("/users/", "/" + str(len(UserData)) + "/restaurants/" +estName+"/", 0)
-                    break
-            UUID = random.randint(999, 10000)
-            for users in range(len(UserData)):
-                usersNum = UserData[users]["number"]
-                if (usersNum == number):
-                    name = UserData[users]["name"]
-                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", name)
-                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/",
-                                 str(UUID))
-                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/number/",
-                                 str(number))
-                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/",
-                                 "/unprocessedOrder/", "")
-                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 2)
-                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/paid/", 0)
-                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/cash/", 0)
-                    reply = "Hi, "+ name +" welcome to " + estName + " is this order for-here or to-go"
-                    client.send_message({
-                        'from': NexmoNumber,
-                        'to': number,
-                        'text': reply
-                    })
-                    return reply
-            reply = "Hi welcome to " + estName + " please enter your name to continue"
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", "")
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/number/", str(number))
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/unprocessedOrder/", "")
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 1)
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/paid/", 0)
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/cash/", 0)
-
-            client.send_message({
-                'from': NexmoNumber,
-                'to': number,
-                'text': reply
-            })
-            return reply
     if(DBdata[indx]['stage'] == 1):
         database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/name/", str(msg))
         database.put("/users/", "/" + str(len(UserData)-1) + "/name/", str(msg))
@@ -394,8 +361,6 @@ def getReply(msg, number):
         if(msg == "for here" or msg == "fo here" or msg == "for her" or msg == "for herw" or msg == "for herr" or msg == "here"):
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", 0)
-            tickets = database.get("/users/" + str(usrIndx) +"/restaurant/", estName)
-            database.put("/users/", "/" + str(usrIndx) + "/restaurants/" + estName + "/" + str(len(tickets)-1)+"/to-go/", [0])
             client.send_message({
                 'from': NexmoNumber,
                 'to': number,
@@ -433,7 +398,7 @@ def getReply(msg, number):
             'to': number,
             'text': "Burger with bacon and cheese, no avacado"
         })
-        time.sleep(0.25)
+        time.sleep(0.75)
         print("m2")
         client.send_message({
             'from': NexmoNumber,
@@ -558,4 +523,4 @@ def inbound_sms():
 
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5000)
