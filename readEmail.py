@@ -65,14 +65,18 @@ for mail_id in imapper.listids(limit=100):
     zipCitySearch = search.by_zipcode(zipCode).common_city_list
     score = 0
     city = ""
-    for cities in range(len(zipCitySearch)):
-        newScore = fuzz.partial_ratio(streetAdrCity,str(zipCitySearch[cities]).upper())
-        if(newScore > score):
-            score = newScore
-            city = str(zipCitySearch[cities]).upper()
-    cityIndx = streetAdrCity.find(city)
-    streetAdr = streetAdrCity[:cityIndx]
-    print(streetAdr,city,zipCode,name,email)
+    if(zipCitySearch != None):
+        for cities in range(len(zipCitySearch)):
+            newScore = fuzz.partial_ratio(streetAdrCity,str(zipCitySearch[cities]).upper())
+            if(newScore > score):
+                score = newScore
+                city = str(zipCitySearch[cities]).upper()
+        cityIndx = streetAdrCity.find(city)
+        streetAdr = streetAdrCity[:cityIndx]
+        print(streetAdr,city,zipCode,name,email)
+    else:
+        pass
+
 
 
     ''' 

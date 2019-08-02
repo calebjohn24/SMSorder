@@ -1,7 +1,6 @@
 import datetime
 import json
 import random
-import time
 from bs4 import BeautifulSoup
 import uszipcode
 import easyimap
@@ -38,7 +37,7 @@ def genUsr(name, number):
     timeStamp = datetime.datetime.today()
     database.put("/users/", "/" + str(len(UserData)) + "/name", name)
     database.put("/users/", "/" + str(len(UserData)) + "/number", number)
-    database.put("/users/", "/" + str(len(UserData)) + "/restaurants/" + estName + "/" + str(0) + "/time",
+    database.put("/users/", "/" + str(len(UserData)) + "/restaurants/" + estName + "/" + str(0) + "/StartTime",
                  str(timeStamp))
     database.put("/users/","/" + str(len(UserData)) + "/restaurants/" + estName + "/" + str(0) + "/loyaltyCard",0)
 
@@ -56,7 +55,8 @@ def verifyPayment(UUIDcode, indxFB, usrIndx):
             mail = imapper.mail(mail_id)
             bodyText = (mail.body)
             bodyText = bodyText.lower()
-            UUID = (bodyText[(bodyText.find("uuid") + 5): ((bodyText.find("uuid")) + 9)])
+            UUID = (bodyText[(bodyText.find("uuid") + 5): ((bodyText.find("uuid")) + 10)])
+            print(UUIDcode,UUID)
             bodyText = (mail.body)
             soup = BeautifulSoup(bodyText, 'lxml')
             bodyText = (soup.get_text())
@@ -95,14 +95,18 @@ def verifyPayment(UUIDcode, indxFB, usrIndx):
             zipCitySearch = search.by_zipcode(zipCode).common_city_list
             score = 0
             city = ""
-            for cities in range(len(zipCitySearch)):
-                newScore = fuzz.partial_ratio(streetAdrCity, str(zipCitySearch[cities]).upper())
-                if (newScore > score):
-                    score = newScore
-                    city = str(zipCitySearch[cities]).upper()
-            cityIndx = streetAdrCity.find(city)
-            streetAdr = streetAdrCity[:cityIndx]
-            print(streetAdr, city, zipCode, name, email)
+            streetAdr = ""
+            if (zipCitySearch != None):
+                for cities in range(len(zipCitySearch)):
+                    newScore = fuzz.partial_ratio(streetAdrCity, str(zipCitySearch[cities]).upper())
+                    if (newScore > score):
+                        score = newScore
+                        city = str(zipCitySearch[cities]).upper()
+                cityIndx = streetAdrCity.find(city)
+                streetAdr = streetAdrCity[:cityIndx]
+                print(streetAdr, city, zipCode, name, email)
+            else:
+                pass
             if (UUID == UUIDcode):
                 print("order found")
                 database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "/paid/", 1)
@@ -319,7 +323,7 @@ def translateOrder(msg, indxFB):
     order += ('proces. fee ${0}'.format(format(fee, ',.2f'))) + "\n"
     order += ('total ${0}'.format(format(total, ',.2f'))) + "\n"
     print(order)
-    order += 'if everything looks good enter "ok" otherwise enter "help"\n'
+    order += 'if everything looks good enter "OK" otherwise enter "HELP"\n'
     total = 0.01  # delete line
     database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "total/", total)
     usrIndx = DBdata[indxFB]["userIndx"]
@@ -349,6 +353,7 @@ def genPayment(total, name, UUIDcode):
     print(UUIDcode)
     paymentLink = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alan.john@cedarrobots.com&currency_code=USD&amount=' \
                   '' + str(total) + '&return=http://cedarrobots.com&item_name=' + str(name) + "-UUID-" + str(UUIDcode)
+
     return paymentLink
 
 
@@ -382,7 +387,7 @@ def getReply(msg, number):
                 database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                              (len(numOrders)))
                 database.put("/users/",
-                             "/" + str(usr) + "/restaurants/" + estName + "/" + str((len(numOrders))) + "/time",
+                             "/" + str(usr) + "/restaurants/" + estName + "/" + str((len(numOrders))) + "/Starttime",
                              str(timeStamp))
 
                 break
@@ -411,6 +416,7 @@ def getReply(msg, number):
                 indx = db
                 break
             elif ((len(DBdata) - db) == 1):
+                print("no msg")
                 return 200
         if (DBdata[indx]['stage'] == 1):
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/name/", str(msg).capitalize())
@@ -467,10 +473,8 @@ def getReply(msg, number):
                              (len(numOrders) - 1)) + "/pickup-time",
                          str(msg))
             reply = "Got it!, you can " \
-                    "view the menu here " + link + " please " \
-                                                   "enter you order now " + "text us items " \
-                                                                              "one by one in Different Texts like this, " \
-                                                                              "you can also enter any promo codes at this time"
+                    "view the menu here " + link + " enter your items and promo-codes one by one in DIFFERENT TEXTS " \
+                                                   "Enter " +'"DONE" when finished'
 
             client.send_message({
                 'from': NexmoNumber,
@@ -478,20 +482,6 @@ def getReply(msg, number):
                 'text': reply
             })
             print("m0")
-            time.sleep(0.5)
-            client.send_message({
-                'from': NexmoNumber,
-                'to': number,
-                'text': 'Quantity, Item Name, toppings add, "no" toppings to remove'
-            })
-            time.sleep(0.5)
-            print("jk")
-            client.send_message({
-                'from': NexmoNumber,
-                'to': number,
-                'text': 'text "done" once your finished'
-            })
-            time.sleep(0.5)
             return reply
 
         elif (DBdata[indx]['stage'] == 4):
@@ -520,10 +510,17 @@ def getReply(msg, number):
                 return
         elif (DBdata[indx]['stage'] == 5):
             if (msg == "ok"):
+                timeStamp = datetime.datetime.today()
+                usrIndx = DBdata[indx]["userIndx"]
+                numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estName)
+                database.put("/users/",
+                             "/" + str(usrIndx) + "/restaurants/" + estName + "/" + str(
+                                 (len(numOrders) - 1)) + "/EndTime",
+                             timeStamp)
                 total = DBdata[indx]['total']
                 UUID = DBdata[indx]['UUID']
                 name = DBdata[indx]['name']
-                reply = 'thanks, please click the link below to pay if you want to pay cash enter "cash"\n ' \
+                reply = 'thanks, please click the link below to pay if you want to pay cash enter "CASH"\n ' \
                         "" + genPayment(total, name, UUID)
                 client.send_message({
                     'from': NexmoNumber,
@@ -589,9 +586,8 @@ def getReply(msg, number):
                     'to': number,
                     'text': reply
                 })
-            elif (
-                    msg == "ok" or msg == "yes" or msg == "sure" or msg == "ye" or msg == "yep" or msg == "yup"
-                    or msg == "i do" or msg == "y" or msg == "i do want one" or msg == "yeah" or msg == "yea"):
+            elif ((msg == "ok" or msg == "yes" or msg == "sure" or msg == "ye" or msg == "yep" or msg == "yup"
+                    or msg == "i do" or msg == "y" or msg == "i do want one" or msg == "yeah" or msg == "yea") and DBdata[indx]['paid'] == 1):
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/loyaltyCard/", "sign-up")
                 usrIndx = DBdata[indx]["userIndx"]
                 numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estName)
@@ -605,6 +601,8 @@ def getReply(msg, number):
                     'to': number,
                     'text': reply
                 })
+                return reply
+                logOrder(indx, number)
             elif (msg == "no" or msg == "don't" or msg == "nope" or msg == "nah" or msg == "n" or
                   msg == "no thanks" or msg == "nop" or msg == "i don't want one" or msg == "i don't" or msg == "i dont" or msg == "i dont want one"):
                 reply = "No problem! enjoy your order!"
@@ -614,10 +612,12 @@ def getReply(msg, number):
                     'to': number,
                     'text': reply
                 })
-            logOrder(indx, number)
-            return reply
+                logOrder(indx, number)
+                return reply
+            else:
+                return 200
         else:
-            return 0
+            return 200
 
 
 
