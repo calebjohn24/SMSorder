@@ -1,7 +1,8 @@
-- scrape paypal emails
+- re do payment verification
 - save new users x
 - find old users in DB x
 - add coupons(load)
 - add coupns (apply)
 - save easy order
+- fix quantity size mix up
 4.81740 - 4.74300

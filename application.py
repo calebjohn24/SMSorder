@@ -10,17 +10,30 @@ from firebase import firebase
 from flask import Flask, request
 from fuzzywuzzy import fuzz
 from words2num import w2n
+import urllib.request
+import paypalrestsdk
+from werkzeug.datastructures import ImmutableOrderedMultiDict
+
 
 database = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
 with open('menu.json') as data_file:
     data = json.load(data_file)
 
+
+paypalClient = "AbnvQxz3b9dhXBe_sQyCER6mrviKkOGoPltfEwQB28_f_gbptqAYSocORdwPJJ42lxDtVfZVIDv38dWl"
+paypalSecret = "EIiJshTzYsufiKZmB8sYjpEiJLirn5O9D7K-2Y5B3aeJjSkjClg_ruhGsnua9o7UM3RttsofUFGG3xnh"
+VERIFY_URL_PROD = 'https://ipnpb.paypal.com/cgi-bin/webscr'
+VERIFY_URL_TEST = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr'
 foodItems = (data['items'])
 items = []
 login = "payments@cedarrobots.com"
 password = "CedarPayments1!"
 
 promoPass = "asnifnr10002"
+paypalrestsdk.configure({
+  "mode": "sandbox", # sandbox or live
+  "client_id": paypalClient,
+  "client_secret": paypalSecret })
 
 client = nexmo.Client(key='8558cb90', secret='PeRbp1ciHeqS8sDI')
 
@@ -351,10 +364,12 @@ def logOrder(tix, number):
 
 def genPayment(total, name, UUIDcode):
     print(UUIDcode)
+    apiurl = "http://tinyurl.com/api-create.php?url="
     paymentLink = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alan.john@cedarrobots.com&currency_code=USD&amount=' \
                   '' + str(total) + '&return=http://cedarrobots.com&item_name=' + str(name) + "-UUID-" + str(UUIDcode)
-
-    return paymentLink
+    tinyurl = urllib.request.urlopen(apiurl + paymentLink).read()
+    shortLink =tinyurl.decode("utf-8")
+    return shortLink
 
 
 def getReply(msg, number):
@@ -536,7 +551,7 @@ def getReply(msg, number):
                 loyaltyCard = numOrders[0]["loyaltyCard"]
                 cash = DBdata[indx]["cash"]
                 if (cash != 1):
-                    if (loyaltyCard == 1):
+                    if (loyaltyCard == 0):
                         client.send_message({
                             'from': NexmoNumber,
                             'to': number,
@@ -549,7 +564,6 @@ def getReply(msg, number):
                             'to': number,
                             'text': "your order has been processed and will be ready shortly! we've added points to your loyalty card"
                         })
-                        logOrder(indx, number)
                     usrIndx = DBdata[indx]["userIndx"]
                     numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estName)
                     database.put("/users/",
@@ -586,8 +600,9 @@ def getReply(msg, number):
                     'to': number,
                     'text': reply
                 })
+                #logOrder(indx,number)
             elif ((msg == "ok" or msg == "yes" or msg == "sure" or msg == "ye" or msg == "yep" or msg == "yup"
-                    or msg == "i do" or msg == "y" or msg == "i do want one" or msg == "yeah" or msg == "yea") and DBdata[indx]['paid'] == 1):
+                    or msg == "i do" or msg == "y" or msg == "i do want one" or msg == "yeah" or msg == "yea" or msg == "alright") and DBdata[indx]['paid'] == 1):
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/loyaltyCard/", "sign-up")
                 usrIndx = DBdata[indx]["userIndx"]
                 numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estName)
@@ -601,8 +616,8 @@ def getReply(msg, number):
                     'to': number,
                     'text': reply
                 })
-                return reply
                 logOrder(indx, number)
+                return reply
             elif (msg == "no" or msg == "don't" or msg == "nope" or msg == "nah" or msg == "n" or
                   msg == "no thanks" or msg == "nop" or msg == "i don't want one" or msg == "i don't" or msg == "i dont" or msg == "i dont want one"):
                 reply = "No problem! enjoy your order!"
@@ -632,6 +647,16 @@ def inbound_sms():
     getReply(msg, number)
 
     return ('', 200)
+
+
+
+@app.route('/ipn', methods=['POST'])
+def ipn():
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = (json.dumps(request.form))
+    print(rsp)
+    return (" ",200)
+
 
 
 # when you run the code through terminal, this will allow Flask to work

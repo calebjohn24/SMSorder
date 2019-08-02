@@ -3,6 +3,6 @@ account_sid = 'AC94b7b349a46b465fdbbf5ac96751f307'
 auth_token = 'ea1399fcefbb293f5ab25254535d3a8a'
 https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alan.john@cedarrobots.com&currency_code=USD&amount=123.99&return=http://example.com&item_name=Coffee
 https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alan.john%40cedarrobots.com%2eorg&item_name=Item%20UUID&amount=19%2e99&currency_code=USD
-https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alan.john@cedarrobots.com&currency_code=USD&amount=0.01&return=http://cedarrobots.com&item_name=TestItem
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-ninhv43009@business.example.com&currency_code=USD&amount=1.11&item_name=TestItem
 
 
