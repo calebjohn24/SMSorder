@@ -12,7 +12,7 @@ from fuzzywuzzy import fuzz
 from werkzeug.datastructures import ImmutableOrderedMultiDict
 from words2num import w2n
 
-database = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
+database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/")
 with open('menu.json') as data_file:
     data = json.load(data_file)
 

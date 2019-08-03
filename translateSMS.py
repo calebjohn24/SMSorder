@@ -7,7 +7,7 @@ with open('menu.json') as data_file:
     data = json.load(data_file)
 
 foodItems = (data['items'])
-userOrder = "Burger with Bacon and cheese. TWOBURG"
+userOrder = "12 oz. Bees knees with extra honey"
 removelex = ["without", "no", "remove", "take out", "w/o", "take off"]
 addlex = ["with", "add", "more", "w/", "include"]
 itemIndxs = []
@@ -89,10 +89,22 @@ for item in range(len(items)):
         itemX = pos[nameIndx][0]
         # print(itemX)
         if (itemXtag == "NN" or itemXtag == "NNS"):
-            name += itemX
-            nameFlag = 1
-            pos.pop(nameIndx)
-            break
+            if((len(pos))- nameIndx != 1):
+                if(pos[nameIndx + 1][1] == "NN" or pos[nameIndx + 1][1] == "NNS"):
+                    name += itemX
+                    # nameIndx += 1
+                    name += " "
+                    pos.pop(nameIndx)
+                else:
+                    name += itemX
+                    nameFlag = 1
+                    pos.pop(nameIndx)
+                    break
+            else:
+                name += itemX
+                nameFlag = 1
+                pos.pop(nameIndx)
+                break
         elif (itemXtag == "JJ" or itemXtag == "VBD" or itemXtag == "RB" or itemXtag == "RB" or itemXtag == "RBR"):
             name += itemX
             # nameIndx += 1
