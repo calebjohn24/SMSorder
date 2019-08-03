@@ -3,4 +3,7 @@
   {"name": "ICED COFFEE", "sizes": [["8 oz", 2.5], ["12 oz", 2.75], ["16 oz", 3.0]], "extras": [["CREAM", 0.0], ["CHOCOLATE-SAUCE", 1.0], ["CARAMEL-SAUCE", 0.5]]},
   {"name": "CHICKEN BURGER", "sizes": [["U", 5.45]], "extras": [["HOT-SAUCE", 0.25], ["BACON", 0.75], ["AVACADO", 1.25]]},
   {"name": "COFFEE", "sizes": [["SMALL", 2.0], ["MEDIUM", 2.75], ["LARGE", 3.5]], "extras": [["CREAM", 0.0], ["SUGAR", 0.0], ["ESPRESSO", 1.0]]},
-  {"name": "TEA", "sizes": [["SMALL", 3.0], ["MEDIUM", 3.5], ["LARGE", 4.0]], "extras": [["MILK", 0.0], ["SUGAR", 0.25]]}]}
+  {"name": "TEA", "sizes": [["SMALL", 3.0], ["MEDIUM", 3.5], ["LARGE", 4.0]], "extras": [["MILK", 0.0], ["SUGAR", 0.25]]},
+  {"name": "HALFCOF", "sizes": [["u",-1]], "extras": [["12 oz ICED COFFEE", "0.5%"]]},
+  {"name": "TWOBURG", "sizes": [["u",-1]], "extras": [["BURGER", 2.0]]}
+]}

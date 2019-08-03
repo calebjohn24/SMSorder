@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/proscessPaypal.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menu.json" beforeDir="false" afterPath="$PROJECT_DIR$/menu.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/phone.txt" beforeDir="false" afterPath="$PROJECT_DIR$/phone.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testPaypal.py" beforeDir="false" afterPath="$PROJECT_DIR$/testPaypal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/todo.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translateSMS.py" beforeDir="false" afterPath="$PROJECT_DIR$/translateSMS.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,8 +23,8 @@
       <file leaf-file-name="application.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="656" column="14" lean-forward="true" selection-start-line="656" selection-start-column="14" selection-end-line="656" selection-end-column="14" />
+            <state relative-caret-position="161">
+              <caret line="657" column="102" selection-start-line="657" selection-start-column="102" selection-end-line="657" selection-end-column="102" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -33,11 +32,29 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="translateSMS.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/translateSMS.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="25">
+              <caret line="143" column="8" selection-start-line="143" selection-start-column="8" selection-end-line="143" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="menu.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/menu.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="175">
+              <caret line="7" column="68" selection-start-line="7" selection-start-column="68" selection-end-line="7" selection-end-column="68" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="phone.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/phone.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-end-line="5" selection-end-column="150" />
+            <state relative-caret-position="175">
+              <caret line="7" selection-start-line="7" selection-end-line="7" />
             </state>
           </provider>
         </entry>
@@ -54,8 +71,8 @@
       <file leaf-file-name="proscessPaypal.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/proscessPaypal.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="18" column="20" lean-forward="true" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
+            <state relative-caret-position="225">
+              <caret line="18" column="20" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -96,10 +113,8 @@
       <find>indxFB</find>
       <find>print(U</find>
       <find>hi</find>
-      <find>hi</find>
       <find>do y</find>
       <find>No pr</find>
-      <find>print</find>
       <find>numOr</find>
       <find>(len(numOrders) - 1)</find>
       <find>(len(numOrders) - 2)</find>
@@ -107,6 +122,8 @@
       <find>&quot;ok</find>
       <find>time</find>
       <find>times</find>
+      <find>log</find>
+      <find>print</find>
     </findStrings>
     <replaceStrings>
       <replace>0.25</replace>
@@ -136,20 +153,20 @@
         <option value="$PROJECT_DIR$/readEmail2.py" />
         <option value="$PROJECT_DIR$/data.txt" />
         <option value="$PROJECT_DIR$/simpleSMSresp.py" />
-        <option value="$PROJECT_DIR$/translateSMS.py" />
         <option value="$PROJECT_DIR$/testChar.py" />
-        <option value="$PROJECT_DIR$/menu.json" />
         <option value="$PROJECT_DIR$/fbtest.py" />
         <option value="$PROJECT_DIR$/readEmail.py" />
         <option value="$PROJECT_DIR$/todo.txt" />
-        <option value="$PROJECT_DIR$/phone.txt" />
         <option value="$PROJECT_DIR$/testPaypal.py" />
-        <option value="$PROJECT_DIR$/application.py" />
         <option value="$PROJECT_DIR$/proscessPaypal.py" />
+        <option value="$PROJECT_DIR$/phone.txt" />
+        <option value="$PROJECT_DIR$/menu.json" />
+        <option value="$PROJECT_DIR$/translateSMS.py" />
+        <option value="$PROJECT_DIR$/application.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
     <option name="width" value="1920" />
     <option name="height" value="992" />
@@ -160,6 +177,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -171,7 +189,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -191,7 +208,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.proscessPaypal">
+  <component name="RunManager" selected="Python.application">
     <configuration name="application" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SMSorder" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -329,10 +346,10 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.proscessPaypal" />
-        <item itemvalue="Python.testPaypal" />
         <item itemvalue="Python.application" />
         <item itemvalue="Python.translateSMS" />
+        <item itemvalue="Python.proscessPaypal" />
+        <item itemvalue="Python.testPaypal" />
         <item itemvalue="Python.simpleSMSresp" />
       </list>
     </recent_temporary>
@@ -474,18 +491,26 @@
       <option name="project" value="LOCAL" />
       <updated>1564707042514</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="added IPN request still need to integrate with bot">
+      <created>1564733634877</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1564733634877</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1920" height="992" extended-state="6" />
+    <frame x="0" y="23" width="1920" height="1057" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49479166" visible="true" weight="0.11532386" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.51269037" side_tool="true" weight="0.32178771" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Python Console" order="7" sideWeight="0.49936548" weight="0.32960895" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48730963" visible="true" weight="0.29832402" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48730963" visible="true" weight="0.3" />
       <window_info id="Structure" order="1" sideWeight="0.5052083" side_tool="true" weight="0.11532386" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.535533" weight="0.326257" />
       <window_info id="Favorites" order="2" sideWeight="0.50082374" side_tool="true" weight="0.3001269" />
@@ -501,21 +526,21 @@
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4962853" visible="true" weight="0.13744076" />
       <window_info id="Structure" order="1" sideWeight="0.5037147" side_tool="true" visible="true" weight="0.13744076" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48730963" visible="true" weight="0.29895833" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Python Console" order="7" sideWeight="0.49936548" weight="0.32960895" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4997367" weight="0.4" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.535533" weight="0.326257" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.51269037" side_tool="true" weight="0.32178771" />
-      <window_info anchor="bottom" id="Version Control" order="10" />
-      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50082374" side_tool="true" weight="0.3001269" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Python Console" order="7" sideWeight="0.49936548" weight="0.32960895" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -533,20 +558,65 @@
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="minor bug fix on order logging, added timing for orders" />
     <MESSAGE value="added email scraping" />
-    <option name="LAST_COMMIT_MESSAGE" value="added email scraping" />
+    <MESSAGE value="added IPN request still need to integrate with bot" />
+    <option name="LAST_COMMIT_MESSAGE" value="added IPN request still need to integrate with bot" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/application.py</url>
-          <line>638</line>
+          <line>625</line>
         </line-breakpoint>
       </breakpoints>
       <option name="time" value="1" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/application.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14075">
+          <caret line="575" column="43" selection-start-line="575" selection-start-column="43" selection-end-line="575" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phone.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/todo.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="10" selection-start-column="10" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/proscessPaypal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="18" column="20" lean-forward="true" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testPaypal.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/translateSMS.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2250">
+          <caret line="93" column="91" selection-start-line="93" selection-start-column="91" selection-end-line="93" selection-end-column="91" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14325">
@@ -669,20 +739,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/menu.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="87">
-          <caret line="3" column="65" selection-start-line="3" selection-start-column="65" selection-end-line="3" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/translateSMS.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-754">
-          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/simpleSMSresp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="812">
@@ -726,8 +782,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/proscessPaypal.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="18" column="20" lean-forward="true" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
+        <state relative-caret-position="225">
+          <caret line="18" column="20" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -741,17 +797,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/werkzeug/serving.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="967" selection-start-line="967" selection-end-line="967" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/phone.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-end-line="5" selection-end-column="150" />
+        <state relative-caret-position="175">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/menu.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="7" column="68" selection-start-line="7" selection-start-column="68" selection-end-line="7" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/translateSMS.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="143" column="8" selection-start-line="143" selection-start-column="8" selection-end-line="143" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="656" column="14" lean-forward="true" selection-start-line="656" selection-start-column="14" selection-end-line="656" selection-end-column="14" />
+        <state relative-caret-position="161">
+          <caret line="657" column="102" selection-start-line="657" selection-start-column="102" selection-end-line="657" selection-end-column="102" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
