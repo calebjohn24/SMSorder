@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added coupon support, rebuilt translation engine">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bugfix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GenJson.py" beforeDir="false" afterPath="$PROJECT_DIR$/GenJson.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translateSMS.py" beforeDir="false" afterPath="$PROJECT_DIR$/translateSMS.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -382,7 +380,14 @@
       <option name="project" value="LOCAL" />
       <updated>1565309803548</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="minor bugfix">
+      <created>1565311863960</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1565311863960</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -413,6 +418,7 @@
     <MESSAGE value="added IPN request still need to integrate with bot" />
     <MESSAGE value="added coupon support" />
     <MESSAGE value="added coupon support, rebuilt translation engine" />
-    <option name="LAST_COMMIT_MESSAGE" value="added coupon support, rebuilt translation engine" />
+    <MESSAGE value="minor bugfix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bugfix" />
   </component>
 </project>
