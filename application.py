@@ -136,6 +136,15 @@ def translateOrder(msg, indxFB):
             tokens.insert(frrIndx, str(fractions[tokenFrIndx][1]))
             tokens.pop((frrIndx + 1))
 
+        for bb in range(len(tokens)):
+            try:
+                print(tokens[bb])
+                print(w2n(tokens[bb]))
+                tokens.insert(bb, str(w2n(tokens[bb])))
+                tokens.pop(bb + 1)
+            except:
+                pass
+
         for mm in range(len(tokens)):
             for ltrs in range(len(tokens[mm])):
                 tokenizedToken.append([str(tokens[mm][ltrs]), mm])
@@ -357,7 +366,6 @@ def translateOrder(msg, indxFB):
                             spIndx = sppR
                             aLexIndx = rLex
                             remNameIndxs.append(sppR)
-
                 if (len(spellChkTokens) > 0):
                     if (len(remNameIndxs) != 0 and len(addwordIndxs) != 0):
                         state = 0

@@ -3,10 +3,11 @@ import nltk
 from fuzzywuzzy import fuzz
 from words2num import w2n
 from spellchecker import SpellChecker
+import num2words
 
 with open('menu.json') as data_file:
     data = json.load(data_file)
-userOrder = "Burger with avacado and bacon;12 oz iced coffee with carmel sauce"
+userOrder = "twelve ounce iced coffee"
 
 foodItems = (data['items'])
 
@@ -79,6 +80,15 @@ for item in range(len(items)):
     if (frrIndx != -1):
         tokens.insert(frrIndx, str(fractions[tokenFrIndx][1]))
         tokens.pop((frrIndx+1))
+
+    for bb in range(len(tokens)):
+        try:
+            print(tokens[bb])
+            print(w2n(tokens[bb]))
+            tokens.insert(bb,str(w2n(tokens[bb])))
+            tokens.pop(bb+1)
+        except:
+            pass
 
     for mm in range(len(tokens)):
         for ltrs in range(len(tokens[mm])):
