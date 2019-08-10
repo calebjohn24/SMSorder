@@ -7,7 +7,7 @@ import num2words
 
 with open('menu.json') as data_file:
     data = json.load(data_file)
-userOrder = "twelve ounce iced coffee"
+userOrder = "twelve ounce iced coffee with cream and chochalte sauce"
 
 foodItems = (data['items'])
 
@@ -284,6 +284,7 @@ for item in range(len(items)):
         price += data['items'][nameIndx]['sizes'][sizeIndx][1]
         name = str(data['items'][nameIndx]['name']).lower()
         size = str(data['items'][nameIndx]['sizes'][sizeIndx][0]).lower()
+        print(newScore)
         testScore = 0
         remNameIndxs = []
         if(sizeFlag == 0):

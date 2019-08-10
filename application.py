@@ -61,8 +61,8 @@ def verifyPayment(indxFB):
         DBdata = database.get("/restaurants/" + estName, "orders")
         code = DBdata[indxFB]["paid"]
         cash = DBdata[indxFB]["cash"]
-        if (code == 1):
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)-1) + "/", "/filled/", "1")
+        if (code == 1 or cash == "CASH"):
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata) - 1) + "/", "/filled/", "1")
             break
     return "found"
 
@@ -74,6 +74,7 @@ def translateOrder(msg, indxFB):
     spell = SpellChecker()
     userOrder = userOrder.lower()
     userOrder = userOrder.replace('oz.', 'oz')
+    userOrder = userOrder.replace('\n', ';')
     userOrder = userOrder.replace('pc.', 'pc')
     userOrder = userOrder.replace('pce.', 'pce')
     userOrder = userOrder.replace('pcs.', 'pcs')
@@ -165,15 +166,16 @@ def translateOrder(msg, indxFB):
                 newStr += str(tokenizedToken[tk0][0])
                 currentNum = tokenizedToken[tk0][1]
             elif (tokenizedToken[tk0][1] == 1000):
-                if (tokenizedToken[tk0 + 1][1] == currentNum):
-                    try:
-                        int(tokenizedToken[tk0 + 1][0])
-                        pass
-                    except ValueError:
-                        if (tokenizedToken[tk0 + 1][0] == "."):
+                if(len(tokenizedToken) - tk0 > 2):
+                    if (tokenizedToken[tk0 + 1][1] == currentNum):
+                        try:
+                            int(tokenizedToken[tk0 + 1][0])
                             pass
-                        else:
-                            newStr += " "
+                        except ValueError:
+                            if (tokenizedToken[tk0 + 1][0] == "."):
+                                pass
+                            else:
+                                newStr += " "
 
             else:
                 newStr += " "
@@ -341,144 +343,115 @@ def translateOrder(msg, indxFB):
             price += data['items'][nameIndx]['sizes'][sizeIndx][1]
             name = str(data['items'][nameIndx]['name']).lower()
             size = str(data['items'][nameIndx]['sizes'][sizeIndx][0]).lower()
-            testScore = 0
-            remNameIndxs = []
-            if (sizeFlag == 0):
-                lenName = len(name.split()) + len(size.split())
-            else:
-                lenName = len(name.split())
+            print(newScore)
+            if(newScore > 15):
+                remNameIndxs = []
+                if (sizeFlag == 0):
+                    lenName = len(name.split()) + len(size.split())
+                else:
+                    lenName = len(name.split())
 
-            spellChkTokens = spellChkTokens[lenName:]
-            if (len(spellChkTokens) > 0):
-                for spp in range(len(spellChkTokens)):
-                    for aLex in range(len(addlex)):
-                        newScore = fuzz.ratio(addlex[aLex], spellChkTokens[spp])
-                        if (newScore > 85):
-                            addScore = newScore
-                            spIndx = spp
-                            aLexIndx = aLex
-                            addwordIndxs.append(spp)
-
-                for sppR in range(len(spellChkTokens)):
-                    for rLex in range(len(removelex)):
-                        newScore = fuzz.ratio(removelex[rLex], spellChkTokens[sppR])
-                        # print(removelex[rLex], spellChkTokens[sppR], newScore)
-                        if (newScore > 85):
-                            addScore = newScore
-                            spIndx = sppR
-                            aLexIndx = rLex
-                            remNameIndxs.append(sppR)
+                spellChkTokens = spellChkTokens[lenName:]
                 if (len(spellChkTokens) > 0):
-                    if (len(remNameIndxs) != 0 and len(addwordIndxs) != 0):
-                        state = 0
-                        currentWord = 0
-                        for remEx in range(len(spellChkTokens)):
-                            for hh in range(len(remNameIndxs)):
-                                if (remNameIndxs[hh] == remEx):
-                                    state = 1
-                                    currentWord = 1
-                                    break
-                                else:
-                                    currentWord = 0
-                            for yy in range(len(addwordIndxs)):
-                                if (addwordIndxs[yy] == remEx):
-                                    state = 0
-                                    currentWord = 1
-                                    break
-                                else:
-                                    currentWord = 0
-                            if (currentWord == 0):
-                                if (state == 0):
+                    for spp in range(len(spellChkTokens)):
+                        for aLex in range(len(addlex)):
+                            newScore = fuzz.ratio(addlex[aLex], spellChkTokens[spp])
+                            if (newScore > 85):
+                                addScore = newScore
+                                spIndx = spp
+                                aLexIndx = aLex
+                                addwordIndxs.append(spp)
+
+                    for sppR in range(len(spellChkTokens)):
+                        for rLex in range(len(removelex)):
+                            newScore = fuzz.ratio(removelex[rLex], spellChkTokens[sppR])
+                            # print(removelex[rLex], spellChkTokens[sppR], newScore)
+                            if (newScore > 85):
+                                addScore = newScore
+                                spIndx = sppR
+                                aLexIndx = rLex
+                                remNameIndxs.append(sppR)
+                    if (len(spellChkTokens) > 0):
+                        if (len(remNameIndxs) != 0 and len(addwordIndxs) != 0):
+                            state = 0
+                            currentWord = 0
+                            for remEx in range(len(spellChkTokens)):
+                                for hh in range(len(remNameIndxs)):
+                                    if (remNameIndxs[hh] == remEx):
+                                        state = 1
+                                        currentWord = 1
+                                        break
+                                    else:
+                                        currentWord = 0
+                                for yy in range(len(addwordIndxs)):
+                                    if (addwordIndxs[yy] == remEx):
+                                        state = 0
+                                        currentWord = 1
+                                        break
+                                    else:
+                                        currentWord = 0
+                                if (currentWord == 0):
+                                    if (state == 0):
+                                        extras.append(spellChkTokens[remEx])
+                                    elif (state == 1):
+                                        notes += " "
+                                        notes += spellChkTokens[remEx]
+                        elif (len(remNameIndxs) != 0 and len(addwordIndxs) == 0):
+                            state = 0
+                            currentWord = 0
+                            for remEx in range(len(spellChkTokens)):
+                                for yy in range(len(remNameIndxs)):
+                                    if (remNameIndxs[yy] == remEx):
+                                        state = 1
+                                        currentWord = 1
+                                        break
+                                    else:
+                                        currentWord = 0
+                                if (currentWord == 0):
+                                    if (state == 0):
+                                        extras.append(spellChkTokens[remEx])
+                                    elif (state == 1):
+                                        notes += "no "
+                                        notes += spellChkTokens[remEx]
+                        elif (len(remNameIndxs) == 0 and len(addwordIndxs) != 0):
+                            state = 0
+                            currentWord = 0
+                            for remEx in range(len(spellChkTokens)):
+                                # print(spellChkTokens[remEx])
+                                for yy in range(len(addwordIndxs)):
+                                    if (addwordIndxs[yy] == remEx):
+                                        currentWord = 1
+                                        break
+                                    else:
+                                        currentWord = 0
+                                if (currentWord == 0):
                                     extras.append(spellChkTokens[remEx])
-                                elif (state == 1):
-                                    notes += " "
-                                    notes += spellChkTokens[remEx]
-                    elif (len(remNameIndxs) != 0 and len(addwordIndxs) == 0):
-                        state = 0
-                        currentWord = 0
-                        for remEx in range(len(spellChkTokens)):
-                            for yy in range(len(remNameIndxs)):
-                                if (remNameIndxs[yy] == remEx):
-                                    state = 1
-                                    currentWord = 1
-                                    break
-                                else:
-                                    currentWord = 0
-                            if (currentWord == 0):
-                                if (state == 0):
-                                    extras.append(spellChkTokens[remEx])
-                                elif (state == 1):
-                                    notes += "no "
-                                    notes += spellChkTokens[remEx]
-                    elif (len(remNameIndxs) == 0 and len(addwordIndxs) != 0):
-                        state = 0
-                        currentWord = 0
-                        for remEx in range(len(spellChkTokens)):
-                            # print(spellChkTokens[remEx])
-                            for yy in range(len(addwordIndxs)):
-                                if (addwordIndxs[yy] == remEx):
-                                    currentWord = 1
-                                    break
-                                else:
-                                    currentWord = 0
-                            if (currentWord == 0):
+                        elif (len(remNameIndxs) == 0 and len(addwordIndxs) == 0):
+                            for remEx in range(len(spellChkTokens)):
                                 extras.append(spellChkTokens[remEx])
-                    elif (len(remNameIndxs) == 0 and len(addwordIndxs) == 0):
-                        for remEx in range(len(spellChkTokens)):
-                            extras.append(spellChkTokens[remEx])
-                            # print(spellChkTokens[remEx])
+                                # print(spellChkTokens[remEx])
 
-            if (notes != ""):
-                if (size != 'u'):
-                    writeStr += size
+                if (notes != ""):
+                    if (size != 'u'):
+                        writeStr += size
+                        writeStr += " "
+                    writeStr += name
+                    writeStr += ' '
+                    writeStr += notes
                     writeStr += " "
-                writeStr += name
-                writeStr += ' '
-                writeStr += notes
-                writeStr += " "
-            else:
+                else:
+                    if (size != 'u'):
+                        writeStr += size
+                        writeStr += " "
+                    writeStr += name
+                appStr = ""
                 if (size != 'u'):
-                    writeStr += size
-                    writeStr += " "
-                writeStr += name
-            appStr = ""
-            if (size != 'u'):
-                appStr += size
-                appStr += " "
-            appStr += name
-            itemsOrdered.append([appStr, price, quant])
-            if (len(extras) > 0):
-                writeStr += ""
-                extraIndxs = []
-                for e in range(len(extras)):
-                    exScore = 0
-                    exIndx = 0
-                    for ee in range(len(data['items'][nameIndx]['extras'])):
-                        compStr = data['items'][nameIndx]['extras'][ee][0]
-                        compStr = str(compStr.lower())
-                        newScore = fuzz.token_sort_ratio(compStr, extras[e])
-                        if (newScore > exScore):
-                            exScore = newScore
-                            extraIndx = ee
-                        elif (newScore == exScore):
-                            newScore = fuzz.ratio(compStr, testString)
-                            if (newScore > exScore):
-                                exScore = newScore
-                                extraIndx = ee
-                    extraIndxs.append([e, extraIndx])
-                newExStr = ''
-                remIndxs = []
-                for rr in range(len(extraIndxs)):
-                    exLen = len(str(data['items'][nameIndx]['extras'][extraIndxs[rr][1]][0]).split())
-                    print(str(data['items'][nameIndx]['extras'][extraIndxs[rr][1]][0]), exLen)
-                    if (exLen > 1):
-                        newExStr += extras[extraIndxs[rr][0]]
-                        remIndxs.append(extras[extraIndxs[rr][0]])
-
-                if (len(remIndxs) > 1):
-                    for rr in range(len(remIndxs)):
-                        extras.remove(remIndxs[rr])
-                    extras.append(newExStr)
+                    appStr += size
+                    appStr += " "
+                appStr += name
+                itemsOrdered.append([appStr, price, quant])
+                if (len(extras) > 0):
+                    writeStr += ""
                     extraIndxs = []
                     for e in range(len(extras)):
                         exScore = 0
@@ -496,22 +469,58 @@ def translateOrder(msg, indxFB):
                                     exScore = newScore
                                     extraIndx = ee
                         extraIndxs.append([e, extraIndx])
-                # print(extraIndxs)
-                for rrn in range(len(extraIndxs)):
-                    exV = (extraIndxs[rrn][1])
-                    writeStr += " add "
-                    writeStr += data['items'][nameIndx]['extras'][exV][0].lower()
-                    price += data['items'][nameIndx]['extras'][exV][1]
-                    print("inc3")
+                    newExStr = ''
+                    remIndxs = []
+                    for rr in range(len(extraIndxs)):
+                        exLen = len(str(data['items'][nameIndx]['extras'][extraIndxs[rr][1]][0]).split())
+                        print(str(data['items'][nameIndx]['extras'][extraIndxs[rr][1]][0]), exLen)
+                        if (exLen > 1):
+                            newExStr += extras[extraIndxs[rr][0]]
+                            remIndxs.append(extras[extraIndxs[rr][0]])
 
-            writeStr += " x "
-            writeStr += str(quant)
-            price = price * quant
-            subtotal += price
-            writeStr += " " + '${:0,.2f}'.format(price)
-            writeStr += "\n"
-            extras = []
-            notes = ''
+                    if (len(remIndxs) > 1):
+                        for rr in range(len(remIndxs)):
+                            extras.remove(remIndxs[rr])
+                        extras.append(newExStr)
+                        extraIndxs = []
+                        for e in range(len(extras)):
+                            exScore = 0
+                            exIndx = 0
+                            for ee in range(len(data['items'][nameIndx]['extras'])):
+                                compStr = data['items'][nameIndx]['extras'][ee][0]
+                                compStr = str(compStr.lower())
+                                newScore = fuzz.token_sort_ratio(compStr, extras[e])
+                                if (newScore > exScore):
+                                    exScore = newScore
+                                    extraIndx = ee
+                                elif (newScore == exScore):
+                                    newScore = fuzz.ratio(compStr, testString)
+                                    if (newScore > exScore):
+                                        exScore = newScore
+                                        extraIndx = ee
+                            extraIndxs.append([e, extraIndx])
+                    # print(extraIndxs)
+                    for rrn in range(len(extraIndxs)):
+                        exV = (extraIndxs[rrn][1])
+                        writeStr += " add "
+                        writeStr += data['items'][nameIndx]['extras'][exV][0].lower()
+                        price += data['items'][nameIndx]['extras'][exV][1]
+                        print("inc3")
+
+                writeStr += " x "
+                writeStr += str(quant)
+                price = price * quant
+                subtotal += price
+                writeStr += " " + '${:0,.2f}'.format(price)
+                writeStr += "\n"
+                extras = []
+                notes = ''
+            else:
+                writeStr += "INVALID ITEM"
+                writeStr += "\n"
+                extras = []
+                notes = ''
+
     usrIndx = DBdata[indxFB]["userIndx"]
     numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
     database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "finalOrder/", writeStr)
@@ -526,6 +535,7 @@ def translateOrder(msg, indxFB):
     writeStr += "tax " + '${:0,.2f}'.format(tax)
     writeStr += "\n"
     total = subtotal * 1.1
+    linkTotal = float(total)
     writeStr += "total " + '${:0,.2f}'.format(total)
     totalStr = ""+'${:0,.2f}'.format(total)
     writeStr += "\n"
@@ -533,6 +543,7 @@ def translateOrder(msg, indxFB):
     order = writeStr
     print(order)
     database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "total/", str(totalStr))
+    database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "linkTotal/", str(linkTotal))
     usrIndx = DBdata[indxFB]["userIndx"]
     numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
     database.put("/users/",
@@ -665,7 +676,7 @@ def getReply(msg, number):
                     'from': NexmoNumber,
                     'to': number,
                     'text': "Sounds good! your order will be " + "for-here\n" + "if you want"
-                                                                                " your order now enter" + ' "asap" otherwise enter the time your preferred time.(EX 11:15am)'
+                                                                                " your order now enter" + ' "asap" otherwise enter your preferred time.(EX 11:15am)'
                 })
             else:
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", "TO_GO")
@@ -683,7 +694,7 @@ def getReply(msg, number):
                                                                              " your order now enter " + '"asap" otherwise enter the time your preferred time.(EX 11:15am)'
                 })
         elif (DBdata[indx]['stage'] == 3):
-            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", msg)
+            database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", msg.upper())
             database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
             usrIndx = DBdata[indx]["userIndx"]
             numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
@@ -737,7 +748,7 @@ def getReply(msg, number):
                              "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                                  (len(numOrders) - 1)) + "/EndTime",
                              timeStamp)
-                total = DBdata[indx]['total']
+                total = DBdata[indx]['linkTotal']
                 UUID = DBdata[indx]['UUID']
                 name = DBdata[indx]['name']
                 reply = 'thanks, please click the link below to pay if you want to pay cash enter "CASH"\n ' \
@@ -780,8 +791,8 @@ def getReply(msg, number):
                 return reply
 
             elif (msg == "help"):
-                reply = "Sorry about that, please try re-entering your items, please text me items in this format\n " + "" \
-                                                                                                                        ' "Quantity, Item Name, toppings to add, "no" toppings to remove"'
+                reply = "-Sorry about that, please try re-entering your items, please text me items in this format\n " + "" \
+                                                                                                                        '-"Quantity, Item Name, toppings to add, "no" toppings to remove"'
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/unprocessedOrder/", "")
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
                 client.send_message({
