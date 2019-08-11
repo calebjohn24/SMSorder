@@ -1,15 +1,19 @@
-import json
 import nltk
 from fuzzywuzzy import fuzz
 from words2num import w2n
 from spellchecker import SpellChecker
 import num2words
 
-with open('menu.json') as data_file:
-    data = json.load(data_file)
-userOrder = "twelve ounce iced coffee with cream and chochalte sauce"
 
-foodItems = (data['items'])
+from firebase import firebase
+import json
+database = firebase.FirebaseApplication("https://cedarfb2.firebaseio.com/")
+uid = "JYzVI5fR5KW399swMP9zgEMNTxu2"
+data = (database.get("restaurants/" + uid,"/menu/items/"))
+
+userOrder = "8oz iced coffee with cream"
+
+foodItems = (data)
 
 couponflag = 0
 spell = SpellChecker()
@@ -127,37 +131,38 @@ for item in range(len(items)):
     cpnIndx = -1
     couponFlag = 0
     if(len(newTokens)==1):
-        for cpn in range(len(data['items'])):
-            #print(data['items'][cpn]['sizes'][0][1])
-            if(data['items'][cpn]['sizes'][0][1] == -1):
-                if(newTokens[0] == data['items'][cpn]['name'].lower()):
-                    print("coupon found")
-                    couponFlag = 100
-                    discAmt = data['items'][cpn]["extras"][0][1]
-                    numUsed = 1
-                    for hh in range(len(itemsOrdered)):
-                        scoreDisc = (fuzz.token_sort_ratio(itemsOrdered[hh][0],data['items'][cpn]['extras'][0][0].lower()))
-                        if(scoreDisc > 95):
-                            limit = data['items'][cpn]['extras'][1][1]
-                            if (type(discAmt) == str):
-                                discAmt = discAmt[:-1]
-                                discAmt = float(discAmt)
-                                discAmt = itemsOrdered[hh][1] * discAmt
-                                subtotal -= discAmt
-                            elif (type(discAmt) == float or type(discAmt) == int):
-                                discTotal = (discAmt)
-                                subtotal -= discAmt
-                            if(itemsOrdered[hh][2] > limit):
-                                while(limit > numUsed):
-                                    if (type(discAmt) == str):
-                                        discAmt = discAmt[:-1]
-                                        discAmt = float(discAmt)
-                                        discAmt = itemsOrdered[hh][1] * discAmt
-                                        subtotal -= discAmt
-                                    elif (type(discAmt) == float or type(discAmt) == int):
-                                        discTotal = (discAmt)
-                                        subtotal -= discAmt
-                                    numUsed += 1
+        for cpn in range(len(data)):
+            if (data[cpn] != None):
+                #print(data[cpn]['sizes'][0][1])
+                if(data[cpn]['sizes'][0][1] == -1):
+                    if(newTokens[0] == data[cpn]['name'].lower()):
+                        print("coupon found")
+                        couponFlag = 100
+                        discAmt = data[cpn]["extras"][0][1]
+                        numUsed = 1
+                        for hh in range(len(itemsOrdered)):
+                            scoreDisc = (fuzz.token_sort_ratio(itemsOrdered[hh][0],data[cpn]['extras'][0][0].lower()))
+                            if(scoreDisc > 95):
+                                limit = data[cpn]['extras'][1][1]
+                                if (type(discAmt) == str):
+                                    discAmt = discAmt[:-1]
+                                    discAmt = float(discAmt)
+                                    discAmt = itemsOrdered[hh][1] * discAmt
+                                    subtotal -= discAmt
+                                elif (type(discAmt) == float or type(discAmt) == int):
+                                    discTotal = (discAmt)
+                                    subtotal -= discAmt
+                                if(itemsOrdered[hh][2] > limit):
+                                    while(limit > numUsed):
+                                        if (type(discAmt) == str):
+                                            discAmt = discAmt[:-1]
+                                            discAmt = float(discAmt)
+                                            discAmt = itemsOrdered[hh][1] * discAmt
+                                            subtotal -= discAmt
+                                        elif (type(discAmt) == float or type(discAmt) == int):
+                                            discTotal = (discAmt)
+                                            subtotal -= discAmt
+                                        numUsed += 1
 
                     writeStr += items[item] + (' -${0}'.format(format(discAmt*numUsed, ',.2f')))
                     writeStr += " x " + str(numUsed)
@@ -206,39 +211,42 @@ for item in range(len(items)):
             testScore = 0
             nameIndx = 0
             sizeIndx = 0
-            for dataNM in range(len(data['items'])):
-                if(data['items'][dataNM]['sizes'][0][0] != "u"):
-                    for dataSZ in range(len(data['items'][dataNM]['sizes'])):
-                        compStr = data['items'][dataNM]['name'] + " " + data['items'][dataNM]['sizes'][dataSZ][0]
-                        compStr = str(compStr).lower()
-                        newScore = fuzz.token_sort_ratio(compStr,testString)
-                        if(newScore > testScore):
-                            testScore = newScore
-                            nameIndx = dataNM
-                            sizeIndx = dataSZ
-                        elif(newScore == testScore):
-                            newScore = fuzz.ratio(compStr, testString)
+            for dataNM in range(len(data)):
+                if (data[dataNM] != None):
+                    if(data[dataNM]['sizes'][0][0] != "u"):
+                        for dataSZ in range(len(data[dataNM]['sizes'])):
+                            compStr = data[dataNM]['name'] + " " + data[dataNM]['sizes'][dataSZ][0]
+                            compStr = str(compStr).lower()
+                            newScore = fuzz.token_sort_ratio(compStr,testString)
+                            if(newScore > testScore):
+                                testScore = newScore
+                                nameIndx = dataNM
+                                sizeIndx = dataSZ
+                            elif(newScore == testScore):
+                                newScore = fuzz.ratio(compStr, testString)
+                                if (newScore > testScore):
+                                    testScore = newScore
+                                    nameIndx = dataNM
+                                    sizeIndx = sizeIndx
+                else:
+                    if (data[dataNM] != None):
+                        if (data[dataNM]['sizes'][0][0] != "u"):
+                            compStr = data[dataNM]['name']
+                            compStr = str(compStr).lower()
+                            newScore = fuzz.token_sort_ratio(compStr, testString)
                             if (newScore > testScore):
                                 testScore = newScore
                                 nameIndx = dataNM
-                                sizeIndx = sizeIndx
-                else:
-                    compStr = data['items'][dataNM]['name']
-                    compStr = str(compStr).lower()
-                    newScore = fuzz.token_sort_ratio(compStr, testString)
-                    if (newScore > testScore):
-                        testScore = newScore
-                        nameIndx = dataNM
-                        sizeIndx = 0
-                    elif (newScore == testScore):
-                        newScore = fuzz.ratio(compStr, testString)
-                        if (newScore > testScore):
-                            testScore = newScore
-                            nameIndx = dataNM
-                            sizeIndx = sizeIndx
+                                sizeIndx = 0
+                            elif (newScore == testScore):
+                                newScore = fuzz.ratio(compStr, testString)
+                                if (newScore > testScore):
+                                    testScore = newScore
+                                    nameIndx = dataNM
+                                    sizeIndx = sizeIndx
 
-            name = str(data['items'][nameIndx]['name']).lower()
-            size = str(data['items'][nameIndx]['sizes'][sizeIndx][0]).lower()
+            name = str(data[nameIndx]['name']).lower()
+            size = str(data[nameIndx]['sizes'][sizeIndx][0]).lower()
         else:
             for szz in range(len(sizeArr)):
                 testString += sizeArr[szz]
@@ -249,41 +257,43 @@ for item in range(len(items)):
             testScore = 0
             nameIndx = 0
             sizeIndx = 0
-            for dataNM in range(len(data['items'])):
-                if(data['items'][dataNM]['sizes'][0][0] != "u"):
-                    for dataSZ in range(len(data['items'][dataNM]['sizes'])):
-                        compStr = data['items'][dataNM]['name'] + " " + data['items'][dataNM]['sizes'][dataSZ][0]
-                        compStr = str(compStr).lower()
-                        newScore = fuzz.token_sort_ratio(compStr,testString)
-                        #print(newScore, testScore, compStr, testString)
-                        if(newScore > testScore):
-                            testScore = newScore
-                            nameIndx = dataNM
-                            sizeIndx = dataSZ
-                        elif(newScore == testScore):
-                            newScore = fuzz.ratio(compStr, testString)
-                            if (newScore > testScore):
+            for dataNM in range(len(data)):
+                if (data[dataNM] != None):
+                    if(data[dataNM]['sizes'][0][0] != "u"):
+                        for dataSZ in range(len(data[dataNM]['sizes'])):
+                            compStr = data[dataNM]['name'] + " " + data[dataNM]['sizes'][dataSZ][0]
+                            compStr = str(compStr).lower()
+                            newScore = fuzz.token_sort_ratio(compStr,testString)
+                            #print(newScore, testScore, compStr, testString)
+                            if(newScore > testScore):
                                 testScore = newScore
                                 nameIndx = dataNM
                                 sizeIndx = dataSZ
+                            elif(newScore == testScore):
+                                newScore = fuzz.ratio(compStr, testString)
+                                if (newScore > testScore):
+                                    testScore = newScore
+                                    nameIndx = dataNM
+                                    sizeIndx = dataSZ
                 else:
-                    compStr = data['items'][dataNM]['name']
-                    compStr = str(compStr).lower()
-                    newScore = fuzz.token_sort_ratio(compStr, testString)
-                    #print(newScore, testScore, compStr, testString)
-                    if (newScore > testScore):
-                        testScore = newScore
-                        nameIndx = dataNM
-                        sizeIndx = 0
-                    elif (newScore == testScore):
-                        newScore = fuzz.ratio(compStr, testString)
+                    if (data[dataNM] != None):
+                        compStr = data[dataNM]['name']
+                        compStr = str(compStr).lower()
+                        newScore = fuzz.token_sort_ratio(compStr, testString)
+                        #print(newScore, testScore, compStr, testString)
                         if (newScore > testScore):
                             testScore = newScore
                             nameIndx = dataNM
                             sizeIndx = 0
-        price += data['items'][nameIndx]['sizes'][sizeIndx][1]
-        name = str(data['items'][nameIndx]['name']).lower()
-        size = str(data['items'][nameIndx]['sizes'][sizeIndx][0]).lower()
+                        elif (newScore == testScore):
+                            newScore = fuzz.ratio(compStr, testString)
+                            if (newScore > testScore):
+                                testScore = newScore
+                                nameIndx = dataNM
+                                sizeIndx = 0
+        price += data[nameIndx]['sizes'][sizeIndx][1]
+        name = str(data[nameIndx]['name']).lower()
+        size = str(data[nameIndx]['sizes'][sizeIndx][0]).lower()
         print(newScore)
         testScore = 0
         remNameIndxs = []
@@ -398,8 +408,8 @@ for item in range(len(items)):
             for e in range(len(extras)):
                 exScore = 0
                 exIndx = 0
-                for ee in range(len(data['items'][nameIndx]['extras'])):
-                    compStr = data['items'][nameIndx]['extras'][ee][0]
+                for ee in range(len(data[nameIndx]['extras'])):
+                    compStr = data[nameIndx]['extras'][ee][0]
                     compStr = str(compStr.lower())
                     newScore = fuzz.token_sort_ratio(compStr, extras[e])
                     if (newScore > exScore):
@@ -414,8 +424,8 @@ for item in range(len(items)):
             newExStr = ''
             remIndxs = []
             for rr in range(len(extraIndxs)):
-                exLen = len(str(data['items'][nameIndx]['extras'][extraIndxs[rr][1]][0]).split())
-                print(str(data['items'][nameIndx]['extras'][extraIndxs[rr][1]][0]),exLen)
+                exLen = len(str(data[nameIndx]['extras'][extraIndxs[rr][1]][0]).split())
+                print(str(data[nameIndx]['extras'][extraIndxs[rr][1]][0]),exLen)
                 if(exLen > 1):
                     newExStr += extras[extraIndxs[rr][0]]
                     remIndxs.append(extras[extraIndxs[rr][0]])
@@ -428,8 +438,8 @@ for item in range(len(items)):
                 for e in range(len(extras)):
                     exScore = 0
                     exIndx = 0
-                    for ee in range(len(data['items'][nameIndx]['extras'])):
-                        compStr = data['items'][nameIndx]['extras'][ee][0]
+                    for ee in range(len(data[nameIndx]['extras'])):
+                        compStr = data[nameIndx]['extras'][ee][0]
                         compStr = str(compStr.lower())
                         newScore = fuzz.token_sort_ratio(compStr, extras[e])
                         if (newScore > exScore):
@@ -445,8 +455,8 @@ for item in range(len(items)):
             for rrn in range(len(extraIndxs)):
                 exV = (extraIndxs[rrn][1])
                 writeStr += " add "
-                writeStr += data['items'][nameIndx]['extras'][exV][0].lower()
-                price += data['items'][nameIndx]['extras'][exV][1]
+                writeStr += data[nameIndx]['extras'][exV][0].lower()
+                price += data[nameIndx]['extras'][exV][1]
                 print("inc3")
 
 
@@ -458,8 +468,6 @@ for item in range(len(items)):
         writeStr += "\n"
         extras = []
         notes  = ''
-
-
 
 writeStr += "process fee $0.20 \n"
 subtotal += 0.2
