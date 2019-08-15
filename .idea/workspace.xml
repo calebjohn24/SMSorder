@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="integrated with app still testing">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readMenu.py" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="loads menu from firebase">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/our_view.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/TranslationEngV2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/data.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/fbtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/genTD2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/generateTD.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/menu.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/phone.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/proscessPaypal.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/readEmail.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/readMenu.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/tickets.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/todo.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/translateSMS.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GenJson.py" beforeDir="false" afterPath="$PROJECT_DIR$/GenJson.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GenJson.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TranslationEngV2.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translateSMS.py" beforeDir="false" afterPath="$PROJECT_DIR$/translateSMS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fbtest.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/genTD2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/generateTD.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/menu.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/phone.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/proscessPaypal.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/readEmail.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/readMenu.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tickets.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/translateSMS.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,6 +49,7 @@
       <list>
         <option value="Jupyter Notebook" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -36,6 +63,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/caleb/Documents/GitHub/SMSorder/menu.json" />
     <property name="full.screen.before.presentation.mode" value="false" />
@@ -54,7 +82,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.translateSMS">
+  <component name="RunManager" selected="Python.application">
     <configuration name="__init__" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SMSorder" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -213,9 +241,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.application" />
         <item itemvalue="Python.translateSMS" />
         <item itemvalue="Python.readMenu" />
-        <item itemvalue="Python.application" />
         <item itemvalue="Python.__init__" />
         <item itemvalue="Python.simpletTemplate" />
       </list>
@@ -414,8 +442,18 @@
       <option name="project" value="LOCAL" />
       <updated>1565477352934</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="loads menu from firebase">
+      <created>1565499839285</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1565499839285</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.css" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -448,6 +486,7 @@
     <MESSAGE value="added coupon support, rebuilt translation engine" />
     <MESSAGE value="minor bugfix" />
     <MESSAGE value="integrated with app still testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="integrated with app still testing" />
+    <MESSAGE value="loads menu from firebase" />
+    <option name="LAST_COMMIT_MESSAGE" value="loads menu from firebase" />
   </component>
 </project>

@@ -11,7 +11,7 @@ database = firebase.FirebaseApplication("https://cedarfb2.firebaseio.com/")
 uid = "JYzVI5fR5KW399swMP9zgEMNTxu2"
 data = (database.get("restaurants/" + uid,"/menu/items/"))
 
-userOrder = "8oz iced coffee with cream"
+userOrder = "medium coffee with cream"
 
 foodItems = (data)
 
@@ -87,8 +87,6 @@ for item in range(len(items)):
 
     for bb in range(len(tokens)):
         try:
-            print(tokens[bb])
-            print(w2n(tokens[bb]))
             tokens.insert(bb,str(w2n(tokens[bb])))
             tokens.pop(bb+1)
         except:
@@ -291,7 +289,7 @@ for item in range(len(items)):
                                 testScore = newScore
                                 nameIndx = dataNM
                                 sizeIndx = 0
-        price += data[nameIndx]['sizes'][sizeIndx][1]
+        price += float(data[nameIndx]['sizes'][sizeIndx][1])
         name = str(data[nameIndx]['name']).lower()
         size = str(data[nameIndx]['sizes'][sizeIndx][0]).lower()
         print(newScore)
@@ -456,14 +454,14 @@ for item in range(len(items)):
                 exV = (extraIndxs[rrn][1])
                 writeStr += " add "
                 writeStr += data[nameIndx]['extras'][exV][0].lower()
-                price += data[nameIndx]['extras'][exV][1]
+                price += float(data[nameIndx]['extras'][exV][1])
                 print("inc3")
 
 
         writeStr += " x "
         writeStr += str(quant)
-        price = price*quant
-        subtotal += price
+        price = float(price)*quant
+        subtotal += float(price)
         writeStr += " " + '${:0,.2f}'.format(price)
         writeStr += "\n"
         extras = []

@@ -11,21 +11,26 @@ from fuzzywuzzy import fuzz
 from werkzeug.datastructures import ImmutableOrderedMultiDict
 from words2num import w2n
 from spellchecker import SpellChecker
+from flask import render_template
 
 database = firebase.FirebaseApplication("https://cedarfb2.firebaseio.com/")
-uid = "JYzVI5fR5KW399swMP9zgEMNTxu2"
+uid = "MmvTki8FjtM07zdTHA3QMfxp6712"
 data = (database.get("restaurants/" + uid,"/menu/items/"))
 
 paypalClient = "AbnvQxz3b9dhXBe_sQyCER6mrviKkOGoPltfEwQB28_f_gbptqAYSocORdwPJJ42lxDtVfZVIDv38dWl"
 paypalSecret = "EIiJshTzYsufiKZmB8sYjpEiJLirn5O9D7K-2Y5B3aeJjSkjClg_ruhGsnua9o7UM3RttsofUFGG3xnh"
 VERIFY_URL_PROD = 'https://ipnpb.paypal.com/cgi-bin/webscr'
 VERIFY_URL_TEST = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr'
-foodItems = (data['items'])
+shortUUID=756232
 items = []
 login = "payments@cedarrobots.com"
 password = "CedarPayments1!"
 
-promoPass = "asnifnr10002"
+
+
+promoPass = "promo-" + str(shortUUID)
+addPass = "add-"+str(shortUUID)
+remPass = "remove-"+str(shortUUID)
 paypalrestsdk.configure({
     "mode": "sandbox",  # sandbox or live
     "client_id": paypalClient,
@@ -36,7 +41,7 @@ client = nexmo.Client(key='8558cb90', secret='PeRbp1ciHeqS8sDI')
 NexmoNumber = '13166009096'
 databse = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
 estNameStr = "TestRaunt"
-estName = "JYzVI5fR5KW399swMP9zgEMNTxu2"
+estName = "MmvTki8FjtM07zdTHA3QMfxp6712"
 link = "LINK"
 
 app = Flask(__name__)
@@ -112,7 +117,7 @@ def translateOrder(msg, indxFB):
     subtotal = 0
     itemsOrdered = []
     for item in range(len(items)):
-        price = 0
+        price = 0.0
         sizeArr = []
         ordStr = nltk.tokenize.word_tokenize(items[item])
         tokens = []
@@ -345,7 +350,7 @@ def translateOrder(msg, indxFB):
                                     testScore = newScore
                                     nameIndx = dataNM
                                     sizeIndx = 0
-            price += data[nameIndx]['sizes'][sizeIndx][1]
+            price += float(data[nameIndx]['sizes'][sizeIndx][1])
             name = str(data[nameIndx]['name']).lower()
             size = str(data[nameIndx]['sizes'][sizeIndx][0]).lower()
             print(newScore)
@@ -510,12 +515,12 @@ def translateOrder(msg, indxFB):
                     exV = (extraIndxs[rrn][1])
                     writeStr += " add "
                     writeStr += data[nameIndx]['extras'][exV][0].lower()
-                    price += data[nameIndx]['extras'][exV][1]
+                    price += float(data[nameIndx]['extras'][exV][1])
                     print("inc3")
 
             writeStr += " x "
             writeStr += str(quant)
-            price = price * quant
+            price = float(price) * quant
             subtotal += price
             writeStr += " " + '${:0,.2f}'.format(price)
             writeStr += "\n"
@@ -895,6 +900,52 @@ def ipn():
                 database.put("/log/" + estName + "/" + str(logDate), "/paypalFees/", float(rsp["mc_fee"]))
     return (" ", 200)
 
+
+
+@app.route('/'+estNameStr,methods=['GET'])
+def your_view():
+    orders = database.get("/restaurants/" + estName, "orders")
+    webDataDisp = []
+    keys = []
+    print(orders)
+    for ords in range(len(orders)):
+        filled = orders[ords]["filled"]
+        if (filled == "1"):
+            UUID = orders[ords]["UUID"]
+            writeStr = str(orders[ords]["name"]) + " " + str(orders[ords]["finalOrder"]) \
+                       + " " + str(orders[ords]["togo"]) + " " + str(orders[ords]["time"]) + " " \
+                      "" + str(orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " +str(orders[ords]["cash"])
+            keys.append(UUID)
+            webDataDisp.append(writeStr)
+    return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn = estNameStr)
+
+@app.route('/'+estNameStr,methods=['POST'])
+def button():
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
+    item = (rsp['item'])
+    print(item)
+    orders = database.get("/restaurants/" + estName, "orders")
+    webDataDisp = []
+    keys = []
+    print(orders)
+    for ords in range(len(orders)):
+        UUID = orders[ords]["UUID"]
+        if (item == UUID):
+            database.put("/restaurants/" + estName + "/orders/" + str(ords) + "/", "/filled/", "2")
+        else:
+            filled = orders[ords]["filled"]
+            if (filled == "1"):
+                writeStr = str(orders[ords]["name"]) + " " + str(orders[ords]["finalOrder"]) \
+                           + " " + str(orders[ords]["togo"]) + " " + str(orders[ords]["time"]) + " " \
+                                                                                                 "" + str(
+                    orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " + str(orders[ords]["cash"])
+                keys.append(UUID)
+                webDataDisp.append(writeStr)
+    return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys = keys, btn = estNameStr)
+
+
+
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host= '0.0.0.0',port=5000)
