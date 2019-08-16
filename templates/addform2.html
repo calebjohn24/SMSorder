@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Items</title>
+</head>
+<body>
+<h1>Add Sizes</h1>
+<form method="POST" action="{{btn}}">
+    {%for i in range(0, len)%}
+    <h3>Enter Size {{i+1}} Name (If only size enter 'u')</h3>
+    <input name="{{i}}">
+    <h3>Enter Size {{i+1}} Price (Numbers and decimals only)</h3>
+    <input name="{{i}}a">
+    {%endfor%}
+    <h3>Enter Number of Toppings</h3>
+    <input name="numEx">
+    <button type="submit" value="{{btn}}">Done</button>
+</form>
+</body>
+</html>

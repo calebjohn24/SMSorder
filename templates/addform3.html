@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Items</title>
+</head>
+<body>
+<h1>Add Toppings and Customizations</h1>
+<form method="POST" action="{{btn}}">
+    {%for i in range(0, len)%}
+    <h3>Enter Name For Topping/Customization #{{i+1}} (If only topping enter 'u')</h3>
+    <input name="{{i}}">
+    <h3>Enter Price For Topping/Customization #{{i+1}} Numbers and decimals only)</h3>
+    <input name="{{i}}a">
+    {%endfor%}
+    <button type="submit" value="{{btn}}">Done</button>
+</form>
+</body>
+</html>
