@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added support for adding and removing items and coupons">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added CSS Styling">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/coupon.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coupon.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/our_view.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/remItems.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/remItems.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,8 +19,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Jupyter Notebook" />
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -58,7 +53,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.application">
+  <component name="RunManager" selected="Python.testSreadSHeet">
     <configuration name="__init__" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SMSorder" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -164,7 +159,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="simpletTemplate" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="testSreadSHeet" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SMSorder" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -172,11 +167,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testFIles" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/simpletTemplate.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testFIles/testSreadSHeet.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -211,17 +206,17 @@
       <item itemvalue="Python.readEmail" />
       <item itemvalue="Python.translateSMS" />
       <item itemvalue="Python.application" />
-      <item itemvalue="Python.simpletTemplate" />
       <item itemvalue="Python.__init__" />
       <item itemvalue="Python.readMenu" />
+      <item itemvalue="Python.testSreadSHeet" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.testSreadSHeet" />
         <item itemvalue="Python.application" />
         <item itemvalue="Python.translateSMS" />
         <item itemvalue="Python.readMenu" />
         <item itemvalue="Python.__init__" />
-        <item itemvalue="Python.simpletTemplate" />
       </list>
     </recent_temporary>
   </component>
@@ -439,7 +434,14 @@
       <option name="project" value="LOCAL" />
       <updated>1565921735760</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="added CSS Styling">
+      <created>1565934804999</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1565934804999</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -479,6 +481,7 @@
     <MESSAGE value="loads menu from firebase" />
     <MESSAGE value="added order display still need CSS" />
     <MESSAGE value="added support for adding and removing items and coupons" />
-    <option name="LAST_COMMIT_MESSAGE" value="added support for adding and removing items and coupons" />
+    <MESSAGE value="added CSS Styling" />
+    <option name="LAST_COMMIT_MESSAGE" value="added CSS Styling" />
   </component>
 </project>

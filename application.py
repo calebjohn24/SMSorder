@@ -25,7 +25,6 @@ items = []
 login = "payments@cedarrobots.com"
 password = "CedarPayments1!"
 
-
 paypalrestsdk.configure({
     "mode": "sandbox",  # sandbox or live
     "client_id": paypalClient,
@@ -83,6 +82,7 @@ def translateOrder(msg, indxFB):
     userOrder = userOrder.replace('pcs.', 'pcs')
     userOrder = userOrder.replace('lb.', 'lb')
     userOrder = userOrder.replace('lbs.', 'lbs')
+    userOrder = userOrder.replace('in.', 'in')
     userOrder = userOrder.replace('g.', 'g')
     userOrder = userOrder.replace('mg.', 'mg')
     userOrder = userOrder.replace('kg.', 'kg')
@@ -96,7 +96,9 @@ def translateOrder(msg, indxFB):
 
     measurements = ["oz", 'pc', 'pce', 'pcs', 'lbs', 'lb', 'ounce', 'ozs', 'ounces', 'pound', 'pounds'
         , 'grams', 'g', 'gram', 'gs', "milligram", 'mg', 'milligrams', 'mgs', 'kilogram', 'kg'
-        , 'kilograms', 'kgs', 'piece', 'pice', 'piecie']
+        , 'kilograms', 'kgs', 'piece', 'pice', 'piecie', "cms", "inch", "in", "inches", "ins", "foot", "feet", "ft",
+                    "cm"
+        , "centimeter"]
 
     removelex = ["without", "no", "remove", "take out", "w/o", "take off", "out"]
     addlex = ["with", "add", "more", "w/", "include"]
@@ -911,7 +913,8 @@ def view():
             UUID = orders[ords]["UUID"]
             writeStr = str(orders[ords]["name"]) + " " + str(orders[ords]["finalOrder"]) \
                        + " " + str(orders[ords]["togo"]) + " " + str(orders[ords]["time"]) + " " \
-                 "" + str(orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " + str(orders[ords]["cash"])
+                                                                                             "" + str(
+                orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " + str(orders[ords]["cash"])
             keys.append(UUID)
             webDataDisp.append(writeStr)
     return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=estNameStr)
@@ -942,19 +945,21 @@ def button():
                 webDataDisp.append(writeStr)
     return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=estNameStr)
 
-@app.route('/'+remPass, methods=['GET'])
+
+@app.route('/' + remPass, methods=['GET'])
 def removeItemsDisp():
-    menuItems = database.get("/restaurants/" + estName +"/menu/", "items")
+    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     print(menuItems)
     names = []
     keys = []
     for men in range(len(menuItems)):
-        if(menuItems[men] != None):
+        if (menuItems[men] != None):
             names.append(menuItems[men]["name"])
             keys.append(men)
     return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass)
 
-@app.route('/'+remPass, methods=['POST'])
+
+@app.route('/' + remPass, methods=['POST'])
 def removeItems():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -964,16 +969,18 @@ def removeItems():
     database.delete("/restaurants/" + estName + "/menu/items/", item)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     for men in range(len(menuItems)):
-        if(menuItems[men] != None):
+        if (menuItems[men] != None):
             names.append(menuItems[men]["name"])
             keys.append(men)
     return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass)
 
-@app.route('/'+addPass, methods=['GET'])
+
+@app.route('/' + addPass, methods=['GET'])
 def addItmDisp():
     return render_template('addform.html', btn=addPass)
 
-@app.route('/'+addPass, methods=['POST'])
+
+@app.route('/' + addPass, methods=['POST'])
 def addItmForm():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -985,17 +992,18 @@ def addItmForm():
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     keyVal = 0
     for mmx in range(len(menuItems)):
-        if(menuItems[mmx] != None):
-            if(keyVal < mmx):
+        if (menuItems[mmx] != None):
+            if (keyVal < mmx):
                 keyVal = mmx
     keyVal += 1
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) , "/name/", name)
+    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/name/", name)
     database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", sku)
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) , "/inp/", "inp")
+    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/inp/", "inp")
     for nn in range(numSizes):
-        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn) , "/0", "")
-        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn) , "/1", 0)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/0", "")
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/1", 0)
         return render_template('addform2.html', btn=(str(addPass) + "2"), len=numSizes)
+
 
 ''' 
 @app.route('/'+addPass+"2", methods=['GET'])
@@ -1003,7 +1011,8 @@ def addItmForm2():
     return render_template('addform2.html', btn=(str(addPass) + "2"),len = 2)
 '''
 
-@app.route('/'+addPass+"2", methods=['POST'])
+
+@app.route('/' + addPass + "2", methods=['POST'])
 def addItmResp2():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1011,20 +1020,24 @@ def addItmResp2():
     numExtras = rsp["numEx"]
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     for sx in range(len(menuItems)):
-        if(menuItems[sx] != None):
-            if(menuItems[sx]['inp'] == "inp"):
-                for ssz in range(int((len(rsp)-1)/2)):
+        if (menuItems[sx] != None):
+            if (menuItems[sx]['inp'] == "inp"):
+                for ssz in range(int((len(rsp) - 1) / 2)):
                     szName = rsp[str(ssz)]
                     szPrice = rsp[str(ssz) + "a"]
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz) ,"/0/", szName)
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz) , "/1/",float(szPrice))
+                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz), "/0/",
+                                 szName)
+                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz), "/1/",
+                                 float(szPrice))
                 for sse in range(int(numExtras)):
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse) , "/0/", "")
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse) , "/1/", 0)
+                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
+                                 "")
+                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", 0)
                 break
     return render_template('addform3.html', btn=(str(addPass) + "3"), len=int(numExtras))
 
-@app.route('/'+addPass+"3", methods=['GET'])
+
+@app.route('/' + addPass + "3", methods=['GET'])
 def addItmForm3():
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     for sx in range(len(menuItems)):
@@ -1033,7 +1046,8 @@ def addItmForm3():
                 itxL = int(len(menuItems[sx]['extras']))
                 return render_template('addform3.html', btn=(str(addPass) + "3"), len=itxL)
 
-@app.route('/'+addPass+"3", methods=['POST'])
+
+@app.route('/' + addPass + "3", methods=['POST'])
 def addItmResp3():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1041,20 +1055,24 @@ def addItmResp3():
     for sx in range(len(menuItems)):
         if (menuItems[sx] != None):
             if (menuItems[sx]['inp'] == "inp"):
-                for sse in range(int(len(rsp)/2)):
+                for sse in range(int(len(rsp) / 2)):
                     exName = rsp[str(sse)]
                     exPrice = rsp[str(sse) + "a"]
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse) , "/0/", exName)
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse) ,"/1/", float(exPrice))
+                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
+                                 exName)
+                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/",
+                                 float(exPrice))
                 database.put("/restaurants/" + estName + "/menu/items/" + str(sx), "/inp/", "")
                 break
     return redirect(url_for('addItmDisp'))
 
-@app.route('/'+promoPass, methods=['GET'])
+
+@app.route('/' + promoPass, methods=['GET'])
 def addCpn():
     return render_template('coupon.html')
 
-@app.route('/'+promoPass, methods=['POST'])
+
+@app.route('/' + promoPass, methods=['POST'])
 def addCpnResp():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1083,17 +1101,19 @@ def addCpnResp():
     database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/1/", limit)
     return render_template('coupon.html')
 
-@app.route("/"+uid,methods=["GET"])
+
+@app.route("/" + uid, methods=["GET"])
 def sendPromo():
     return render_template('sendPromo.html')
 
 
-@app.route("/"+uid,methods=["GET"])
+@app.route("/" + uid, methods=["GET"])
 def checkPromo():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     print(rsp)
     return render_template('sendPromo.html')
+
 
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
