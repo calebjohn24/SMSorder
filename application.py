@@ -1118,10 +1118,12 @@ def addItmResp3():
                     database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/",
                                  float(exPrice))
                 database.put("/restaurants/" + estName + "/menu/items/" + str(sx), "/inp/", "")
+                menu = (database.get("restaurants/" + uid, "/menu/items/"))
                 for MSD in range(len(menu)):
                     logData = database.get("/log/" + uid + "/", logYM)
-                    test = logData["MonthlySKUdata"][MSD]
-                    if (menu[MSD] != None and test == None):
+                    try:
+                        test = logData["MonthlySKUdata"][MSD]
+                    except IndexError:
                         database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/SKU/",
                                      str(menu[MSD]['sku']))
                         database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/name/",
