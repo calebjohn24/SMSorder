@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
     <title>Add Coupon</title>
 </head>
 <body>
-<h1>Add Coupon</h1>
+<br>
+<h1>Edit {{restName}} Menu</h1>
+<br>
+<h2>Add Coupon</h2>
+<br>
 <form method="POST" action="{{btn}}">
     <h3>Enter Coupon Name Ex. halfcof</h3>
     <input name="name">
@@ -19,6 +21,8 @@
     <input name="amt">
     <h3>Enter Coupon Limit Ex. 1</h3>
     <input name="lim">
+    <br>
+    <br>
     <button type="submit" value="{{btn}}">Done</button>
 </form>
 </body>

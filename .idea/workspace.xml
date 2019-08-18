@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fixes">
-      <change afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testFIles/CedarChatbot-70ec2d781527.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testFIles/credentials.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testFIles/info.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testFIles/testLog.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testFIles/testSheets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added basic gsheet logging and support for multiple menus">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/todo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/todo.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/translateSMS.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/translateSMS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addform2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/coupon.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coupon.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/remItems.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/remItems.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/testSheets.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/testSheets.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -232,8 +229,8 @@
       <list>
         <item itemvalue="Python.testSheets" />
         <item itemvalue="Python.testLog" />
-        <item itemvalue="Python.testSreadSHeet" />
         <item itemvalue="Python.application" />
+        <item itemvalue="Python.testSreadSHeet" />
         <item itemvalue="Python.translateSMS" />
       </list>
     </recent_temporary>
@@ -466,7 +463,14 @@
       <option name="project" value="LOCAL" />
       <updated>1565982640968</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="added basic gsheet logging and support for multiple menus">
+      <created>1566090124656</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1566090124657</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -508,6 +512,7 @@
     <MESSAGE value="added support for adding and removing items and coupons" />
     <MESSAGE value="added CSS Styling" />
     <MESSAGE value="minor bug fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fixes" />
+    <MESSAGE value="added basic gsheet logging and support for multiple menus" />
+    <option name="LAST_COMMIT_MESSAGE" value="added basic gsheet logging and support for multiple menus" />
   </component>
 </project>

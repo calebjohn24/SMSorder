@@ -43,12 +43,7 @@ for dt in range(len(menu)):
 
 MenuHrs = ((database.get("restaurants/" + uid, "/Hours/")))
 menKeys = list(MenuHrs.keys())
-for mnx in range(len(menKeys)):
-    startHrMn = (float(MenuHrs[menKeys[mnx]]["startHr"]))
-    endHrMn = (float(MenuHrs[menKeys[mnx]]["endHr"]))
-    if(startHrMn <= float(currentTime) < endHrMn):
-        print("current menu")
-        print(menKeys[mnx])
+print(menKeys)
 
 
 ''' 
@@ -57,6 +52,11 @@ NameDF['Name'] = Names
 wks.set_dataframe(SkuDF, (1, 1))
 wks.set_dataframe(NameDF,(1,2))
 '''
+ZipCodes = database.get("log/" + uid+"/"+logYM, "/zipCodes/")
+for zips in range(len(ZipCodes)):
+    print(ZipCodes[zips]["name"])
+    database.put("/log/" + uid + "/" + logYM + "/zipCodes/" + str(zips), "/NumOrders/", 0)
+
 ''' 
 #starts with 1 not 0
 #wks.set_menuframe(df,(1,1))

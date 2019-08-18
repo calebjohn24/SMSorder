@@ -60,12 +60,28 @@ def verifyPayment(indxFB):
         code = DBdata[indxFB]["paid"]
         cash = DBdata[indxFB]["cash"]
         if (code == 1 or cash == "CASH"):
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata) - 1) + "/", "/filled/", "1")
-            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "endTime/", time.time())
-            totalTime = DBdata[indxFB]["startTime"] - time.time()
-            timeData = float(database.get("/log/" + uid + "/" + logYM + "/hours/" + str(int(datetime.datetime.now().hour)) + "/TotalDuration/"))
-            timeData += totalTime
-            database.put("/log/" + uid + "/" + logYM + "/hours/" + str(int(datetime.datetime.now().hour)), "/TotalDuration/", timeData)
+            database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "filled/", "1")
+            database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "endTime/", time.time())
+            totalTime = float(DBdata[indxFB]["startTime"]) - time.time()
+            database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "duration/", totalTime)
+            logData = database.get("/log/" + uid + "/", logYM)
+            CedarFees = float(logData['CedarFees'])
+            CedarFees += 0.2
+            database.put("/log/" + uid + "/" + logYM, "/CedarFees/", CedarFees)
+            SKUarr = DBdata[indxFB]["SKUS"]
+            keys = list(logData["MonthlySKUdata"].keys())
+            for sku in range(len(SKUarr)):
+                itm = SKUarr[sku][0]
+                price = SKUarr[sku][1]
+                for itx in range(len(keys)):
+                    if(logData["MonthlySKUdata"][keys[itx]]["SKU"] == itm):
+                        numSold = int(logData["MonthlySKUdata"][keys[itx]]["numSold"])
+                        numSold += 1
+                        rev = float(logData["MonthlySKUdata"][keys[itx]]["rev"])
+                        rev += price
+                        database.put("/log/" + uid + "/" + logYM, "/MonthlySKUdata/" + str(keys[itx]) + "/", "rev", rev)
+                        database.put("/log/" + uid + "/" + logYM, "/MonthlySKUdata/"+str(keys[itx])+"/", "numSold",numSold)
+
             break
     return "found"
 
@@ -78,6 +94,8 @@ def translateOrder(msg, indxFB):
     menKeys = list(MenuHrs.keys())
     currentMenu = ""
     menuIndx = 0
+    SKUS = []
+    database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "SKUS/", SKUS)
     for mnx in range(len(menKeys)):
         startHrMn = (float(MenuHrs[menKeys[mnx]]["startHr"]))
         endHrMn = (float(MenuHrs[menKeys[mnx]]["endHr"]))
@@ -88,6 +106,7 @@ def translateOrder(msg, indxFB):
             currentMenu = str(menKeys[mnx])
             break
     couponflag = 0
+    tickSize = 0
     userOrder = msg
     spell = SpellChecker()
     userOrder = userOrder.lower()
@@ -203,7 +222,7 @@ def translateOrder(msg, indxFB):
         couponFlag = 0
         if (len(newTokens) == 1):
             for cpn in range(len(data)):
-                if (data[cpn] != None):
+                if (data[cpn] != None and (data[cpn]["time"] == currentMenu or data[cpn]["time"] == "all")):
                     # print(data[cpn]['sizes'][0][1])
                     if (data[cpn]['sizes'][0][1] == -1):
                         if (newTokens[0] == data[cpn]['name'].lower()):
@@ -539,10 +558,13 @@ def translateOrder(msg, indxFB):
             writeStr += "\n"
             extras = []
             notes = ''
+            for skuIndx in range(quant):
+                SKUS.append([data[nameIndx]["sku"],float(price)])
 
     usrIndx = DBdata[indxFB]["userIndx"]
     numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
     database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "finalOrder/", writeStr)
+    database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "SKUS/", SKUS)
     database.put("/users/",
                  "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str((len(numOrders) - 1)) + "/order/",
                  str(writeStr))
@@ -562,6 +584,7 @@ def translateOrder(msg, indxFB):
     order = writeStr
     print(order)
     database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "total/", str(totalStr))
+    database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "tickSize/", str(tickSize))
     database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "linkTotal/", str(linkTotal))
     usrIndx = DBdata[indxFB]["userIndx"]
     numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
@@ -573,16 +596,6 @@ def translateOrder(msg, indxFB):
 
 
 def logOrder(tix, number):
-    logDate = (datetime.datetime.now().strftime("%Y-%m"))
-    database.put("/log/" + estName + "/" + str(logDate), "/exp/", 0)
-    currentVal = (database.get("/log/" + str(estName) + "/" + str(logDate) + "/", "orders"))
-    currentacct = (database.get("/log/" + str(estName) + "/" + str(logDate) + "/", "acct"))
-    if (currentacct == None):
-        database.put("/log/" + estName + "/" + str(logDate), "/orders/", (1))
-        database.put("/log/" + estName + "/" + str(logDate), "/acct/", (0.2))
-    else:
-        database.put("/log/" + estName + "/" + str(logDate), "/orders/", (currentVal + 1))
-        database.put("/log/" + estName + "/" + str(logDate), "/acct/", (currentacct + 0.20))
     database.put("/restaurants/" + estName + "/orders/" + str(tix) + "/", "/number/", str(number) + ".")
 
 
@@ -602,12 +615,14 @@ def getReply(msg, number):
     startHr = float(database.get("restaurants/" + uid, "/OChrs/open/"))
     endHr = float(database.get("restaurants/" + uid, "/OChrs/close/"))
     if(startHr <= float(currentTime) < endHr):
+        spell = SpellChecker()
+        #msg = spell.correction(msg)
         msg = msg.lower()
         indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")
         UserData = database.get("/", "users")
         if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr" or msg == "ordee"):
-            UUID = random.randint(9999999, 100000000)
+            UUID = random.randint(10, 1000000000)
             reply = "Hi welcome to " + estNameStr + " please enter your name to continue"
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", "")
@@ -617,6 +632,7 @@ def getReply(msg, number):
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/paid/", 0)
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/cash/", "")
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/togo/", "")
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/tickSize/", 0)
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/filled/", "0")
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "finalOrder/", "")
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/", time.time())
@@ -648,15 +664,6 @@ def getReply(msg, number):
                     genUsr("", number)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/",
                                  (len(UserData)))
-            client.send_message({
-                'from': NexmoNumber,
-                'to': number,
-                'text': reply
-            })
-            return reply
-        elif (msg == promoPass):
-            print("gen new code")
-            reply = "enter the Name of this coupon Ex: 50% off medium coffee"
             client.send_message({
                 'from': NexmoNumber,
                 'to': number,
@@ -913,6 +920,8 @@ def ipn():
         if (DBdata[dbItems]["UUID"] == rsp["item_name"]):
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/paid/", 1)
             usrIndx = DBdata[dbItems]["userIndx"]
+            ticketSize = int(DBdata[dbItems]["tickSize"])
+            startTime = float(DBdata[dbItems]["startTime"])
             numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
             database.put("/users/", "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                 (len(numOrders) - 1)) + "/totalPaid", rsp["mc_gross"])
@@ -922,14 +931,19 @@ def ipn():
             database.put("/users/", "/" + str(usrIndx) + "/zipCode", rsp["address_zip"])
             database.put("/users/", "/" + str(usrIndx) + "/city", rsp["address_city"])
             database.put("/users/", "/" + str(usrIndx) + "/streetAdr", rsp["address_street"])
-            logDate = (datetime.datetime.now().strftime("%Y-%m"))
-            database.put("/log/" + estName + "/" + str(logDate), "/exp/", 0)
-            currentacct = (database.get("/log/" + str(estName) + "/" + str(logDate) + "/", "paypalFees"))
-            if (currentacct != None):
-                database.put("/log/" + estName + "/" + str(logDate), "/paypalFees/",
-                             (float(rsp["mc_fee"]) + currentacct))
-            else:
-                database.put("/log/" + estName + "/" + str(logDate), "/paypalFees/", float(rsp["mc_fee"]))
+            logData = database.get("/log/" + uid + "/", logYM)
+            payPalFees = float(logData['paypalFees'])
+            payPalFees += float(rsp["mc_fee"])
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/zipCode/", rsp["address_zip"])
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/city/", rsp["address_city"])
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/day/", calendar.day_name[datetime.datetime.now().today().weekday()])
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/hour/", int(datetime.datetime.now().hour))
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/month/", (datetime.datetime.now().strftime("%m")))
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/date/", (datetime.datetime.now().strftime("%d")))
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/year/",(datetime.datetime.now().strftime("%Y")))
+            database.put("/log/" + uid + "/" + logYM,"/paypalFees/",payPalFees)
+
+
     return (" ", 200)
 
 
@@ -949,7 +963,7 @@ def view():
                 orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " + str(orders[ords]["cash"])
             keys.append(UUID)
             webDataDisp.append(writeStr)
-    return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=estNameStr)
+    return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=estNameStr,restName=estNameStr)
 
 
 @app.route('/' + estNameStr, methods=['POST'])
@@ -1004,12 +1018,12 @@ def removeItems():
         if (menuItems[men] != None):
             names.append(menuItems[men]["name"])
             keys.append(men)
-    return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass)
+    return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass,restName=estNameStr)
 
 
 @app.route('/' + addPass, methods=['GET'])
 def addItmDisp():
-    return render_template('addform.html', btn=addPass)
+    return render_template('addform.html', btn=addPass, restName=estNameStr)
 
 
 @app.route('/' + addPass, methods=['POST'])
@@ -1036,7 +1050,7 @@ def addItmForm():
     for nn in range(numSizes):
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/0", "")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/1", 0)
-        return render_template('addform2.html', btn=(str(addPass) + "2"), len=numSizes)
+        return render_template('addform2.html', btn=(str(addPass) + "2"), len=numSizes, restName=estNameStr)
 
 
 @app.route('/' + addPass + "2", methods=['POST'])
@@ -1056,12 +1070,17 @@ def addItmResp2():
                                  szName)
                     database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz), "/1/",
                                  float(szPrice))
-                for sse in range(int(numExtras)):
+                if(numExtras != ""):
+                    for sse in range(int(numExtras)):
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
+                                     "")
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", 0)
+                else:
                     database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
                                  "")
                     database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", 0)
                 break
-    return render_template('addform3.html', btn=(str(addPass) + "3"), len=int(numExtras))
+    return render_template('addform3.html', btn=(str(addPass) + "3"), len=int(numExtras),restName=estNameStr)
 
 
 @app.route('/' + addPass + "3", methods=['GET'])
@@ -1071,7 +1090,7 @@ def addItmForm3():
         if (menuItems[sx] != None):
             if (menuItems[sx]['inp'] == "inp"):
                 itxL = int(len(menuItems[sx]['extras']))
-                return render_template('addform3.html', btn=(str(addPass) + "3"), len=itxL)
+                return render_template('addform3.html', btn=(str(addPass) + "3"), len=itxL,restName=estNameStr)
 
 
 @app.route('/' + addPass + "3", methods=['POST'])
@@ -1090,13 +1109,23 @@ def addItmResp3():
                     database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/",
                                  float(exPrice))
                 database.put("/restaurants/" + estName + "/menu/items/" + str(sx), "/inp/", "")
+                for MSD in range(len(menu)):
+                    logData = database.get("/log/" + uid + "/", logYM)
+                    test = logData["MonthlySKUdata"][MSD]
+                    if (menu[MSD] != None and test == None):
+                        database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/SKU/",
+                                     str(menu[MSD]['sku']))
+                        database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/name/",
+                                     str(menu[MSD]['name']))
+                        database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/numSold/", 0)
+                        database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/rev/", 0)
                 break
     return redirect(url_for('addItmDisp'))
 
 
 @app.route('/' + promoPass, methods=['GET'])
 def addCpn():
-    return render_template('coupon.html')
+    return render_template('coupon.html',restName=estNameStr)
 
 
 @app.route('/' + promoPass, methods=['POST'])
@@ -1127,20 +1156,7 @@ def addCpnResp():
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/1/", amt)
     database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/0/", "limit")
     database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/1/", limit)
-    return render_template('coupon.html')
-
-
-@app.route("/" + uid, methods=["GET"])
-def sendPromo():
-    return render_template('sendPromo.html')
-
-
-@app.route("/" + uid, methods=["GET"])
-def checkPromo():
-    request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
-    print(rsp)
-    return render_template('sendPromo.html')
+    return render_template('coupon.html',restName=estNameStr)
 
 
 # when you run the code through terminal, this will allow Flask to work

@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
     <title>Add Items</title>
 </head>
 <body>
-<h1>Add Toppings and Customizations</h1>
+<br>
+<h1>Edit {{restName}} Menu</h1>
+<br>
+<h2>Add Toppings and Customizations</h2>
+<br>
 <form method="POST" action="{{btn}}">
     {%for i in range(0, len)%}
     <h3>Enter Name For Topping/Customization #{{i+1}} (If only topping enter 'u')</h3>
@@ -17,6 +19,8 @@
     <h3>Enter Price For Topping/Customization #{{i+1}} Numbers and decimals only)</h3>
     <input name="{{i}}a">
     {%endfor%}
+    <br>
+    <br>
     <button type="submit" value="{{btn}}">Done</button>
 </form>
 </body>
