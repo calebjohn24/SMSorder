@@ -69,6 +69,14 @@ def verifyPayment(indxFB):
             CedarFees += 0.2
             database.put("/log/" + uid + "/" + logYM, "/CedarFees/", CedarFees)
             SKUarr = DBdata[indxFB]["SKUS"]
+            ret = int(logData["retCustomers"])
+            newCust = int(logData["newCustomers"])
+            if(DBdata[indxFB]["ret"] == 0):
+                ret += 1
+                database.put("/log/" + uid + "/" + logYM, "/retCustomers/", ret)
+            else:
+                newCust += 1
+                database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
             keys = list(logData["MonthlySKUdata"].keys())
             for sku in range(len(SKUarr)):
                 itm = SKUarr[sku][0]
@@ -81,7 +89,6 @@ def verifyPayment(indxFB):
                         rev += price
                         database.put("/log/" + uid + "/" + logYM, "/MonthlySKUdata/" + str(keys[itx]) + "/", "rev", rev)
                         database.put("/log/" + uid + "/" + logYM, "/MonthlySKUdata/"+str(keys[itx])+"/", "numSold",numSold)
-
             break
     return "found"
 
@@ -655,6 +662,7 @@ def getReply(msg, number):
                                  "LoyaltyCard")
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                                  (len(numOrders)))
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/",0)
                     database.put("/users/",
                                  "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str((len(numOrders))) + "/Starttime",
                                  str(timeStamp))
@@ -664,6 +672,7 @@ def getReply(msg, number):
                     genUsr("", number)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/",
                                  (len(UserData)))
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 1)
             client.send_message({
                 'from': NexmoNumber,
                 'to': number,
