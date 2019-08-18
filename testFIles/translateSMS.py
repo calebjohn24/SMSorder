@@ -7,7 +7,7 @@ import num2words
 
 from firebase import firebase
 import json
-database = firebase.FirebaseApplication("https://cedarfb2.firebaseio.com/")
+database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/")
 uid = "JYzVI5fR5KW399swMP9zgEMNTxu2"
 data = (database.get("restaurants/" + uid,"/menu/items/"))
 
@@ -456,7 +456,6 @@ for item in range(len(items)):
                 writeStr += data[nameIndx]['extras'][exV][0].lower()
                 price += float(data[nameIndx]['extras'][exV][1])
                 print("inc3")
-
 
         writeStr += " x "
         writeStr += str(quant)
