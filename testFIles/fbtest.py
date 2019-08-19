@@ -1,35 +1,22 @@
 from firebase import firebase
-import datetime
-NAME = "caleb"
-database = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
-estName = "TestRaunt"
-#database.put("/users/", "/" + str(1) + "/restaurants/" + estName +"/" +str(0)+"/items/" + str(0)+"/"+ "name", "NAME")
-def genUsr(name,number):
+import pyrebase as fbAuth
 
+config = {
+  "apiKey": "AIzaSyB2it4zPzPdn_bW9OAglTHUtclidAw307o",
+  "authDomain": "cedarchatbot.firebaseapp.com",
+  "databaseURL": "https://cedarchatbot.firebaseio.com",
+  "storageBucket": "cedarchatbot.appspot.com",
+}
 
-    timeStamp = datetime.datetime.today()
-    #database.put("/users/", "/" + str(len(UserData)) +  "/name", name)
-    #database.put("/users/", "/" + str(len(UserData)) +  "/number", number)
-    #database.put("/users/", "/" + str(len(UserData)-1) + "/restaurants/" + estName +"/" +str(len(UserData[]))+ "/time", str(timeStamp))
-'''
-UserData = database.get("/","users")
-for usr in range(len(UserData)):
-    print(UserData[usr])
-'''
-indx = 1
-numOrders = database.get("/users/"+str(indx)+"/restaurants/", estName)
-numOrders = database.get("/users/" + str(indx) + "/restaurants/", estName)
-loyaltyCard = numOrders[len(numOrders)-1]["loyaltyCard"]
-print(loyaltyCard)
-#database.put("/users/", "/" + str(1) + "/restaurants/" + estName + "/" + str((len(numOrders)-1)) + "/time",str(76))
+firebaseAuth = pyrebase.initialize_app(config)
+auth = firebaseAuth.auth()
 
-logDate = (datetime.datetime.now().strftime("%Y-%m"))
-database.put("/log/" + estName + "/" + str(logDate), "/exp/", 0)
-currentVal = (database.get("/log/" + str(estName) + "/" + str(logDate) + "/", "orders"))
-currentacct = (database.get("/log/" + str(estName) + "/" + str(logDate) + "/", "acct"))
-if(currentacct == None):
-    database.put("/log/" + estName + "/" + str(logDate), "/orders/", (1))
-    database.put("/log/" + estName + "/" + str(logDate), "/acct/", (0.2))
-else:
-    database.put("/log/" + estName + "/" + str(logDate), "/orders/", (currentVal + 1))
-    database.put("/log/" + estName + "/" + str(logDate), "/acct/", (currentacct + 0.20))
+# Log the user in
+try:
+    user = auth.sign_in_with_email_and_password("cajohn0205@gmail.com", "test123")
+    print(user['localId'])
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W', 'cajohn0205@gmail.com', extra={'id': 123})
+    fireapp = firebase.FirebaseApplication('https://cedarchatbot.firebaseio.com/',  authentication=authentication)
+    print(fireapp.get("/restaurants/",user["localId"]))
+except Exception:
+    print("incorrect password")

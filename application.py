@@ -13,7 +13,9 @@ from werkzeug.datastructures import ImmutableOrderedMultiDict
 from words2num import w2n
 from spellchecker import SpellChecker
 from flask import render_template
+import pyrebase as fbAuth
 
+sessionTime = 900
 infoFile = open("info.json")
 info = json.load(infoFile)
 uid = info['uid']
@@ -21,19 +23,27 @@ logYM = (datetime.datetime.now().strftime("%Y-%m"))
 estName = info['uid']
 estNameStr = info['name']
 shortUID = info['shortUID']
-database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/")
+authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W', 'cajohn0205@gmail.com', extra={'id': 123})
+database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
 data = (database.get("restaurants/" + uid, "/menu/items/"))
 items = []
 login = "payments@cedarrobots.com"
 password = "CedarPayments1!"
-
+config = {
+  "apiKey": "AIzaSyB2it4zPzPdn_bW9OAglTHUtclidAw307o",
+  "authDomain": "cedarchatbot.firebaseapp.com",
+  "databaseURL": "https://cedarchatbot.firebaseio.com",
+  "storageBucket": "cedarchatbot.appspot.com",
+}
+firebaseAuth = fbAuth.initialize_app(config)
+auth = firebaseAuth.auth()
 client = nexmo.Client(key='8558cb90', secret='PeRbp1ciHeqS8sDI')
 
 NexmoNumber = '13166009096'
 databse = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
-promoPass = "promo-" + str(estNameStr)
-addPass = "add-" + str(estNameStr)
-remPass = "remove-" + str(estNameStr)
+promoPass = "promo-" + str(estName)
+addPass = "add-" + str(estName)
+remPass = "remove-" + str(estName)
 
 link = "LINK"
 
@@ -41,6 +51,9 @@ app = Flask(__name__)
 
 
 def genUsr(name, number):
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     UserData = database.get("/", "users")
     timeStamp = datetime.datetime.today()
     database.put("/users/", "/" + str(len(UserData)) + "/name", name)
@@ -52,6 +65,9 @@ def genUsr(name, number):
 
 
 def verifyPayment(indxFB):
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     DBdata = database.get("/restaurants/" + estName, "orders")
     code = DBdata[indxFB]["paid"]
     cash = DBdata[indxFB]["cash"]
@@ -94,6 +110,9 @@ def verifyPayment(indxFB):
 
 
 def translateOrder(msg, indxFB):
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     data = (database.get("restaurants/" + uid, "/menu/items/"))
     currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
     DBdata = database.get("/restaurants/" + estName, "orders")
@@ -603,6 +622,9 @@ def translateOrder(msg, indxFB):
 
 
 def logOrder(tix, number):
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     database.put("/restaurants/" + estName + "/orders/" + str(tix) + "/", "/number/", str(number) + ".")
 
 
@@ -618,6 +640,9 @@ def genPayment(total, name, UUIDcode):
 
 
 def getReply(msg, number):
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
     startHr = float(database.get("restaurants/" + uid, "/OChrs/open/"))
     endHr = float(database.get("restaurants/" + uid, "/OChrs/close/"))
@@ -922,6 +947,9 @@ def getReply(msg, number):
 
 @app.route('/ipn', methods=['POST'])
 def ipn():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     DBdata = database.get("/restaurants/" + estName, "orders")
@@ -951,12 +979,61 @@ def ipn():
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/date/", (datetime.datetime.now().strftime("%d")))
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/year/",(datetime.datetime.now().strftime("%Y")))
             database.put("/log/" + uid + "/" + logYM,"/paypalFees/",payPalFees)
-
-
     return (" ", 200)
 
+@app.route('/'+estNameStr, methods=['GET'])
+def loginPage():
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
+                                            authentication=authentication)
+    database.put("/restaurants/" + uid + "/", "loginTime", 0)
+    return render_template("login.html",btn=str(estNameStr),restName=estNameStr)
 
-@app.route('/' + estNameStr, methods=['GET'])
+@app.route('/'+estNameStr, methods=['POST'])
+def loginPageCheck():
+    rsp = ((request.form))
+    email = str(rsp["email"])
+    pw = str(rsp["pw"])
+    try:
+        user = auth.sign_in_with_email_and_password(str(rsp["email"]), pw)
+        print(user['localId'])
+        authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                         'cajohn0205@gmail.com', extra={'id': 123})
+        fireapp = firebase.FirebaseApplication('https://cedarchatbot.firebaseio.com/', authentication=authentication)
+        testDB = (fireapp.get("/restaurants/", user["localId"]))
+        if(str(user["localId"]) == str(uid) and testDB != None):
+            print("found")
+            database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
+                                                    authentication=authentication)
+            database.put("/restaurants/" + uid + "/", "loginTime", time.time())
+            return redirect(url_for('panel'))
+        else:
+            print("incorrect password")
+            database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
+                                                    authentication=authentication)
+            database.put("/restaurants/" + uid + "/", "loginTime", 0)
+            return render_template("login2.html", btn=str(estNameStr),restName=estNameStr)
+    except Exception:
+        atabase = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
+                                               authentication=authentication)
+        database.put("/restaurants/" + uid + "/", "loginTime", 0)
+        print("incorrect password")
+        return render_template("login2.html",btn=str(estNameStr),restName=estNameStr)
+
+@app.route('/' + uid , methods=['GET'])
+def panel():
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if((currentTime - lastLogin) < sessionTime):
+        return render_template("panel.html", restName=estNameStr,viewOrders=(uid + "view"),addItm=(addPass),remItms=remPass,addCpn=promoPass,signOut=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
+
+@app.route('/' + uid + "view", methods=['GET'])
 def view():
     orders = database.get("/restaurants/" + estName, "orders")
     webDataDisp = []
@@ -972,10 +1049,9 @@ def view():
                 orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " + str(orders[ords]["cash"])
             keys.append(UUID)
             webDataDisp.append(writeStr)
-    return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=estNameStr,restName=estNameStr)
+    return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=str(uid + "view"),restName=estNameStr)
 
-
-@app.route('/' + estNameStr, methods=['POST'])
+@app.route('/' + uid + "view", methods=['POST'])
 def button():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -998,178 +1074,261 @@ def button():
                     orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " + str(orders[ords]["cash"])
                 keys.append(UUID)
                 webDataDisp.append(writeStr)
-    return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=estNameStr)
-
+    return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=str(uid + "view"))
 
 @app.route('/' + remPass, methods=['GET'])
 def removeItemsDisp():
-    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    print(menuItems)
-    names = []
-    keys = []
-    for men in range(len(menuItems)):
-        if (menuItems[men] != None):
-            names.append(menuItems[men]["name"])
-            keys.append(men)
-    return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass)
-
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        print(menuItems)
+        names = []
+        keys = []
+        for men in range(len(menuItems)):
+            if (menuItems[men] != None):
+                names.append(menuItems[men]["name"])
+                keys.append(men)
+        return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + remPass, methods=['POST'])
 def removeItems():
-    request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
-    item = int(rsp['item'])
-    names = []
-    keys = []
-    database.delete("/restaurants/" + estName + "/menu/items/", item)
-    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    for men in range(len(menuItems)):
-        if (menuItems[men] != None):
-            names.append(menuItems[men]["name"])
-            keys.append(men)
-    return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass,restName=estNameStr)
-
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        request.parameter_storage_class = ImmutableOrderedMultiDict
+        rsp = ((request.form))
+        item = int(rsp['item'])
+        names = []
+        keys = []
+        database.delete("/restaurants/" + estName + "/menu/items/", item)
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        for men in range(len(menuItems)):
+            if (menuItems[men] != None):
+                names.append(menuItems[men]["name"])
+                keys.append(men)
+        return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass,restName=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + addPass, methods=['GET'])
 def addItmDisp():
-    return render_template('addform.html', btn=addPass, restName=estNameStr)
-
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        return render_template('addform.html', btn=addPass, restName=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + addPass, methods=['POST'])
 def addItmForm():
-    request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
-    name = (rsp['name'])
-    numSizes = int(rsp['numSizes'])
-    menTime = (rsp['time'])
-    sku = (rsp['sku'])
-    print(name)
-    print(numSizes)
-    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    keyVal = 0
-    for mmx in range(len(menuItems)):
-        if (menuItems[mmx] != None):
-            if (keyVal < mmx):
-                keyVal = mmx
-    keyVal += 1
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/name/", name)
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", sku)
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/time/", menTime)
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/inp/", "inp")
-    for nn in range(numSizes):
-        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/0", "")
-        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/1", 0)
-        return render_template('addform2.html', btn=(str(addPass) + "2"), len=numSizes, restName=estNameStr)
-
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        request.parameter_storage_class = ImmutableOrderedMultiDict
+        rsp = ((request.form))
+        name = (rsp['name'])
+        numSizes = int(rsp['numSizes'])
+        menTime = (rsp['time'])
+        sku = (rsp['sku'])
+        print(name)
+        print(numSizes)
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        keyVal = 0
+        for mmx in range(len(menuItems)):
+            if (menuItems[mmx] != None):
+                if (keyVal < mmx):
+                    keyVal = mmx
+        keyVal += 1
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/name/", name)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", sku)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/time/", menTime)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/inp/", "inp")
+        for nn in range(numSizes):
+            database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/0", "")
+            database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/1", 0)
+            return render_template('addform2.html', btn=(str(addPass) + "2"), len=numSizes, restName=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + addPass + "2", methods=['POST'])
 def addItmResp2():
-    request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
-    print(rsp)
-    numExtras = rsp["numEx"]
-    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    for sx in range(len(menuItems)):
-        if (menuItems[sx] != None):
-            if (menuItems[sx]['inp'] == "inp"):
-                for ssz in range(int((len(rsp) - 1) / 2)):
-                    szName = rsp[str(ssz)]
-                    szPrice = rsp[str(ssz) + "a"]
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz), "/0/",
-                                 szName)
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz), "/1/",
-                                 float(szPrice))
-                if(numExtras != ""):
-                    for sse in range(int(numExtras)):
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        request.parameter_storage_class = ImmutableOrderedMultiDict
+        rsp = ((request.form))
+        print(rsp)
+        numExtras = rsp["numEx"]
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        for sx in range(len(menuItems)):
+            if (menuItems[sx] != None):
+                if (menuItems[sx]['inp'] == "inp"):
+                    for ssz in range(int((len(rsp) - 1) / 2)):
+                        szName = rsp[str(ssz)]
+                        szPrice = rsp[str(ssz) + "a"]
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz), "/0/",
+                                     szName)
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz), "/1/",
+                                     float(szPrice))
+                    if(numExtras != ""):
+                        for sse in range(int(numExtras)):
+                            database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
+                                         "")
+                            database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", 0)
+                    else:
                         database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
                                      "")
                         database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", 0)
-                else:
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
-                                 "")
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", 0)
-                break
-    return render_template('addform3.html', btn=(str(addPass) + "3"), len=int(numExtras),restName=estNameStr)
-
+                    break
+        return render_template('addform3.html', btn=(str(addPass) + "3"), len=int(numExtras),restName=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + addPass + "3", methods=['GET'])
 def addItmForm3():
-    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    for sx in range(len(menuItems)):
-        if (menuItems[sx] != None):
-            if (menuItems[sx]['inp'] == "inp"):
-                itxL = int(len(menuItems[sx]['extras']))
-                return render_template('addform3.html', btn=(str(addPass) + "3"), len=itxL,restName=estNameStr)
-
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        for sx in range(len(menuItems)):
+            if (menuItems[sx] != None):
+                if (menuItems[sx]['inp'] == "inp"):
+                    itxL = int(len(menuItems[sx]['extras']))
+                    return render_template('addform3.html', btn=(str(addPass) + "3"), len=itxL,restName=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + addPass + "3", methods=['POST'])
 def addItmResp3():
-    request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
-    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    for sx in range(len(menuItems)):
-        if (menuItems[sx] != None):
-            if (menuItems[sx]['inp'] == "inp"):
-                for sse in range(int(len(rsp) / 2)):
-                    exName = rsp[str(sse)]
-                    exPrice = rsp[str(sse) + "a"]
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
-                                 exName)
-                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/",
-                                 float(exPrice))
-                database.put("/restaurants/" + estName + "/menu/items/" + str(sx), "/inp/", "")
-                menu = (database.get("restaurants/" + uid, "/menu/items/"))
-                for MSD in range(len(menu)):
-                    logData = database.get("/log/" + uid + "/", logYM)
-                    try:
-                        test = logData["MonthlySKUdata"][MSD]
-                    except IndexError:
-                        database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/SKU/",
-                                     str(menu[MSD]['sku']))
-                        database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/name/",
-                                     str(menu[MSD]['name']))
-                        database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/numSold/", 0)
-                        database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/rev/", 0)
-                break
-    return redirect(url_for('addItmDisp'))
-
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        request.parameter_storage_class = ImmutableOrderedMultiDict
+        rsp = ((request.form))
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        for sx in range(len(menuItems)):
+            if (menuItems[sx] != None):
+                if (menuItems[sx]['inp'] == "inp"):
+                    for sse in range(int(len(rsp) / 2)):
+                        exName = rsp[str(sse)]
+                        exPrice = rsp[str(sse) + "a"]
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
+                                     exName)
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/",
+                                     float(exPrice))
+                    database.put("/restaurants/" + estName + "/menu/items/" + str(sx), "/inp/", "")
+                    menu = (database.get("restaurants/" + uid, "/menu/items/"))
+                    for MSD in range(len(menu)):
+                        logData = database.get("/log/" + uid + "/", logYM)
+                        try:
+                            test = logData["MonthlySKUdata"][MSD]
+                        except IndexError:
+                            database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/SKU/",
+                                         str(menu[MSD]['sku']))
+                            database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/name/",
+                                         str(menu[MSD]['name']))
+                            database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/numSold/", 0)
+                            database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/rev/", 0)
+                    break
+        return redirect(url_for('panel'))
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + promoPass, methods=['GET'])
 def addCpn():
-    return render_template('coupon.html',restName=estNameStr)
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        return render_template('coupon.html',restName=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
 @app.route('/' + promoPass, methods=['POST'])
 def addCpnResp():
-    request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
-    print(rsp)
-    name = rsp['name']
-    item = rsp['itm']
-    amt = rsp['amt']
-    limit = rsp['lim']
-    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    keyVal = 0
-    for mmx in range(len(menuItems)):
-        if (menuItems[mmx] != None):
-            if (keyVal < mmx):
-                keyVal = mmx
-    keyVal += 1
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/name/", name)
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", "cpn-"+name)
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sizes/0/0/", "u")
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sizes/0/1/", -1)
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/0/", item)
-    try:
-        amt = float(amt)
-        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/1/", amt)
-    except ValueError:
-        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/1/", amt)
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/0/", "limit")
-    database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/1/", limit)
-    return render_template('coupon.html',restName=estNameStr)
-
-
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    print()
+    if ((currentTime - lastLogin) < sessionTime):
+        request.parameter_storage_class = ImmutableOrderedMultiDict
+        rsp = ((request.form))
+        print(rsp)
+        name = rsp['name']
+        item = rsp['itm']
+        amt = rsp['amt']
+        limit = rsp['lim']
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        keyVal = 0
+        for mmx in range(len(menuItems)):
+            if (menuItems[mmx] != None):
+                if (keyVal < mmx):
+                    keyVal = mmx
+        keyVal += 1
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/name/", name)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", "cpn-"+name)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sizes/0/0/", "u")
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sizes/0/1/", -1)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/0/", item)
+        try:
+            amt = float(amt)
+            database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/1/", amt)
+        except ValueError:
+            database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/1/", amt)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/0/", "limit")
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/1/", limit)
+        menu = (database.get("restaurants/" + uid, "/menu/items/"))
+        for MSD in range(len(menu)):
+            logData = database.get("/log/" + uid + "/", logYM)
+            try:
+                test = logData["MonthlySKUdata"][MSD]
+            except IndexError:
+                database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/SKU/",
+                             str(menu[MSD]['sku']))
+                database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/name/",
+                             str(menu[MSD]['name']))
+                database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/numSold/", 0)
+                database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/rev/", 0)
+        return render_template('coupon.html',restName=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

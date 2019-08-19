@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added detailed logging">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bugfix">
+      <change afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/login2.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/fbtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/fbtest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/info.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +24,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Jupyter Notebook" />
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -76,6 +81,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/application.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="fbtest (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="SMSorder" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testFIles" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testFIles/fbtest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -189,43 +215,22 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="translateSMS" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SMSorder" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/translateSMS.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.fbtest" />
       <item itemvalue="Python.readEmail" />
-      <item itemvalue="Python.translateSMS" />
       <item itemvalue="Python.application" />
       <item itemvalue="Python.testSreadSHeet" />
       <item itemvalue="Python.testLog" />
       <item itemvalue="Python.testSheets" />
+      <item itemvalue="Python.fbtest (1)" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.application" />
+        <item itemvalue="Python.fbtest (1)" />
         <item itemvalue="Python.testSheets" />
         <item itemvalue="Python.testLog" />
         <item itemvalue="Python.testSreadSHeet" />
-        <item itemvalue="Python.translateSMS" />
       </list>
     </recent_temporary>
   </component>
@@ -478,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566113727694</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="minor bugfix">
+      <created>1566114204504</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1566114204504</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -513,7 +525,6 @@
     <MESSAGE value="added IPN request still need to integrate with bot" />
     <MESSAGE value="added coupon support" />
     <MESSAGE value="added coupon support, rebuilt translation engine" />
-    <MESSAGE value="minor bugfix" />
     <MESSAGE value="integrated with app still testing" />
     <MESSAGE value="loads menu from firebase" />
     <MESSAGE value="added order display still need CSS" />
@@ -522,6 +533,7 @@
     <MESSAGE value="minor bug fixes" />
     <MESSAGE value="added basic gsheet logging and support for multiple menus" />
     <MESSAGE value="added detailed logging" />
-    <option name="LAST_COMMIT_MESSAGE" value="added detailed logging" />
+    <MESSAGE value="minor bugfix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bugfix" />
   </component>
 </project>
