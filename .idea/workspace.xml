@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="generates pdf">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
+      <change afterPath="$PROJECT_DIR$/static/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testFIles/genPDF.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/genPDF.py" afterDir="false" />
@@ -46,7 +48,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/caleb/Documents/GitHub/SMSorder/menu.json" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/static/menus" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/static" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -55,6 +57,7 @@
       <recent name="$PROJECT_DIR$/static" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static" />
       <recent name="$PROJECT_DIR$/static/menus" />
       <recent name="$PROJECT_DIR$/menus" />
       <recent name="$PROJECT_DIR$/testFIles" />
@@ -231,8 +234,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.genPDF" />
         <item itemvalue="Python.application" />
+        <item itemvalue="Python.genPDF" />
         <item itemvalue="Python.testSheets" />
         <item itemvalue="Python.fbtest (1)" />
         <item itemvalue="Python.testLog" />
@@ -523,7 +526,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566198541037</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="minor bug fix">
+      <created>1566200322988</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1566200322988</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -551,7 +561,6 @@
     <MESSAGE value="updated sear alg" />
     <MESSAGE value="finalized translation algorithms" />
     <MESSAGE value="chatbot no users or coupons v2" />
-    <MESSAGE value="minor bug fix" />
     <MESSAGE value="minor bug fix on order logging, added timing for orders" />
     <MESSAGE value="added email scraping" />
     <MESSAGE value="added IPN request still need to integrate with bot" />
@@ -569,6 +578,7 @@
     <MESSAGE value="added control panel and authentication" />
     <MESSAGE value="added link to gsheets" />
     <MESSAGE value="generates pdf" />
-    <option name="LAST_COMMIT_MESSAGE" value="generates pdf" />
+    <MESSAGE value="minor bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
   </component>
 </project>

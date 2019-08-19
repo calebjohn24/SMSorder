@@ -79,7 +79,7 @@ for menuNames in range(len(keys)):
                             text = ""
                     yStart += 7
                     text = ""
-    fileName = estNameStr + "-" +str([keys[menuNames]][0]) + "-" + "menu.pdf"
+    fileName = "static/menus/"+estNameStr + "-" +str([keys[menuNames]][0]) + "-" + "menu.pdf"
     print(fileName)
     pdf.output(fileName)
     print("\n")
