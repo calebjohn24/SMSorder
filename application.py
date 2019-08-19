@@ -1132,7 +1132,85 @@ def removeItems():
             if (menuItems[men] != None):
                 names.append(menuItems[men]["name"])
                 keys.append(men)
-        return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass,restName=estNameStr)
+        pdf = FPDF()
+        pdf.add_page()
+        yStart = 20
+        fontName = "helvetica"
+        authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                         'cajohn0205@gmail.com', extra={'id': 123})
+        database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+        menu = (database.get("restaurants/" + uid, "/menu/items/"))
+        print(menu)
+        hours = (database.get("restaurants/" + uid, "/Hours/"))
+        pdf.set_font(fontName, size=24, style="BU")
+        text = estNameStr + " Menu"
+        pdf.multi_cell(200, 10, txt=text, align="C")
+        yStart += 10
+        print(hours)
+        keys = list(hours.keys())
+        print(keys)
+        for menuNames in range(len(keys)):
+            for dt in range(len(menu)):
+                if (menu[dt] != None):
+                    if ((menu[dt]["sizes"][0][1] != -1)):
+                        print(menu[dt]["time"])
+                        print(str([keys[menuNames]][0]))
+                        if (menu[dt]["time"] == "all" or menu[dt]["time"] == "All" or menu[dt]["time"] == str([keys[menuNames]][0])):
+                            name = menu[dt]["name"].lower()
+                            sizes = []
+                            toppings = []
+                            for sz in range(len(menu[dt]["sizes"])):
+                                sizes.append([str(menu[dt]["sizes"][sz][0]).lower(), menu[dt]["sizes"][sz][1]])
+                            if (len(menu[dt]["extras"]) > 0):
+                                for ex in range(len(menu[dt]["extras"])):
+                                    if (str(menu[dt]["extras"][ex][0]) != ""):
+                                        toppings.append(
+                                            [str(menu[dt]["extras"][ex][0]).lower(), menu[dt]["extras"][ex][1]])
+                            print(sizes, toppings, name)
+                            # pdf.line(0, yStart, 500000, yStart)
+                            pdf.set_font(fontName, size=18, style="B")
+                            text = name
+                            pdf.multi_cell(100, 10, txt=text, align="L")
+                            yStart += 10
+                            text = ""
+                            pdf.set_font(fontName, size=14, style="B")
+                            if (len(sizes) > 1):
+                                text = "-Sizes:"
+                                pdf.multi_cell(100, 7, txt=text, align="L")
+                                yStart += 7
+                                pdf.set_font(fontName, size=12, style="")
+                                text = ""
+                                for szs in range(len(sizes)):
+                                    text += "     -"
+                                    text += sizes[szs][0]
+                                    text += " ~ $" + str(sizes[szs][1])
+                                    pdf.multi_cell(100, 7, txt=text, align="L")
+                                    yStart += 7
+                                    text = ""
+                            else:
+                                pdf.set_font(fontName, size=12, style="")
+                                text += "     ~$" + str(sizes[0][1])
+                                pdf.multi_cell(100, 7, txt=text, align="L")
+                                yStart += 7
+                                text = ""
+                            if (len(menu[dt]["extras"]) > 0):
+                                pdf.set_font(fontName, size=14, style="B")
+                                text = "-Toppings/Customizations:"
+                                pdf.multi_cell(100, 7, txt=text, align="L")
+                                yStart += 7
+                                text = ""
+                                pdf.set_font(fontName, size=12, style="")
+                                for ex in range(len(toppings)):
+                                    text += "     -"
+                                    text += toppings[ex][0]
+                                    text += " ~ $" + str(toppings[ex][1])
+                                    pdf.multi_cell(100, 7, txt=text, align="L")
+                                    yStart += 7
+                                    text = ""
+                            yStart += 14
+            fileName = "static/menus/" + estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
+            pdf.output(fileName)
+        return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -1324,9 +1402,8 @@ def addItmResp3():
                 if (menu[dt] != None):
                     if ((menu[dt]["sizes"][0][1] != -1)):
                         print(menu[dt]["time"])
-                        print(str([keys[menuNames][0]]))
-                        if (menu[dt]["time"] == "all" or menu[dt]["time"] == "All" or menu[dt]["time"] == str(
-                                [keys[menuNames][0]])):
+                        print(str([keys[menuNames]][0]))
+                        if (menu[dt]["time"] == "all" or menu[dt]["time"] == "All" or menu[dt]["time"] == str([keys[menuNames]][0])):
                             name = menu[dt]["name"].lower()
                             sizes = []
                             toppings = []
@@ -1334,7 +1411,8 @@ def addItmResp3():
                                 sizes.append([str(menu[dt]["sizes"][sz][0]).lower(), menu[dt]["sizes"][sz][1]])
                             if(len(menu[dt]["extras"]) > 0):
                                 for ex in range(len(menu[dt]["extras"])):
-                                    toppings.append([str(menu[dt]["extras"][ex][0]).lower(), menu[dt]["extras"][ex][1]])
+                                    if(str(menu[dt]["extras"][ex][0]) != ""):
+                                        toppings.append([str(menu[dt]["extras"][ex][0]).lower(), menu[dt]["extras"][ex][1]])
                             print(sizes, toppings, name)
                             # pdf.line(0, yStart, 500000, yStart)
                             pdf.set_font(fontName, size=18, style="B")
@@ -1377,7 +1455,7 @@ def addItmResp3():
                                     yStart += 7
                                     text = ""
                             yStart += 14
-            fileName = "menus/"+ estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
+            fileName = "static/menus/"+ estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
             pdf.output(fileName)
         return redirect(url_for('panel'))
     else:

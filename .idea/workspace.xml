@@ -4,8 +4,11 @@
     <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="generates pdf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/genPDF.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/genPDF.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +46,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/caleb/Documents/GitHub/SMSorder/menu.json" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/menus" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/static/menus" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -52,6 +55,7 @@
       <recent name="$PROJECT_DIR$/static" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static/menus" />
       <recent name="$PROJECT_DIR$/menus" />
       <recent name="$PROJECT_DIR$/testFIles" />
     </key>
@@ -68,7 +72,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.application">
+  <component name="RunManager" selected="Python.genPDF">
     <configuration name="application" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SMSorder" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -227,8 +231,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.application" />
         <item itemvalue="Python.genPDF" />
+        <item itemvalue="Python.application" />
         <item itemvalue="Python.testSheets" />
         <item itemvalue="Python.fbtest (1)" />
         <item itemvalue="Python.testLog" />
@@ -512,7 +516,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566197188890</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="generates pdf">
+      <created>1566198541036</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1566198541037</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="UnknownFeatures">
