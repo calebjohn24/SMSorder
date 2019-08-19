@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bugfix">
-      <change afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/login2.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/fbtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/fbtest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/info.json" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added control panel and authentication">
+      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -490,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566114204504</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="added control panel and authentication">
+      <created>1566183981596</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1566183981596</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -534,6 +534,7 @@
     <MESSAGE value="added basic gsheet logging and support for multiple menus" />
     <MESSAGE value="added detailed logging" />
     <MESSAGE value="minor bugfix" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bugfix" />
+    <MESSAGE value="added control panel and authentication" />
+    <option name="LAST_COMMIT_MESSAGE" value="added control panel and authentication" />
   </component>
 </project>
