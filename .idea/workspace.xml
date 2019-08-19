@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added link to gsheets">
-      <change afterPath="$PROJECT_DIR$/menus/CedarChatbot-70ec2d781527.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testFIles/genPDF.py" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="generates pdf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/testSheets.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/testSheets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -53,6 +47,10 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static/menus" />
+      <recent name="$PROJECT_DIR$/static" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/menus" />
       <recent name="$PROJECT_DIR$/testFIles" />
@@ -507,7 +505,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566184261969</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="generates pdf">
+      <created>1566197188889</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1566197188890</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -528,7 +533,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="initial commit" />
     <MESSAGE value="fixed formatting" />
     <MESSAGE value="V1, memory issues still need fixing" />
     <MESSAGE value="fixed inputting items" />
@@ -553,6 +557,7 @@
     <MESSAGE value="minor bugfix" />
     <MESSAGE value="added control panel and authentication" />
     <MESSAGE value="added link to gsheets" />
-    <option name="LAST_COMMIT_MESSAGE" value="added link to gsheets" />
+    <MESSAGE value="generates pdf" />
+    <option name="LAST_COMMIT_MESSAGE" value="generates pdf" />
   </component>
 </project>

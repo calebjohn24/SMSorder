@@ -1177,6 +1177,8 @@ def addItmForm():
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", sku)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/time/", menTime)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/inp/", "inp")
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/extras/" + str(0), "/0/", "")
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/extras/" + str(0), "/1/", 0)
         for nn in range(numSizes):
             database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/0", "")
             database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/sizes/" + str(nn), "/1", 0)
@@ -1308,6 +1310,7 @@ def addItmResp3():
                                                          'cajohn0205@gmail.com', extra={'id': 123})
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
         menu = (database.get("restaurants/" + uid, "/menu/items/"))
+        print(menu)
         hours = (database.get("restaurants/" + uid, "/Hours/"))
         pdf.set_font(fontName, size=24, style="BU")
         text = estNameStr + " Menu"
@@ -1329,8 +1332,9 @@ def addItmResp3():
                             toppings = []
                             for sz in range(len(menu[dt]["sizes"])):
                                 sizes.append([str(menu[dt]["sizes"][sz][0]).lower(), menu[dt]["sizes"][sz][1]])
-                            for ex in range(len(menu[dt]["extras"])):
-                                toppings.append([str(menu[dt]["extras"][ex][0]).lower(), menu[dt]["extras"][ex][1]])
+                            if(len(menu[dt]["extras"]) > 0):
+                                for ex in range(len(menu[dt]["extras"])):
+                                    toppings.append([str(menu[dt]["extras"][ex][0]).lower(), menu[dt]["extras"][ex][1]])
                             print(sizes, toppings, name)
                             # pdf.line(0, yStart, 500000, yStart)
                             pdf.set_font(fontName, size=18, style="B")
@@ -1358,19 +1362,20 @@ def addItmResp3():
                                 pdf.multi_cell(100, 7, txt=text, align="L")
                                 yStart += 7
                                 text = ""
-                            pdf.set_font(fontName, size=14, style="B")
-                            text = "-Toppings/Customizations:"
-                            pdf.multi_cell(100, 7, txt=text, align="L")
-                            yStart += 7
-                            text = ""
-                            pdf.set_font(fontName, size=12, style="")
-                            for ex in range(len(toppings)):
-                                text += "     -"
-                                text += toppings[ex][0]
-                                text += " ~ $" + str(toppings[ex][1])
+                            if (len(menu[dt]["extras"])>0):
+                                pdf.set_font(fontName, size=14, style="B")
+                                text = "-Toppings/Customizations:"
                                 pdf.multi_cell(100, 7, txt=text, align="L")
                                 yStart += 7
                                 text = ""
+                                pdf.set_font(fontName, size=12, style="")
+                                for ex in range(len(toppings)):
+                                    text += "     -"
+                                    text += toppings[ex][0]
+                                    text += " ~ $" + str(toppings[ex][1])
+                                    pdf.multi_cell(100, 7, txt=text, align="L")
+                                    yStart += 7
+                                    text = ""
                             yStart += 14
             fileName = "menus/"+ estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
             pdf.output(fileName)
