@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added control panel and authentication">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added link to gsheets">
+      <change afterPath="$PROJECT_DIR$/menus/CedarChatbot-70ec2d781527.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/genPDF.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/testSheets.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/testSheets.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,8 +26,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Jupyter Notebook" />
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -40,11 +49,12 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/caleb/Documents/GitHub/SMSorder/menu.json" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/testFIles" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/menus" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/menus" />
       <recent name="$PROJECT_DIR$/testFIles" />
     </key>
   </component>
@@ -124,6 +134,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="genPDF" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="SMSorder" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testFIles" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testFIles/genPDF.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="readEmail" type="PythonConfigurationType" factoryName="Python">
       <module name="SMSorder" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -187,43 +218,22 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="testSreadSHeet" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SMSorder" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testFIles" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testFIles/testSreadSHeet.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.fbtest" />
       <item itemvalue="Python.readEmail" />
       <item itemvalue="Python.application" />
-      <item itemvalue="Python.testSreadSHeet" />
       <item itemvalue="Python.testLog" />
       <item itemvalue="Python.testSheets" />
       <item itemvalue="Python.fbtest (1)" />
+      <item itemvalue="Python.genPDF" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.application" />
-        <item itemvalue="Python.fbtest (1)" />
+        <item itemvalue="Python.genPDF" />
         <item itemvalue="Python.testSheets" />
+        <item itemvalue="Python.fbtest (1)" />
         <item itemvalue="Python.testLog" />
-        <item itemvalue="Python.testSreadSHeet" />
       </list>
     </recent_temporary>
   </component>
@@ -490,7 +500,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566183981596</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="added link to gsheets">
+      <created>1566184261969</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1566184261969</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -535,6 +552,7 @@
     <MESSAGE value="added detailed logging" />
     <MESSAGE value="minor bugfix" />
     <MESSAGE value="added control panel and authentication" />
-    <option name="LAST_COMMIT_MESSAGE" value="added control panel and authentication" />
+    <MESSAGE value="added link to gsheets" />
+    <option name="LAST_COMMIT_MESSAGE" value="added link to gsheets" />
   </component>
 </project>

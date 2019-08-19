@@ -30,6 +30,17 @@
  </form>
 <br>
 <br>
+<br>
+<h3>View Menus</h3>
+<br>
+{%for i in range(0, len)%}
+<h3>
+    <br>
+    <a href="{{menuLinks[i]}}">{{menuNames[i]}}</a>
+</h3>
+{%endfor%}
+<br>
+<br>
 <form action="https://docs.google.com/spreadsheets/d/14NtYvDzCWJcpclphJlxFRtJcz4VlY7syVXYcU3cm3vk/edit?usp=sharing" method="GET">
     <button type="submit" name="addItm" value="">Go to Google Sheets</button>
  </form>

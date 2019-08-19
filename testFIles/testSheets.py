@@ -13,7 +13,9 @@ estName = info['uid']
 estNameStr = info['name']
 shortUID = info['shortUID']
 currentTime = str((float(datetime.datetime.now().hour))+((float(datetime.datetime.now().minute))/100.0))
-database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/")
+authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
 #authorization
 gc = pygsheets.authorize(service_file='CedarChatbot-70ec2d781527.json')
 email = "cedarchatbot@appspot.gserviceaccount.com"
@@ -34,19 +36,10 @@ log = (database.get("log/" + uid, "/"+logYM+"/"))
 menu = (database.get("restaurants/" + uid, "/menu/items/"))
 SKUs = []
 Names = []
-startHr = int(database.get("restaurants/" + uid, "/OChrs/open/"))
-endHr = int(database.get("restaurants/" + uid, "/OChrs/close/"))
 for dt in range(len(menu)):
     if(menu[dt] != None):
         SKUs.append(menu[dt]['sku'])
         Names.append(menu[dt]['name'])
-
-MenuHrs = ((database.get("restaurants/" + uid, "/Hours/")))
-menKeys = list(MenuHrs.keys())
-print(menKeys)
-
-
-''' 
 SkuDF['SKU'] = SKUs
 NameDF['Name'] = Names
 wks.set_dataframe(SkuDF, (1, 1))
@@ -57,7 +50,6 @@ for zips in range(len(ZipCodes)):
     print(ZipCodes[zips]["name"])
     database.put("/log/" + uid + "/" + logYM + "/zipCodes/" + str(zips), "/NumOrders/", 0)
 
-''' 
 #starts with 1 not 0
 #wks.set_menuframe(df,(1,1))
 for MSD in range(len(menu)):

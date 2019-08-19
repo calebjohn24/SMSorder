@@ -4,7 +4,9 @@ import random
 import urllib.request
 import nexmo
 import nltk
+import pygsheets
 import time
+import pandas as pd
 import paypalrestsdk
 from firebase import firebase
 from flask import Flask, request, redirect, url_for
@@ -14,11 +16,14 @@ from words2num import w2n
 from spellchecker import SpellChecker
 from flask import render_template
 import pyrebase as fbAuth
+from fpdf import FPDF
 
 sessionTime = 900
 infoFile = open("info.json")
 info = json.load(infoFile)
 uid = info['uid']
+gc = pygsheets.authorize(service_file='static/CedarChatbot-70ec2d781527.json')
+email = "cedarchatbot@appspot.gserviceaccount.com"
 logYM = (datetime.datetime.now().strftime("%Y-%m"))
 estName = info['uid']
 estNameStr = info['name']
@@ -1007,13 +1012,17 @@ def loginPageCheck():
             database.put("/restaurants/" + uid + "/", "loginTime", time.time())
             return redirect(url_for('panel'))
         else:
+            authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                             'cajohn0205@gmail.com', extra={'id': 123})
             print("incorrect password")
             database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                     authentication=authentication)
             database.put("/restaurants/" + uid + "/", "loginTime", 0)
             return render_template("login2.html", btn=str(estNameStr),restName=estNameStr)
     except Exception:
-        atabase = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
+        authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                         'cajohn0205@gmail.com', extra={'id': 123})
+        database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                authentication=authentication)
         database.put("/restaurants/" + uid + "/", "loginTime", 0)
         print("incorrect password")
@@ -1026,9 +1035,16 @@ def panel():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    print()
     if((currentTime - lastLogin) < sessionTime):
-        return render_template("panel.html", restName=estNameStr,viewOrders=(uid + "view"),addItm=(addPass),remItms=remPass,addCpn=promoPass,signOut=estNameStr)
+        links = []
+        names = []
+        hours = (database.get("restaurants/" + uid, "/Hours/"))
+        keys = list(hours.keys())
+        for menuNames in range(len(keys)):
+            print(str([keys[menuNames]]))
+            names.append(str([keys[menuNames]][0]))
+            links.append("static/menus/"+estNameStr + "-" +str([keys[menuNames]][0]) + "-" + "menu.pdf")
+        return render_template("panel.html",len=len(links), menuLinks =links ,menuNames=names,restName=estNameStr,viewOrders=(uid + "view"),addItm=(addPass),remItms=remPass,addCpn=promoPass,signOut=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -1104,7 +1120,6 @@ def removeItems():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    print()
     if ((currentTime - lastLogin) < sessionTime):
         request.parameter_storage_class = ImmutableOrderedMultiDict
         rsp = ((request.form))
@@ -1145,10 +1160,10 @@ def addItmForm():
     if ((currentTime - lastLogin) < sessionTime):
         request.parameter_storage_class = ImmutableOrderedMultiDict
         rsp = ((request.form))
-        name = (rsp['name'])
+        name = str(rsp['name']).lower()
         numSizes = int(rsp['numSizes'])
-        menTime = (rsp['time'])
-        sku = (rsp['sku'])
+        menTime = str(rsp['time']).lower()
+        sku = str(rsp['sku']).lower()
         print(name)
         print(numSizes)
         menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
@@ -1261,6 +1276,104 @@ def addItmResp3():
                             database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/numSold/", 0)
                             database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/rev/", 0)
                     break
+        SkuDF = pd.DataFrame()
+        NameDF = pd.DataFrame()
+        # Create a column
+        # open the google spreadsheet (where 'PY to Gsheet Test' is the name of my sheet)
+        sh = gc.open('TestRaunt')
+        # select the first sheet
+        startHr = 0
+        endHr = 0
+
+        wks = sh.worksheet_by_title(logYM + "-sales")
+        log = (database.get("log/" + uid, "/" + logYM + "/"))
+        menu = (database.get("restaurants/" + uid, "/menu/items/"))
+        SKUs = []
+        Names = []
+        for dt in range(len(menu)):
+            if (menu[dt] != None):
+                SKUs.append(menu[dt]['sku'])
+                Names.append(menu[dt]['name'])
+        SkuDF['SKU'] = SKUs
+        NameDF['Name'] = Names
+        #
+        wks.set_dataframe(SkuDF, (1, 1))
+        wks.set_dataframe(NameDF, (1, 2))
+
+        pdf = FPDF()
+        pdf.add_page()
+        yStart = 20
+        fontName = "helvetica"
+        authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                         'cajohn0205@gmail.com', extra={'id': 123})
+        database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+        menu = (database.get("restaurants/" + uid, "/menu/items/"))
+        hours = (database.get("restaurants/" + uid, "/Hours/"))
+        pdf.set_font(fontName, size=24, style="BU")
+        text = estNameStr + " Menu"
+        pdf.multi_cell(200, 10, txt=text, align="C")
+        yStart += 10
+        print(hours)
+        keys = list(hours.keys())
+        print(keys)
+        for menuNames in range(len(keys)):
+            for dt in range(len(menu)):
+                if (menu[dt] != None):
+                    if ((menu[dt]["sizes"][0][1] != -1)):
+                        print(menu[dt]["time"])
+                        print(str([keys[menuNames][0]]))
+                        if (menu[dt]["time"] == "all" or menu[dt]["time"] == "All" or menu[dt]["time"] == str(
+                                [keys[menuNames][0]])):
+                            name = menu[dt]["name"].lower()
+                            sizes = []
+                            toppings = []
+                            for sz in range(len(menu[dt]["sizes"])):
+                                sizes.append([str(menu[dt]["sizes"][sz][0]).lower(), menu[dt]["sizes"][sz][1]])
+                            for ex in range(len(menu[dt]["extras"])):
+                                toppings.append([str(menu[dt]["extras"][ex][0]).lower(), menu[dt]["extras"][ex][1]])
+                            print(sizes, toppings, name)
+                            # pdf.line(0, yStart, 500000, yStart)
+                            pdf.set_font(fontName, size=18, style="B")
+                            text = name
+                            pdf.multi_cell(100, 10, txt=text, align="L")
+                            yStart += 10
+                            text = ""
+                            pdf.set_font(fontName, size=14, style="B")
+                            if (len(sizes) > 1):
+                                text = "-Sizes:"
+                                pdf.multi_cell(100, 7, txt=text, align="L")
+                                yStart += 7
+                                pdf.set_font(fontName, size=12, style="")
+                                text = ""
+                                for szs in range(len(sizes)):
+                                    text += "     -"
+                                    text += sizes[szs][0]
+                                    text += " ~ $" + str(sizes[szs][1])
+                                    pdf.multi_cell(100, 7, txt=text, align="L")
+                                    yStart += 7
+                                    text = ""
+                            else:
+                                pdf.set_font(fontName, size=12, style="")
+                                text += "     ~$" + str(sizes[0][1])
+                                pdf.multi_cell(100, 7, txt=text, align="L")
+                                yStart += 7
+                                text = ""
+                            pdf.set_font(fontName, size=14, style="B")
+                            text = "-Toppings/Customizations:"
+                            pdf.multi_cell(100, 7, txt=text, align="L")
+                            yStart += 7
+                            text = ""
+                            pdf.set_font(fontName, size=12, style="")
+                            for ex in range(len(toppings)):
+                                text += "     -"
+                                text += toppings[ex][0]
+                                text += " ~ $" + str(toppings[ex][1])
+                                pdf.multi_cell(100, 7, txt=text, align="L")
+                                yStart += 7
+                                text = ""
+                            yStart += 14
+            fileName = "menus/"+ estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
+            pdf.output(fileName)
         return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
