@@ -18,6 +18,7 @@ from flask import render_template
 import pyrebase as fbAuth
 from fpdf import FPDF
 import os
+import calendar
 
 sessionTime = 900
 infoFile = open("info.json")
@@ -70,7 +71,7 @@ def genUsr(name, number):
                  "NOCARD")
 
 
-def verifyPayment(indxFB):
+def verifyPayment(indxFB, number):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
@@ -83,8 +84,9 @@ def verifyPayment(indxFB):
         cash = DBdata[indxFB]["cash"]
         if (code == 1 or cash == "CASH"):
             database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "filled/", "1")
+            database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "number/", str(number)+".")
             database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "endTime/", time.time())
-            totalTime = float(DBdata[indxFB]["startTime"]) - time.time()
+            totalTime = time.time() - float(DBdata[indxFB]["startTime"])
             database.put("/restaurants/" + estName + "/orders/" + str(indxFB) + "/", "duration/", totalTime)
             logData = database.get("/log/" + uid + "/", logYM)
             CedarFees = float(logData['CedarFees'])
@@ -99,19 +101,21 @@ def verifyPayment(indxFB):
             else:
                 newCust += 1
                 database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
-            keys = list(logData["MonthlySKUdata"].keys())
+            print(logData["MonthlySKUdata"])
             for sku in range(len(SKUarr)):
                 itm = SKUarr[sku][0]
                 price = SKUarr[sku][1]
-                for itx in range(len(keys)):
-                    if(logData["MonthlySKUdata"][keys[itx]]["SKU"] == itm):
-                        numSold = int(logData["MonthlySKUdata"][keys[itx]]["numSold"])
-                        numSold += 1
-                        rev = float(logData["MonthlySKUdata"][keys[itx]]["rev"])
-                        rev += price
-                        database.put("/log/" + uid + "/" + logYM, "/MonthlySKUdata/" + str(keys[itx]) + "/", "rev", rev)
-                        database.put("/log/" + uid + "/" + logYM, "/MonthlySKUdata/"+str(keys[itx])+"/", "numSold",numSold)
-            break
+                for skuData in range(len(logData['MonthlySKUdata'])):
+                    if(logData['MonthlySKUdata'][skuData] != None):
+                        if(logData['MonthlySKUdata'][skuData]["SKU"] == itm):
+                            print()
+                            numSold = int(logData["MonthlySKUdata"][skuData]["numSold"])
+                            numSold +=1
+                            rev = float(logData["MonthlySKUdata"][skuData]["rev"])
+                            rev += price
+                            database.put("/log/" + uid + "/" + logYM, "/MonthlySKUdata/" + str(skuData) + "/rev", rev)
+                            database.put("/log/" + uid + "/" + logYM, "/MonthlySKUdata/" + str(skuData) + "/numSold", numSold)
+                            break
     return "found"
 
 
@@ -253,6 +257,8 @@ def translateOrder(msg, indxFB):
         cpnIndx = -1
         couponFlag = 0
         if (len(newTokens) == 1):
+            discAmt = 0
+            numUsed = 0
             for cpn in range(len(data)):
                 if (data[cpn] != None and (data[cpn]["time"] == currentMenu or data[cpn]["time"] == "all")):
                     # print(data[cpn]['sizes'][0][1])
@@ -286,7 +292,6 @@ def translateOrder(msg, indxFB):
                                                 discTotal = (discAmt)
                                                 subtotal -= discAmt
                                             numUsed += 1
-
                         writeStr += items[item] + (' -${0}'.format(format(discAmt * numUsed, ',.2f')))
                         writeStr += " x " + str(numUsed)
                         writeStr += "\n"
@@ -704,6 +709,8 @@ def getReply(msg, number):
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/",
                                  (len(UserData)))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 1)
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/loyaltyCard/",
+                                 "NOCARD")
             client.send_message({
                 'from': NexmoNumber,
                 'to': number,
@@ -750,6 +757,10 @@ def getReply(msg, number):
                                                                                     " your order now enter" + ' "asap" otherwise enter your preferred time.(EX 11:15am)'
                     })
                 else:
+                    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
+                                                            authentication=authentication)
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", "TO_GO")
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
                     usrIndx = DBdata[indx]["userIndx"]
@@ -767,6 +778,17 @@ def getReply(msg, number):
             elif (DBdata[indx]['stage'] == 3):
                 currentMenu = ""
                 menuIndx = 0
+                authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                                 'cajohn0205@gmail.com', extra={'id': 123})
+                database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
+                                                        authentication=authentication)
+                data = (database.get("restaurants/" + uid, "/menu/items/"))
+                currentTime = str(
+                    (float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
+                DBdata = database.get("/restaurants/" + estName, "orders")
+                MenuHrs = ((database.get("restaurants/" + uid, "/Hours/")))
+                menuLink = ""
+                menKeys = list(MenuHrs.keys())
                 for mnx in range(len(menKeys)):
                     startHrMn = (float(MenuHrs[menKeys[mnx]]["startHr"]))
                     endHrMn = (float(MenuHrs[menKeys[mnx]]["endHr"]))
@@ -775,18 +797,18 @@ def getReply(msg, number):
                         print(menKeys[mnx])
                         menuIndx = mnx
                         currentMenu = str(menKeys[mnx])
-
+                        menuLink = str(MenuHrs[menKeys[mnx]]["link"])
                         break
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", msg.upper())
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
                 usrIndx = DBdata[indx]["userIndx"]
                 numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
+                print(numOrders)
                 database.put("/users/",
                              "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
-                                 (len(numOrders) - 1)) + "/pickup-time",
-                             str(msg))
+                                 (len(numOrders) - 1)) + "/pickup-time",str(msg))
                 reply = "-Got it!, you can " \
-                        "view the "+currentMenu+" menu here " + menKeys[mnx]["link"] + "\n-first enter your items then any promo-codes," \
+                        "view the "+str(currentMenu)+" menu here " + menuLink + "\n-first enter your items then any promo-codes," \
                                                        " one by one in DIFFERENT TEXTS\n" \
                                                        "-Enter " + '"DONE" when finished'
 
@@ -844,12 +866,12 @@ def getReply(msg, number):
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 6)
                     DBdata = database.get("/restaurants/" + estName, "orders")
                     usrIndx = DBdata[indx]["userIndx"]
-                    verifyPayment(indx)
+                    verifyPayment(indx,number)
                     numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
                     loyaltyCard = numOrders[0]["loyaltyCard"]
                     cash = DBdata[indx]["cash"]
                     if (cash != 1):
-                        if (loyaltyCard != "LoyaltyCard"):
+                        if (loyaltyCard == "NOCARD"):
                             client.send_message({
                                 'from': NexmoNumber,
                                 'to': number,
@@ -938,17 +960,17 @@ def getReply(msg, number):
         return ("no msg")
 
 
-    @app.route('/sms', methods=['GET', 'POST'])
-    def inbound_sms():
-        data = dict(request.form) or dict(request.args)
-        print(data["text"])
-        number = str(data['msisdn'][0])
-        msg = str(data["text"][0])
-        print(number, msg)
+@app.route('/sms', methods=['GET', 'POST'])
+def inbound_sms():
+    data = dict(request.form) or dict(request.args)
+    print(data["text"])
+    number = str(data['msisdn'][0])
+    msg = str(data["text"][0])
+    print(number, msg)
 
-        getReply(msg, number)
+    getReply(msg, number)
 
-        return ('', 200)
+    return ('', 200)
 
 
 @app.route('/ipn', methods=['POST'])
@@ -1043,7 +1065,7 @@ def panel():
         keys = list(hours.keys())
         for menuNames in range(len(keys)):
             names.append(str([keys[menuNames]][0]))
-            links.append("/static/"+estNameStr + "-" +str([keys[menuNames]][0]) + "-" + "menu.pdf")
+            links.append(str(hours[keys[menuNames]]["link"]))
             print(links)
         return render_template("panel.html",len=len(links), menuLinks =links ,menuNames=names,restName=estNameStr,viewOrders=(uid + "view"),addItm=(addPass),remItms=remPass,addCpn=promoPass,signOut=estNameStr)
     else:
@@ -1057,15 +1079,18 @@ def view():
     keys = []
     print(orders)
     for ords in range(len(orders)):
-        filled = orders[ords]["filled"]
-        if (filled == "1"):
-            UUID = orders[ords]["UUID"]
-            writeStr = str(orders[ords]["name"]) + " " + str(orders[ords]["finalOrder"]) \
-                       + " " + str(orders[ords]["togo"]) + " " + str(orders[ords]["time"]) + " " \
-                                                                                             "" + str(
-                orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " + str(orders[ords]["cash"])
-            keys.append(UUID)
-            webDataDisp.append(writeStr)
+        try:
+            filled = orders[ords]["filled"]
+            if (filled == "1"):
+                UUID = orders[ords]["UUID"]
+                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) \
+                           + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
+                                                                                                 "" + str(
+                    orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " || " + str(orders[ords]["cash"])
+                keys.append(UUID)
+                webDataDisp.append(writeStr)
+        except KeyError:
+            pass
     return render_template("index.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=str(uid + "view"),restName=estNameStr)
 
 @app.route('/' + uid + "view", methods=['POST'])
@@ -1144,8 +1169,6 @@ def removeItems():
         print(hours)
         keys = list(hours.keys())
         for menuNames in range(len(keys)):
-            fileName = "static/menus/" + estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
-            os.remove(fileName)
             pdf = FPDF()
             pdf.add_page()
             yStart = 20
@@ -1214,9 +1237,10 @@ def removeItems():
                                     text = ""
                             yStart += 7
                             text = ""
-            fileName = "static/menus/"+estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
-            print(fileName)
+            fileName = "menus/"+estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
             pdf.output(fileName)
+            storage = firebaseAuth.storage()
+            storage.child(estNameStr +"/"+ fileName).put(fileName)
             print("\n")
         return redirect(url_for('panel'))
     else:
@@ -1395,8 +1419,6 @@ def addItmResp3():
         print(hours)
         keys = list(hours.keys())
         for menuNames in range(len(keys)):
-            fileName = "static/menus/" + estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
-            os.remove(fileName)
             pdf = FPDF()
             pdf.add_page()
             yStart = 20
@@ -1465,9 +1487,11 @@ def addItmResp3():
                                     text = ""
                             yStart += 7
                             text = ""
-            fileName = "static/menus/"+ estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
+            fileName = "menus/"+ estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
             print(fileName)
             pdf.output(fileName)
+            storage = firebaseAuth.storage()
+            storage.child(estNameStr +"/" +fileName).put(fileName)
             print("\n")
         return redirect(url_for('panel'))
     else:

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
-      <change afterPath="$PROJECT_DIR$/static/TestRaunt-breakfast-menu.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix auto updates pdf">
+      <change afterPath="$PROJECT_DIR$/testFIles/logSkus.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testFIles/testUploadMenus.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/genPDF.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/genPDF.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -53,6 +52,8 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/menus" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/static/menus" />
       <recent name="$PROJECT_DIR$/static" />
     </key>
@@ -75,7 +76,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.genPDF">
+  <component name="RunManager" selected="Python.logSkus">
     <configuration name="application" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SMSorder" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -89,27 +90,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/application.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="fbtest (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SMSorder" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testFIles" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testFIles/fbtest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -160,6 +140,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="logSkus" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="SMSorder" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testFIles" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testFIles/logSkus.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="readEmail" type="PythonConfigurationType" factoryName="Python">
       <module name="SMSorder" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -173,27 +174,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/readEmail.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="testLog" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SMSorder" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testFIles" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testFIles/testLog.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -223,22 +203,43 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="testUploadMenus" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="SMSorder" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testFIles" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testFIles/testUploadMenus.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.fbtest" />
       <item itemvalue="Python.readEmail" />
       <item itemvalue="Python.application" />
-      <item itemvalue="Python.testLog" />
       <item itemvalue="Python.testSheets" />
-      <item itemvalue="Python.fbtest (1)" />
       <item itemvalue="Python.genPDF" />
+      <item itemvalue="Python.testUploadMenus" />
+      <item itemvalue="Python.logSkus" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.application" />
+        <item itemvalue="Python.logSkus" />
+        <item itemvalue="Python.testUploadMenus" />
         <item itemvalue="Python.genPDF" />
         <item itemvalue="Python.testSheets" />
-        <item itemvalue="Python.fbtest (1)" />
-        <item itemvalue="Python.testLog" />
       </list>
     </recent_temporary>
   </component>
@@ -533,7 +534,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566200322988</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="minor bug fix auto updates pdf">
+      <created>1566201707967</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1566201707967</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -554,7 +562,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="fixed formatting" />
     <MESSAGE value="V1, memory issues still need fixing" />
     <MESSAGE value="fixed inputting items" />
     <MESSAGE value="scarped data from receipt" />
@@ -579,6 +586,7 @@
     <MESSAGE value="added link to gsheets" />
     <MESSAGE value="generates pdf" />
     <MESSAGE value="minor bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
+    <MESSAGE value="minor bug fix auto updates pdf" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix auto updates pdf" />
   </component>
 </project>
