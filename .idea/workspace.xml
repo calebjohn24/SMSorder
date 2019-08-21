@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="basic ordering GUI">
-      <change afterPath="$PROJECT_DIR$/flask_session/3a7a0613e7fd126251ce81c9faea8763" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/830cf8613651f1ef64da74068ee4a13f" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/85d770fe117853566ec64c6427983197" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/9ec37b60b18b25d6484f23cebb7cbbfc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/a1d105011d6af81230d02a03223a91ba" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/bf80b69b792e1f58a3c4bfc9241d82ce" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/cf1127cb56c1025a9dfdf7064f5d3950" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="finished front end part 1">
+      <change afterPath="$PROJECT_DIR$/flask_session/01682d675c11a48e38a6b2bb1533ce0f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/97ecdba7d3e09b9d4f7383f532dfd637" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/aa905a3ab35feab778f14426ecd2db30" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/b0b7fd4fc55b764f3d2b22c248c95458" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/e01e3a586ddeac762aa308b301fd2c59" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/checkLY.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/mainOrderBtn.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask_session/0b1f1e1d4c1108b5591727320592c04e" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/0b1f1e1d4c1108b5591727320592c04e" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/3fe8880e6f45ca75daa265956404ddfa" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/3fe8880e6f45ca75daa265956404ddfa" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/main.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
     </list>
@@ -562,7 +563,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566350106195</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="finished front end part 1">
+      <created>1566366243941</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1566366243941</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -583,7 +591,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="fixed inputting items" />
     <MESSAGE value="scarped data from receipt" />
     <MESSAGE value="updated sear alg" />
     <MESSAGE value="finalized translation algorithms" />
@@ -608,6 +615,7 @@
     <MESSAGE value="minor bug fix auto updates pdf" />
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="basic ordering GUI" />
-    <option name="LAST_COMMIT_MESSAGE" value="basic ordering GUI" />
+    <MESSAGE value="finished front end part 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished front end part 1" />
   </component>
 </project>

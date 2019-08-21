@@ -1,21 +1,22 @@
-body,h1,h2,h3,h4,h5,h6,button {font-family: "Lato", sans-serif;}
+body,h1,h2,h3,h4,h5,h6,button,li{font-family: "Lato", sans-serif;}
 body, html {
   height: 100%;
   color: white;
   line-height: 1.8;
   text-align: center;
   background-color: black;
+
 }
-button {
+button{
   background-color: #FFFFFF;
   border: none;
   color: black;
-  padding: 10px 28px;
+  padding: 5px 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 20px;
-  margin: 4px 2px;
+  margin: 2px 2px;
   cursor: pointer;
   border-radius: 20px;
 }

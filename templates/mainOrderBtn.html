@@ -46,7 +46,6 @@ body {
   left: 0;
   background-color: black;
   text-align: center;
-  justify-content: center;
 }
 .left li {
     display: inline-block;
@@ -57,7 +56,6 @@ body {
   right: 0;
   background-color: black;
   text-align: center;
-  justify-content: center;
 }
 .centered {
   position: absolute;
@@ -72,10 +70,8 @@ body {
 }
 ul {
 list-style-type: none;
-    margin:0 auto;
-    text-align: center;
-    display: flex;
-  justify-content: center;
+margin-right: auto;
+ margin-left: auto;
 }
 
 </style>
@@ -87,15 +83,13 @@ list-style-type: none;
      <h1>Tap Item to Add</h1>
       <h3><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Items" title="Type in a name" align="center"></h3>
       <br>
-        <ul id="myUL" a>
-            <h3 align="center">
+        <ul id="myUL" >
                 {%for i in range(0, len)%}
                 <form action="{{btn}}" method="post">
                     <li><button onclick="{{btn}}" name="item" value={{keys[i]}} type="submit">{{names[i]}}</button></li>
                         <br>
                 </form>
                 {%endfor%}
-            </h3>
         </ul>
         <script>
         function myFunction() {
