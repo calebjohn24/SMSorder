@@ -55,8 +55,8 @@ dropdown:hover .dropdown-content {display: block;}
 dropdown:hover .dropbtn {background-color: #3e8e41;}
 
 .split {
-  height: 100%;
-  width: 50%;
+  height: 50%;
+  width: 100%;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -66,12 +66,12 @@ dropdown:hover .dropbtn {background-color: #3e8e41;}
 
 .left {
   left: 0;
-  background-color: #111;
+  background-color: black;
 }
 
 .right {
   right: 0;
-  background-color: red;
+  background-color: black;
 }
 
 .centered {

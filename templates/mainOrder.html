@@ -72,6 +72,7 @@ body {
 <div class="split left">
   <div class="left">
      <h1>Tap Item to Add</h1>
+      <hr>
     {%for i in range(0, len)%}
     <h2>
         <form action="{{btn}}" method="post">
@@ -86,8 +87,19 @@ body {
 
 <div class="split right">
   <div class="right">
-    <h2>Items Selected</h2>
-
+      <h2>Items Selected</h2>
+        <br>
+       <h2>Tap an item to remove</h2>
+      <hr>
+        {%for j in range(0, len2)%}
+    <h2>
+        <form action="{{btn2}}" method="post">
+        <button type="submit" name="rem" value={{currKeys[j]}}>{{currentItms[j]}}</button>
+                <br>
+                <br>
+        </form>
+    </h2>
+    {%endfor%}
 
   </div>
 </div>
