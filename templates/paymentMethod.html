@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Add Items</title>
 <meta charset="UTF-8">
+    <title>Order Food</title>
     <link rel="apple-touch-icon" sizes="60x60" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="57x57" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="72x72" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
@@ -25,25 +25,25 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
+<h1>Would you like to pay now and skip the line?</h1>
+<hr>
+<h2>
+    <form action="{{btn}}" method="post">
+    <button type="submit" name="item" value="yes">Yes!</button>
+
+    </form>
+</h2>
 <br>
-<h1>Edit {{restName}} Menu</h1>
 <br>
-<h2>Add Toppings and Customizations</h2>
-<br>
-<form method="POST" action="{{btn}}">
-    {%for i in range(0, len)%}
-    <h3>Enter Name For Topping/Customization #{{i+1}}</h3>
-    <input name="{{i}}">
-    <h3>Enter Price For Topping/Customization #{{i+1}}</h3>
-    <input type="number" min="0.00" step="0.01" max="2500" name="{{i}}a">
-    <h3>Enter SKU ID</h3>
-    <input name="{{i}}b">
-    {%endfor%}
-    <br>
-    <br>
-    <button type="submit" value="{{btn}}">Done</button>
-</form>
+<h3>
+    <form action="{{btn}}" method="post">
+    <button type="submit" name="item" value="no">No I want to pay at the restaurant</button>
+        	<br>
+        <br>
+    </form>
+</h3>
 </body>
 </html>

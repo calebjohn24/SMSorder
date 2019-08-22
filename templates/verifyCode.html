@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Add Items</title>
+    <title>Order Food</title>
 <meta charset="UTF-8">
     <link rel="apple-touch-icon" sizes="60x60" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="57x57" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
@@ -28,19 +28,10 @@
 </head>
 <body>
 <br>
-<h1>Edit {{restName}} Menu</h1>
-<br>
-<h2>Add Toppings and Customizations</h2>
+<h1>Enter the last 4 digits of your phone number</h1>
 <br>
 <form method="POST" action="{{btn}}">
-    {%for i in range(0, len)%}
-    <h3>Enter Name For Topping/Customization #{{i+1}}</h3>
-    <input name="{{i}}">
-    <h3>Enter Price For Topping/Customization #{{i+1}}</h3>
-    <input type="number" min="0.00" step="0.01" max="2500" name="{{i}}a">
-    <h3>Enter SKU ID</h3>
-    <input name="{{i}}b">
-    {%endfor%}
+    <input type="number" min="0" step="1"  name="tickID">
     <br>
     <br>
     <button type="submit" value="{{btn}}">Done</button>

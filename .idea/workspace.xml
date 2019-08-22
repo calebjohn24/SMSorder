@@ -1,20 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="finished front end part 1">
-      <change afterPath="$PROJECT_DIR$/flask_session/01682d675c11a48e38a6b2bb1533ce0f" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/97ecdba7d3e09b9d4f7383f532dfd637" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/aa905a3ab35feab778f14426ecd2db30" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/b0b7fd4fc55b764f3d2b22c248c95458" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/e01e3a586ddeac762aa308b301fd2c59" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/checkLY.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/mainOrderBtn.html" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
+      <change afterPath="$PROJECT_DIR$/flask_session/08b5cc75c4e1d1555ae3522e3ea24805" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/0d47d41449f466586dca96b1b909bdb1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/1184b3409c4ab579b9e10babbe1e2484" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/2480f3e8f68131ae781699a1cd2a1888" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/2539d908987e2075c5f9ac46946a9216" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/281ed9c59b1624d03764b86322477b6f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/28f6a79e013f41035d81cb03fbe8e2d4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/2a52ecb14ade553f94e92b31403822c7" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/2e2aa814a77eba4be39156c9d8cf183b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/32078a0b92b92c5837f0f4175883a57e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/364c6ce6e6c46c0e167cc818ba08e26f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/432c79246cfd448ba895c361dfdda092" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/45c78719ecc971758d12e2c3a3475315" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/5b9051e5d3acdbb6a077b4e5e8d3e4a2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/5f7872de52e0952eec38bbc78ec02f86" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/691fd2bdd204c94bfddf0b06501e4f28" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/6aa376c19c99b757d8becd4dd2081933" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/7a7bf02a991d6e63de07450c09e4f1d9" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/7de54f34fdc2d0a5e69ab55bd68b3601" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/816490ec4e6f063b4f3606cb69813efb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/8a5debb1afeacaffa3fab882f29f6f7f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/8d1933678d27328ebff4cd6add05e46c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/947a713b185d22cff199fa8d29eef476" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/977aa4a7a726ed8b5394aa33b2e53fa9" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/ac27dafa2a61d5af12f45e5a2743ba0c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/b23db984a6fefbabb1c181ae6f1db235" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/bd081c8b733eb225b1f96311184e92bf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/c6e370a69494383e80f9741f3aedc37c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/c816cb76dad46277ff6a5d722caed30a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/cae0b1e8b54d18c52f8cc2eebe7a98a8" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/cae3487a086382889789da3d4f7aac88" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/caf3b4b4ca8ba5aff125c6f21c0c3bbb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/dd886d6aece5a47c654d281663e553fc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/e54792e998cd2f7e81c24bf9b2e8bb41" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/e79c44f94a2992b1756f1be4c89a42fd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/e8ff9ed69a95ec6af0901dc35d8adcfb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/e98ea0baf8a5f479ab8991e637f04983" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/f2378e4593e2105c645f5dcfa4a12dfa" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/f61ebbf00e0438ce25ae3a9b9816e900" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/f9c322251dd59c197f5c70036996415e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/thankMsg.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/verifyCode.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/verifyCode2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask_session/3fe8880e6f45ca75daa265956404ddfa" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/3fe8880e6f45ca75daa265956404ddfa" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/aa905a3ab35feab778f14426ecd2db30" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/aa905a3ab35feab778f14426ecd2db30" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addform2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,7 +85,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/testFIles/testSheets.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/application.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/application.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1P2Dui2ZxLEnlFRxSydyezKjzHW" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -570,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566366243941</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="minor bug fix">
+      <created>1566428058974</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1566428058974</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -613,9 +665,9 @@
     <MESSAGE value="added link to gsheets" />
     <MESSAGE value="generates pdf" />
     <MESSAGE value="minor bug fix auto updates pdf" />
-    <MESSAGE value="minor bug fix" />
     <MESSAGE value="basic ordering GUI" />
     <MESSAGE value="finished front end part 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished front end part 1" />
+    <MESSAGE value="minor bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
   </component>
 </project>
