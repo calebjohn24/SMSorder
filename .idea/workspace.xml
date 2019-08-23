@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
-      <change afterPath="$PROJECT_DIR$/flask_session/47e8b5de1f28d343fd0e68f3c4eeea72" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/e88a29316742ae35a0084ae988ebc8b7" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="almost done just need to fix currency rounding">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask_session/1936b5fc1480403e45d44d69668de130" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -255,13 +251,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00001" summary="initial commit">
-      <created>1564115820824</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1564115820824</updated>
     </task>
     <task id="LOCAL-00002" summary="fixed formatting">
       <created>1564118576671</created>
@@ -599,7 +588,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566535358513</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="almost done just need to fix currency rounding">
+      <created>1566535682297</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1566535682300</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -620,7 +616,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="updated sear alg" />
     <MESSAGE value="finalized translation algorithms" />
     <MESSAGE value="chatbot no users or coupons v2" />
     <MESSAGE value="minor bug fix on order logging, added timing for orders" />
@@ -645,6 +640,7 @@
     <MESSAGE value="finished front end part 1" />
     <MESSAGE value="added Fb accounting" />
     <MESSAGE value="minor bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
+    <MESSAGE value="almost done just need to fix currency rounding" />
+    <option name="LAST_COMMIT_MESSAGE" value="almost done just need to fix currency rounding" />
   </component>
 </project>

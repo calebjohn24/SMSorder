@@ -433,11 +433,15 @@ def view():
             print(filled)
             if (filled == "1"):
                 UUID = orders[ords]["UUID"]
-
+                subTotal = (orders[ords]["linkTotal"])
+                Tax = float(orders[ords]["linkTotal"] * 0.1)
+                Total = float(subTotal + float(Tax) + 0.1)
+                subTotalStr = ('$' + format(subTotal, ',.2f'))
+                TotalStr = ('$' + format(Total, ',.2f'))
+                TaxStr = ('$' + format(Tax, ',.2f'))
                 writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) \
                            + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
-                                                                                                       " $" + str(
-                    round((((orders[ords]["linkTotal"]+0.1)*1.1)), 2)) + " || " + str(orders[ords]["cash"])
+                                                                                                       " $" + TotalStr + " || " + str(orders[ords]["cash"])
                 keys.append(UUID)
                 print(writeStr)
                 webDataDisp.append(writeStr)
@@ -955,8 +959,14 @@ def order():
     data = (database.get("restaurants/" + uid, "/menu/items/"))
     currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
     currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
-    dispTotal = "$" + str(round(currentTotal, 2))
     DBdata = database.get("/restaurants/" + estName, "orders")
+    subTotal = (DBdata[key]["linkTotal"])
+    Tax = float(DBdata[key]["linkTotal"] * 0.1)
+    Total = float(subTotal + float(Tax) + 0.1)
+    subTotalStr = ('$' + format(subTotal, ',.2f'))
+    TotalStr = ('$' + format(Total, ',.2f'))
+    TaxStr = ('$' + format(Tax, ',.2f'))
+    dispTotal = subTotalStr
     MenuHrs = ((database.get("restaurants/" + uid, "/Hours/")))
     menKeys = list(MenuHrs.keys())
     currentMenu = ""
@@ -1043,7 +1053,14 @@ def orderX():
         database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str((rsp["rem"])), "price"))
     currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
     currentTotal -= currentPrice
-    dispTotal = "$" + str(round(currentTotal, 2))
+    DBdata = database.get("/restaurants/" + estName, "orders")
+    subTotal = (DBdata[key]["linkTotal"])
+    Tax = float(DBdata[key]["linkTotal"] * 0.1)
+    Total = float(subTotal + float(Tax) + 0.1)
+    subTotalStr = ('$' + format(subTotal, ',.2f'))
+    TotalStr = ('$' + format(Total, ',.2f'))
+    TaxStr = ('$' + format(Tax, ',.2f'))
+    dispTotal = subTotalStr
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
     database.delete("/restaurants/" + estName + "/orders/" + str(key) + "/item/", (rsp["rem"]))
     data = (database.get("restaurants/" + uid, "/menu/items/"))
@@ -1306,11 +1323,13 @@ def CheckPaymentMethod():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     DBdata = database.get("/restaurants/" + estName, "orders")
-    subTotal = str(DBdata[key]["linkTotal"])
-    Tax = str(round((float(DBdata[key]["linkTotal"]) * 0.1), 2))
-    Total = str(round((float(subTotal) + float(Tax) + 0.1), 2))
-    return render_template("paymentMethod.html", btn="nextPay", subTotal=subTotal, tax=Tax, total=Total)
-
+    subTotal = (DBdata[key]["linkTotal"])
+    Tax = float(DBdata[key]["linkTotal"] * 0.1)
+    Total = float(subTotal + float(Tax) + 0.1)
+    subTotalStr = ('$' + format(subTotal, ',.2f'))
+    TotalStr = ('$' + format(Total, ',.2f'))
+    TaxStr = ('$' + format(Tax, ',.2f'))
+    return render_template("paymentMethod.html", btn="nextPay", subTotal=subTotalStr, tax=TaxStr, total=TotalStr)
 
 @app.route('/nextPay', methods=['POST'])
 def nextPayment():
