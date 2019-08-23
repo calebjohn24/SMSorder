@@ -26,122 +26,37 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<style>
-    <style>
-body {
-  font-family: Arial;
-  color: white;
-}
-.split {
-  height: 100%;
-  width: 48%;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  overflow-x: hidden;
-  padding-top: 10px;
-  text-align: center;
-}
-.left {
-  left: 0;
-  background-color: black;
-  text-align: center;
-}
-.left li {
-    display: inline-block;
-    justify-content: center;
-    text-align: center;
-}
-.right {
-  right: 0;
-  background-color: black;
-  text-align: center;
-}
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-.centered img {
-  width: 150px;
-  border-radius: 50%;
-}
-ul {
-list-style-type: none;
-margin-right: auto;
- margin-left: auto;
-}
-
-</style>
 </head>
 <body>
-<div class="split right">
-  <div class="right">
-     <h1>Tap Item to Add</h1>
-      <h3><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Items" title="Type in a name" align="center"></h3>
-      <br>
-        <ul id="myUL" >
-                {%for i in range(0, len)%}
-                <form action="{{btn}}" method="post">
-                    <li><button onclick="{{btn}}" name="item" value={{keys[i]}} type="submit">{{names[i]}}</button></li>
-                        <br>
-                </form>
-                {%endfor%}
-        </ul>
-        <script>
-        function myFunction() {
-            var input, filter, ul, li, a, i, txtValue;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("myUL");
-            li = ul.getElementsByTagName("li");
-            for (i = 0; i < li.length; i++) {
-                a = li[i].getElementsByTagName("button")[0];
-                txtValue = a.textContent || a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "";
-                } else {
-                    li[i].style.display = "none";
-                }
-            }
-        }
-        </script>
+<h1>Start Ordering</h1>
+<hr>
+<br>
+<h3>SubTotal-{{subTotal}}</h3>
+<br>
+<h3>Tax-{{tax}}</h3>
+<br>
+<h3>Process Fee-$0.15</h3>
+<br>
+<h3>Total-{{total}}</h3>
+<br>
+<br>
+<h1>Would you like to pay now and skip the line?</h1>
+<br>
+<br>
+<h2>
+    <form action="{{btn}}" method="post">
+    <button type="submit" name="item" value="yes">Yes!</button>
 
-  </div>
-</div>
-
-
-<div class="split left">
-  <div class="left">
-      <h2>Items Selected</h2>
+    </form>
+</h2>
+<br>
+<br>
+<h3>
+    <form action="{{btn}}" method="post">
+    <button type="submit" name="item" value="no">No I want to pay at the restaurant</button>
+        	<br>
         <br>
-       <h2>Tap an item to remove</h2>
-      <hr>
-        {%for j in range(0, len2)%}
-    <h2>
-        <form action="{{btn2}}" method="post">
-        <button type="submit" name="rem" value={{currKeys[j]}}>{{currentItms[j]}}</button>
-                <br>
-        </form>
-    </h2>
-    {%endfor%}
-      <hr>
-      <h3>Total {{total}}</h3>
-      <hr>
-     <form action="{{btn3}}" method="post">
-        <button type="submit" name="item" value="done">Done</button>
-        </form>
-
-  </div>
-</div>
-
+    </form>
+</h3>
 </body>
 </html>
-
-
-
-
-
-

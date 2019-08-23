@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="almost done just need to fix currency rounding">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="fixed currency formatting need to add accounting in gsheets next">
+      <change afterPath="$PROJECT_DIR$/flask_session/0d36c8d5fb02821d8b42d7d6495248fd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/30146eb6e4043d51d3f8e94ce8f259d0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/498bfc6d4d6e36ab990a1502f96f097a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/4bcbaa9b8a8e3bd9725d754f4c2e21c1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/6cd56f58d1f8bee96e9d09f21da7b034" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/6d8767fdfbd65c7a498bfee96dc311e9" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/713f598b55e0d5636d4ccb3e1f6917cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/850df1139d2d00f7cc92f351a4d80193" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/8db221df92e18d4cb3f8a58c891a8d59" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/92d34d2cef99abe0933c57bbcc9d34fc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/a2bb465b2af26963658a59a15ce0780c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/a7390078d17b4df1b0c82bf86cf37e8c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/baed5a4e102c2456ccc5c9665f86ab7a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/c7b341f4f6a923731868076f986ce992" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/d06a0203a78c69e668047c41a4a29be6" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/f731fe1471d870042988eae2b81a8bb7" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/mainPage.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/b856f79abfab4834c83f7315fc327e90" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/mainOrderBtn.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrderBtn.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +57,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/testFIles/testSheets.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/application.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/application.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectId" id="1P2Dui2ZxLEnlFRxSydyezKjzHW" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -43,7 +70,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/caleb/Documents/GitHub/SMSorder/menu.json" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -55,11 +82,11 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/static/img" />
       <recent name="$PROJECT_DIR$/static" />
       <recent name="$PROJECT_DIR$/static/menus" />
-      <recent name="$PROJECT_DIR$/menus" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -251,13 +278,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00002" summary="fixed formatting">
-      <created>1564118576671</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1564118576671</updated>
     </task>
     <task id="LOCAL-00003" summary="fixed formatting">
       <created>1564120088965</created>
@@ -595,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566535682300</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="fixed currency formatting need to add accounting in gsheets next">
+      <created>1566536544268</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1566536544268</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -616,7 +643,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="finalized translation algorithms" />
     <MESSAGE value="chatbot no users or coupons v2" />
     <MESSAGE value="minor bug fix on order logging, added timing for orders" />
     <MESSAGE value="added email scraping" />
@@ -641,6 +667,7 @@
     <MESSAGE value="added Fb accounting" />
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="almost done just need to fix currency rounding" />
-    <option name="LAST_COMMIT_MESSAGE" value="almost done just need to fix currency rounding" />
+    <MESSAGE value="fixed currency formatting need to add accounting in gsheets next" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed currency formatting need to add accounting in gsheets next" />
   </component>
 </project>
