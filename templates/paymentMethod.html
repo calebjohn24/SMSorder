@@ -28,8 +28,21 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-<h1>Would you like to pay now and skip the line?</h1>
+<h1>Total</h1>
 <hr>
+<br>
+<h3>SubTotal-${{subTotal}}</h3>
+<br>
+<h3>Tax-${{tax}}</h3>
+<br>
+<h3>Process Fee-${{0.10}}</h3>
+<br>
+<h3>Total-${{total}}</h3>
+<br>
+<br>
+<h1>Would you like to pay now and skip the line?</h1>
+<br>
+<br>
 <h2>
     <form action="{{btn}}" method="post">
     <button type="submit" name="item" value="yes">Yes!</button>
