@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added Fb accounting">
-      <change afterPath="$PROJECT_DIR$/flask_session/26b64cbf2760ba775793934d4bf1f9c8" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/50372f6ddf9d7597dd504f6a9be9b0e9" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/61fa2a92c0b154f217a4db70362c4548" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/743fd6c71d5a84cf6cb262a8c49b6c0a" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/c54bd2591e1659ab24818a82c3bc319f" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/e2f088a3f962954c68c18a7305050ee3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/e84bef46ba89ec5fd8ece5d8fe5a85ad" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/eb696563287e18ad9308c8a99d2f287c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/ed81c59e582fb9ef8a05359c964ddbf1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/ef73bcd9f6e69bd649ed93c92180f830" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/ef76a7cf3bebd59a40d7fd819cd960d5" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/f1abd45248c35e59fc06b9d1edd0081c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/f6e0a0b0438fdc72913437f9f715af53" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
+      <change afterPath="$PROJECT_DIR$/flask_session/1936b5fc1480403e45d44d69668de130" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/27ddc94878eb5f31b8173ab8ce294a9f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/307c3aee834f070e0f06964588338ae1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/40b6c76630d45eadf4dbc064d21d12c4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/539ba80ebbd243d4c16ae1d9970109f6" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/6373a9449f190f4f73283039f8e22da1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/77001e451cc2401f2e0e4d6fce38d5ad" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/775fe918db03848ea76162347a281a46" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/aa366228fff7bb185b6d1bd1ab6fe2a4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/b5803ec18b922fd7e738a12d9a40268a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/b856f79abfab4834c83f7315fc327e90" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/bacd5a884c2eddffdaf79dbd273aed37" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/ca977b6d47352bfe958d4c038763971e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/cf4e6de423e43cc7091f371481d5e0ba" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/3558b0c1a2b5728551a011bbf5459ab8" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/indexV.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/indexV.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -596,7 +599,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566526462592</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="minor bug fix">
+      <created>1566528464528</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1566528464528</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -640,8 +650,8 @@
     <MESSAGE value="minor bug fix auto updates pdf" />
     <MESSAGE value="basic ordering GUI" />
     <MESSAGE value="finished front end part 1" />
-    <MESSAGE value="minor bug fix" />
     <MESSAGE value="added Fb accounting" />
-    <option name="LAST_COMMIT_MESSAGE" value="added Fb accounting" />
+    <MESSAGE value="minor bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
   </component>
 </project>

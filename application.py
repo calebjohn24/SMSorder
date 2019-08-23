@@ -16,13 +16,14 @@ from words2num import w2n
 from spellchecker import SpellChecker
 from flask import render_template
 from flask import jsonify, session, sessions
-from flask import Flask, escape, request,session
+from flask import Flask, escape, request, session
 from flask_session import Session
 import pyrebase as fbAuth
 from fpdf import FPDF
 import os
 import calendar
 import random
+
 sessionTime = 900
 infoFile = open("info.json")
 info = json.load(infoFile)
@@ -33,17 +34,18 @@ logYM = (datetime.datetime.now().strftime("%Y-%m"))
 estName = info['uid']
 estNameStr = info['name']
 shortUID = info['shortUID']
-authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W', 'cajohn0205@gmail.com', extra={'id': 123})
+authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W', 'cajohn0205@gmail.com',
+                                                 extra={'id': 123})
 database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
 data = (database.get("restaurants/" + uid, "/menu/items/"))
 items = []
 login = "payments@cedarrobots.com"
 password = "CedarPayments1!"
 config = {
-  "apiKey": "AIzaSyB2it4zPzPdn_bW9OAglTHUtclidAw307o",
-  "authDomain": "cedarchatbot.firebaseapp.com",
-  "databaseURL": "https://cedarchatbot.firebaseio.com",
-  "storageBucket": "cedarchatbot.appspot.com",
+    "apiKey": "AIzaSyB2it4zPzPdn_bW9OAglTHUtclidAw307o",
+    "authDomain": "cedarchatbot.firebaseapp.com",
+    "databaseURL": "https://cedarchatbot.firebaseio.com",
+    "storageBucket": "cedarchatbot.appspot.com",
 }
 firebaseAuth = fbAuth.initialize_app(config)
 auth = firebaseAuth.auth()
@@ -61,7 +63,7 @@ linkOrder = "https://0f66029e.ngrok.io/check"
 app = Flask(__name__)
 
 
-def genUsr(name, number):
+def genUsr(name, number, dbIndx):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
@@ -73,7 +75,7 @@ def genUsr(name, number):
                  str(timeStamp))
     database.put("/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/name/", estNameStr)
     database.put("/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/points/", 0)
-
+    database.put("/restaurants/" + estName + "/orders/" + str(dbIndx) + "/", "/usrIndx/", len(UserData))
 
 
 def genPayment(total, name, UUIDcode):
@@ -84,7 +86,7 @@ def genPayment(total, name, UUIDcode):
                   '' + str(total) + '&item_name=' + str(UUIDcode)
     tinyurl = urllib.request.urlopen(apiurl + paymentLink).read()
     shortLink = tinyurl.decode("utf-8")
-    return shortLink
+    return paymentLink
 
 
 def getReply(msg, number):
@@ -94,9 +96,9 @@ def getReply(msg, number):
     currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
     startHr = float(database.get("restaurants/" + uid, "/OChrs/open/"))
     endHr = float(database.get("restaurants/" + uid, "/OChrs/close/"))
-    if(startHr <= float(currentTime) < endHr):
+    if (startHr <= float(currentTime) < endHr):
         spell = SpellChecker()
-        #msg = spell.correction(msg)
+        # msg = spell.correction(msg)
         msg = msg.lower()
         indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")
@@ -135,19 +137,19 @@ def getReply(msg, number):
                                  (len(numOrders)))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/",
                                  time.time())
-                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/",0)
+                    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 0)
                     database.put("/users/",
-                                 "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str((len(numOrders))) + "/startTime",
+                                 "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str(
+                                     (len(numOrders))) + "/startTime",
                                  str(timeStamp))
                     break
                 if ((len(UserData) - usr) == 1):
-                    genUsr("", number)
+                    genUsr("", number, (len(DBdata)))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/",
                                  (len(UserData)))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                                  0)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 1)
-
             client.send_message({
                 'from': NexmoNumber,
                 'to': number,
@@ -165,19 +167,22 @@ def getReply(msg, number):
                     return 200
             if (DBdata[indx]['stage'] == 1):
                 name = msg
+                DBdata = database.get("/restaurants/" + estName, "/orders")
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/name/", str(msg).capitalize())
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 2)
                 UserData = database.get("/", "users")
                 timeStamp = datetime.datetime.today()
-                database.put("/users/", "/" + str(len(UserData)) + "/name", name)
-                database.put("/users/", "/" + str(len(UserData)) + "/number", number)
+                database.put("/users/", "/" + str(DBdata[indx]["userIndx"]) + "/name", name)
+                database.put("/users/", "/" + str(DBdata[indx]["userIndx"]) + "/number", number)
                 database.put("/users/",
-                             "/" + str(len(UserData)) + "/restaurants/" + estNameStr + "/" + str(0) + "/StartTime",
+                             "/" + str(DBdata[indx]["userIndx"]) + "/restaurants/" + estNameStr + "/" + str(
+                                 0) + "/StartTime",
                              str(timeStamp))
-                database.put("/users/", "/" + str(len(UserData)) + "/loyalty/" + estNameStr + "/points/", 0)
+                database.put("/users/", "/" + str((DBdata[indx]["userIndx"])) + "/loyalty/" + estNameStr + "/points/",
+                             0)
                 reply = "Hi, " + str(msg).capitalize() + " is this order for-here or to-go?"
                 usrIndx = DBdata[indx]["userIndx"]
-                database.put("/users", "/" + str(usrIndx) + "/name", str(msg.capitalize()))
+                database.put("/users", "/" + str(DBdata[indx]["userIndx"]) + "/name", str(msg.capitalize()))
                 client.send_message({
                     'from': NexmoNumber,
                     'to': number,
@@ -252,8 +257,8 @@ def getReply(msg, number):
                 print(numOrders)
                 database.put("/users/",
                              "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
-                                 (len(numOrders) - 1)) + "/pickup-time",str(msg))
-                reply = "Got it! click this link below to view the menu and continue ordering " +str(linkOrder)
+                                 (len(numOrders) - 1)) + "/pickup-time", str(msg))
+                reply = "Got it! click this link below to view the menu and continue ordering " + str(linkOrder)
 
                 client.send_message({
                     'from': NexmoNumber,
@@ -291,8 +296,8 @@ def ipn():
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/paid/", 1)
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/filled/", "1")
             usrIndx = DBdata[dbItems]["userIndx"]
-            #ticketSize = int(DBdata[dbItems]["tickSize"])
-            #startTime = float(DBdata[dbItems]["startTime"])
+            # ticketSize = int(DBdata[dbItems]["tickSize"])
+            # startTime = float(DBdata[dbItems]["startTime"])
             number = str(DBdata[dbItems]["number"])
             duration = time.time() - float(DBdata[dbItems]["startTime"])
             numItms = len(DBdata[dbItems]["item"])
@@ -324,20 +329,22 @@ def ipn():
             database.put("/log/" + uid + "/" + logYM, "/CedarFees/", cdrFees)
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/zipCode/", rsp["address_zip"])
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/city/", rsp["address_city"])
-            database.put("/log/" + uid + "/" + logYM,"/paypalFees/",payPalFees)
+            database.put("/log/" + uid + "/" + logYM, "/paypalFees/", payPalFees)
             numItms = len(DBdata[dbItems]["item"])
             orderIndx = DBdata[dbItems]["orderIndx"]
             usrIndx = DBdata[dbItems]["userIndx"]
             database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
                          ((DBdata[dbItems]["linkTotal"] + 0.1) * 1.1))
-            database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "tickSize",
+            database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
+                         "tickSize",
                          numItms)
             database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
                          DBdata[dbItems]["item"])
-            database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "duration",
+            database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
+                         "duration",
                          duration)
             print("sending")
-            reply = "Thank you for your order, you can pick it up when you arrive and skip the line"
+            reply = "-Thank you for your order, you can pick it up when you arrive and skip the line \n-To order again just text " + '"order"'
             client.send_message({
                 'from': NexmoNumber,
                 'to': number,
@@ -346,14 +353,16 @@ def ipn():
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/number/", str(number) + ".")
     return (" ", 200)
 
-@app.route('/'+estNameStr, methods=['GET'])
+
+@app.route('/' + estNameStr, methods=['GET'])
 def loginPage():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                             authentication=authentication)
     database.put("/restaurants/" + uid + "/", "loginTime", 0)
-    return render_template("login.html",btn=str(estNameStr),restName=estNameStr)
+    return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
-@app.route('/'+estNameStr, methods=['POST'])
+
+@app.route('/' + estNameStr, methods=['POST'])
 def loginPageCheck():
     rsp = ((request.form))
     email = str(rsp["email"])
@@ -365,7 +374,7 @@ def loginPageCheck():
                                                          'cajohn0205@gmail.com', extra={'id': 123})
         fireapp = firebase.FirebaseApplication('https://cedarchatbot.firebaseio.com/', authentication=authentication)
         testDB = (fireapp.get("/restaurants/", user["localId"]))
-        if(str(user["localId"]) == str(uid) and testDB != None):
+        if (str(user["localId"]) == str(uid) and testDB != None):
             print("found")
             database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                     authentication=authentication)
@@ -378,24 +387,25 @@ def loginPageCheck():
             database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                     authentication=authentication)
             database.put("/restaurants/" + uid + "/", "loginTime", 0)
-            return render_template("login2.html", btn=str(estNameStr),restName=estNameStr)
+            return render_template("login2.html", btn=str(estNameStr), restName=estNameStr)
     except Exception:
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                          'cajohn0205@gmail.com', extra={'id': 123})
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
-                                               authentication=authentication)
+                                                authentication=authentication)
         database.put("/restaurants/" + uid + "/", "loginTime", 0)
         print("incorrect password")
-        return render_template("login2.html",btn=str(estNameStr),restName=estNameStr)
+        return render_template("login2.html", btn=str(estNameStr), restName=estNameStr)
 
-@app.route('/' + uid , methods=['GET'])
+
+@app.route('/' + uid, methods=['GET'])
 def panel():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    if((currentTime - lastLogin) < sessionTime):
+    if ((currentTime - lastLogin) < sessionTime):
         links = []
         names = []
         hours = (database.get("restaurants/" + uid, "/Hours/"))
@@ -404,7 +414,9 @@ def panel():
             names.append(str([keys[menuNames]][0]))
             links.append(str(hours[keys[menuNames]]["link"]))
             print(links)
-        return render_template("panel.html",len=len(links), menuLinks =links ,menuNames=names,restName=estNameStr,viewOrders=(uid + "view"),addItm=(addPass),remItms=remPass,addCpn=promoPass,signOut=estNameStr)
+        return render_template("panel.html", len=len(links), menuLinks=links, menuNames=names, restName=estNameStr,
+                               viewOrders=(uid + "view"), addItm=(addPass), remItms=remPass, addCpn=promoPass,
+                               signOut=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -422,16 +434,19 @@ def view():
             if (filled == "1"):
                 UUID = orders[ords]["UUID"]
 
-                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrd"]) \
+                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) \
                            + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
-                                                                                                 " $" + str(round(orders[ords]["linkTotal"],2)) + " || " + str(orders[ords]["cash"])
+                                                                                                       " $" + str(
+                    round((((orders[ords]["linkTotal"]+0.1)*1.1)), 2)) + " || " + str(orders[ords]["cash"])
                 keys.append(UUID)
                 print(writeStr)
                 webDataDisp.append(writeStr)
         except KeyError:
             print("exec")
             pass
-    return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=str(uid + "view"),restName=estNameStr)
+    return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys,
+                           btn=str(uid + "view"), restName=estNameStr)
+
 
 @app.route('/' + uid + "view", methods=['POST'])
 def button():
@@ -453,10 +468,12 @@ def button():
                 writeStr = str(orders[ords]["name"]) + " " + str(orders[ords]["finalOrder"]) \
                            + " " + str(orders[ords]["togo"]) + " " + str(orders[ords]["time"]) + " " \
                                                                                                  "" + str(
-                    orders[ords]["total"]) + " " + str(orders[ords]["loyaltyCard"]) + " " + str(orders[ords]["cash"])
+                    orders[ords]["linkTotal"]) + " " + str(orders[ords]["cash"])
                 keys.append(UUID)
                 webDataDisp.append(writeStr)
-    return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys, btn=str(uid + "view"))
+    return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys,
+                           btn=str(uid + "view"))
+
 
 @app.route('/' + remPass, methods=['GET'])
 def removeItemsDisp():
@@ -478,6 +495,7 @@ def removeItemsDisp():
         return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=remPass)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 
 @app.route('/' + remPass, methods=['POST'])
 def removeItems():
@@ -577,14 +595,15 @@ def removeItems():
                                     text = ""
                             yStart += 7
                             text = ""
-            fileName = "menus/"+estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
+            fileName = "menus/" + estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
             pdf.output(fileName)
             storage = firebaseAuth.storage()
-            storage.child(estNameStr +"/"+ fileName).put(fileName)
+            storage.child(estNameStr + "/" + fileName).put(fileName)
             print("\n")
         return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 
 @app.route('/' + addPass, methods=['GET'])
 def addItmDisp():
@@ -598,6 +617,7 @@ def addItmDisp():
         return render_template('addform.html', btn=addPass, restName=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 
 @app.route('/' + addPass, methods=['POST'])
 def addItmForm():
@@ -635,6 +655,7 @@ def addItmForm():
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
+
 @app.route('/' + addPass + "2", methods=['POST'])
 def addItmResp2():
     currentTime = time.time()
@@ -662,19 +683,24 @@ def addItmResp2():
                                      float(szPrice))
                         database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/sizes/" + str(ssz), "/2/",
                                      str(sku))
-                    if(numExtras != ""):
+                    if (numExtras != ""):
                         for sse in range(int(numExtras)):
-                            database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
+                            database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse),
+                                         "/0/",
                                          "")
-                            database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", 0)
+                            database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse),
+                                         "/1/", 0)
                     else:
-                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse),
+                                     "/0/",
                                      "")
-                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", 0)
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse),
+                                     "/1/", 0)
                     break
-        return render_template('addform3.html', btn=(str(addPass) + "3"), len=int(numExtras),restName=estNameStr)
+        return render_template('addform3.html', btn=(str(addPass) + "3"), len=int(numExtras), restName=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 
 @app.route('/' + addPass + "3", methods=['GET'])
 def addItmForm3():
@@ -690,9 +716,10 @@ def addItmForm3():
             if (menuItems[sx] != None):
                 if (menuItems[sx]['inp'] == "inp"):
                     itxL = int(len(menuItems[sx]['extras']))
-                    return render_template('addform3.html', btn=(str(addPass) + "3"), len=itxL,restName=estNameStr)
+                    return render_template('addform3.html', btn=(str(addPass) + "3"), len=itxL, restName=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 
 @app.route('/' + addPass + "3", methods=['POST'])
 def addItmResp3():
@@ -713,10 +740,13 @@ def addItmResp3():
                         exName = rsp[str(sse)]
                         exPrice = rsp[str(sse) + "a"]
                         sku = rsp[str(sse) + "b"]
-                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/0/",
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse),
+                                     "/0/",
                                      exName)
-                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse), "/1/", float(exPrice))
-                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse),"/2/", str(sku))
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse),
+                                     "/1/", float(exPrice))
+                        database.put("/restaurants/" + estName + "/menu/items/" + str(sx) + "/extras/" + str(sse),
+                                     "/2/", str(sku))
                     database.put("/restaurants/" + estName + "/menu/items/" + str(sx), "/inp/", "")
                     menu = (database.get("restaurants/" + uid, "/menu/items/"))
                     for MSD in range(len(menu)):
@@ -810,15 +840,16 @@ def addItmResp3():
                                     text = ""
                             yStart += 7
                             text = ""
-            fileName = "menus/"+ estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
+            fileName = "menus/" + estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
             print(fileName)
             pdf.output(fileName)
             storage = firebaseAuth.storage()
-            storage.child(estNameStr +"/" +fileName).put(fileName)
+            storage.child(estNameStr + "/" + fileName).put(fileName)
             print("\n")
         return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 
 @app.route('/' + promoPass, methods=['GET'])
 def addCpn():
@@ -829,7 +860,7 @@ def addCpn():
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     print()
     if ((currentTime - lastLogin) < sessionTime):
-        return render_template('coupon.html',restName=estNameStr)
+        return render_template('coupon.html', restName=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -858,7 +889,7 @@ def addCpnResp():
                     keyVal = mmx
         keyVal += 1
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/name/", name)
-        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", "cpn-"+name)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", "cpn-" + name)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sizes/0/0/", "u")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sizes/0/1/", -1)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/0/", item)
@@ -881,15 +912,17 @@ def addCpnResp():
                              str(menu[MSD]['name']))
                 database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/numSold/", 0)
                 database.put("/log/" + uid + "/" + logYM + "/MonthlySKUdata/" + str(MSD), "/rev/", 0)
-        return render_template('coupon.html',restName=estNameStr)
+        return render_template('coupon.html', restName=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 
 @app.route("/check", methods=['GET'])
 def loginUUID():
     return render_template("verifyCode.html", btn=str("check"))
 
-@app.route('/check',methods=['POST'])
+
+@app.route('/check', methods=['POST'])
 def getUUID():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -899,20 +932,23 @@ def getUUID():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     tickets = database.get("restaurants/" + uid, "/orders/")
     for tx in range(len(tickets)):
-        if(code == tickets[tx]["number"][-4:]):
+        if (code == tickets[tx]["number"][-4:]):
             key = tx
             UUID = tickets[tx]["UUID"]
             session['UUID'] = UUID
             session['key'] = key
             return redirect(url_for('order'))
-        elif((len(tickets) - tx) == 1):
+        elif ((len(tickets) - tx) == 1):
             return render_template("verifyCode2.html", btn=str("check"))
 
-@app.route('/order',methods=['GET'])
+
+@app.route('/order', methods=['GET'])
 def order():
     UUID = session.get('UUID', None)
     key = session.get('key', None)
     nameKey = session.get('nameKey', None)
+    itmKey = random.randint(9999, 1000000)
+    session['itmKey'] = itmKey
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
@@ -936,7 +972,7 @@ def order():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    itms = database.get("/restaurants/" + estName + "/orders/"+str(key),"/item/")
+    itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
     currentItems = []
     currKeys = []
     print(itms)
@@ -980,19 +1016,22 @@ def order():
     for men in range(len(menuItems)):
         print(menuItems[men])
         if (menuItems[men] != None and (menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
-            if(menuItems[men]["sizes"][0][1] != -1):
+            if (menuItems[men]["sizes"][0][1] != -1):
                 names.append(str(menuItems[men]["name"]).upper())
                 keys.append(men)
-    return render_template("mainOrder.html", len=len(names), names=names, keys=keys, btn="orderSz", len2=(len(currentItems)), currentItms=currentItems, currKeys=currKeys, btn2="order",total=dispTotal, btn3="checkpayment")
+    return render_template("mainOrder.html", len=len(names), names=names, keys=keys, btn="orderSz",
+                           len2=(len(currentItems)), currentItms=currentItems, currKeys=currKeys, btn2="order",
+                           total=dispTotal, btn3="checkpayment")
 
-@app.route('/order',methods=['POST'])
+
+@app.route('/order', methods=['POST'])
 def orderX():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     UUID = session.get('UUID', None)
     key = session.get('key', None)
-    nameKey = session.get('nameKey', None)
-    itmKey = session.get('itmKey', None)
+    itmKey = random.randint(9999, 1000000)
+    session['itmKey'] = itmKey
     print(UUID, key, itmKey)
     print(rsp)
 
@@ -1000,12 +1039,13 @@ def orderX():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     print(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str((rsp["rem"])), "price"))
-    currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str((rsp["rem"])), "price"))
+    currentPrice = float(
+        database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str((rsp["rem"])), "price"))
     currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
     currentTotal -= currentPrice
     dispTotal = "$" + str(round(currentTotal, 2))
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
-    database.delete("/restaurants/" + estName + "/orders/"+str(key)+"/item/", (rsp["rem"]))
+    database.delete("/restaurants/" + estName + "/orders/" + str(key) + "/item/", (rsp["rem"]))
     data = (database.get("restaurants/" + uid, "/menu/items/"))
     currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
     DBdata = database.get("/restaurants/" + estName, "orders")
@@ -1028,7 +1068,7 @@ def orderX():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    itms = database.get("/restaurants/" + estName + "/orders/"+str(key),"/item/")
+    itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
     currentItems = []
     currKeys = []
     finalOrd = ""
@@ -1076,22 +1116,22 @@ def orderX():
         dispTotal = "$0.00"
     names = []
     keys = []
-    print(finalOrd)
-    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/finalOrd/", finalOrd)
     for men in range(len(menuItems)):
         if (menuItems[men] != None and (menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
-            if(menuItems[men]["sizes"][0][1] != -1):
+            if (menuItems[men]["sizes"][0][1] != -1):
                 names.append(str(menuItems[men]["name"]).upper())
                 keys.append(men)
-    return render_template("mainOrderBtn.html", len=len(names), names=names, keys=keys, btn="orderSz", len2=(len(currentItems)), currentItms=currentItems,total=dispTotal, currKeys=currKeys, btn2="order", btn3="checkpayment")
+    return render_template("mainOrderBtn.html", len=len(names), names=names, keys=keys, btn="orderSz",
+                           len2=(len(currentItems)), currentItms=currentItems, total=dispTotal, currKeys=currKeys,
+                           btn2="order", btn3="checkpayment")
+
 
 @app.route('/orderSz', methods=['POST'])
 def orderNm():
-    newItmKey = random.randint(9999, 1000000)
+    newItmKey = session.get('itmKey', None)
     UUID = session.get('UUID', None)
     key = session.get('key', None)
-    nameKey = session.get('nameKey', None)
-    print(UUID,key)
+    print(UUID, key)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     names = []
@@ -1102,10 +1142,11 @@ def orderNm():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     numItms = database.get("/restaurants/" + estName + "/orders/" + str(key), "item")
-    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(newItmKey) + "/name/", str(menuItems[int(rsp['item'])]['name'].lower()))
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(newItmKey) + "/name/",
+                 str(menuItems[int(rsp['item'])]['name'].lower()))
     sizes = menuItems[int(rsp['item'])]['sizes']
     for sz in range(len(sizes)):
-        if((menuItems[int(rsp['item'])]['sizes'][sz][0].lower()) != "u"):
+        if ((menuItems[int(rsp['item'])]['sizes'][sz][0].lower()) != "u"):
             putStr = ""
             putStr += str(menuItems[int(rsp['item'])]['sizes'][sz][0]).lower()
             putStr += " $"
@@ -1116,15 +1157,12 @@ def orderNm():
 
         else:
             names.append("Standard")
-            keys.append(sz)
+            keys.append(0)
             prices.append(menuItems[int(rsp['item'])]['sizes'][sz][1])
-            skuKey = random.randint(99999, 1000000)
-            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
-                         "/item/" + str(newItmKey) + "/skus/" + str(skuKey) + "/",
-                         str(menuItems[int(rsp['item'])]['sizes'][sz][2]))
     session['itmKey'] = newItmKey
     session['nameKey'] = int(rsp['item'])
-    return render_template("picksize.html", len=len(prices), names=names, keys=keys, prices=prices ,btn="ordertopping")
+    return render_template("picksize.html", len=len(prices), names=names, keys=keys, prices=prices, btn="ordertopping")
+
 
 @app.route('/ordertopping', methods=['POST'])
 def ordertp():
@@ -1134,13 +1172,13 @@ def ordertp():
     key = session.get('key', None)
     itmKey = session.get('itmKey', None)
     nameKey = session.get('nameKey', None)
-    print(UUID, key, itmKey)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    print(menuItems[nameKey])
-    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/size/",str(menuItems[nameKey]['sizes'][int(rsp['item'])][0].lower()))
+    print(menuItems[nameKey], "current item")
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/size/",
+                 str(menuItems[nameKey]['sizes'][int(rsp['item'])][0].lower()))
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",
                  float(menuItems[nameKey]['sizes'][int(rsp['item'])][1]))
     skuKey = random.randint(99999, 1000000)
@@ -1158,7 +1196,7 @@ def ordertp():
     names = []
     keys = []
     for ex in range(len(toppings)):
-        if(toppings[ex][0] != ""):
+        if (toppings[ex][0] != ""):
             putStr = ""
             putStr += str(toppings[ex][0].lower())
             putStr += " $"
@@ -1166,7 +1204,9 @@ def ordertp():
             names.append(putStr)
             keys.append(ex)
     print(rsp)
-    return render_template("pickToppings.html", len=len(names), names=names, keys=keys, prices=prices, btn="ordertoppingConfirm")
+    return render_template("pickToppings.html", len=len(names), names=names, keys=keys, prices=prices,
+                           btn="ordertoppingConfirm")
+
 
 @app.route('/ordertoppingConfirm', methods=['POST'])
 def ConfirmItm():
@@ -1174,59 +1214,72 @@ def ConfirmItm():
     key = session.get('key', None)
     itmKey = session.get('itmKey', None)
     nameKey = session.get('nameKey', None)
+    print("nameKEY",nameKey)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    print(menuItems[nameKey])
-    print(rsp)
+    print(menuItems[nameKey], "topping")
+    print(rsp, "rsp")
     print(len(rsp))
     putStr = ""
     addPrice = 0
     extraIndxs = []
     SKUSarr = []
-    if(len(rsp) > 2):
+    if (len(rsp) > 2):
         print(rsp["quantity"])
         print(rsp["notes"])
-        for itx in range(len(rsp)-2):
+        for itx in range(len(menuItems[nameKey]["extras"])):
+            print(itx)
             try:
-                print(rsp[str(itx)])
-                extraIndxs.append(itx)
+                print(rsp[str(itx)], "found")
+                extraIndxs.append(int(itx))
             except Exception:
+                print(str(itx),"not found")
                 pass
+        print(extraIndxs)
         for exx in range(len(extraIndxs)):
             putStr += str(menuItems[nameKey]["extras"][extraIndxs[exx]][0])
+            print(menuItems[nameKey]["extras"][extraIndxs[exx]])
             addPrice += float(menuItems[nameKey]["extras"][extraIndxs[exx]][1])
             putStr += " "
             SKUSarr.append(str(menuItems[nameKey]["extras"][extraIndxs[exx]][2]))
             skuKey = random.randint(99999, 1000000)
-            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/skus/" +str(skuKey)+"/", str(menuItems[nameKey]["extras"][extraIndxs[exx]][2]))
-        currentPrice = float(database.get("/restaurants/" + estName + "/orders/"+str(key)+"/item/"+str(itmKey), "price"))
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
+                         "/item/" + str(itmKey) + "/skus/" + str(skuKey) + "/",
+                         str(menuItems[nameKey]["extras"][extraIndxs[exx]][2]))
+        currentPrice = float(
+            database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
         currentPrice += addPrice
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/toppings/", putStr)
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/", putStr)
-        if(rsp["quantity"] == ""):
-            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/", 1)
-        else:
-            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/", int(rsp["quantity"]))
-            currentPrice = currentPrice * int(rsp["quantity"])
-            print(currentPrice)
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",rsp["notes"] )
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",
-                     currentPrice)
-        currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key),"/linkTotal"))
-        currentTotal += currentPrice
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/",currentTotal)
-    else:
-        currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/toppings/",
                      putStr)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
                      putStr)
         if (rsp["quantity"] == ""):
-            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/",1)
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/", 1)
+        else:
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/",
+                         int(rsp["quantity"]))
+            currentPrice = currentPrice * int(rsp["quantity"])
+            print(currentPrice)
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
+                     rsp["notes"])
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",
+                     currentPrice)
+        currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
+        currentTotal += currentPrice
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
+    else:
+        currentPrice = float(
+            database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/toppings/",
+                     putStr)
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
+                     putStr)
+        if (rsp["quantity"] == ""):
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/", 1)
             currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
             currentTotal += currentPrice
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
@@ -1237,11 +1290,13 @@ def ConfirmItm():
             print(currentPrice)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
                      rsp["notes"])
-        currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
+        currentPrice = float(
+            database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
         currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
         currentTotal += currentPrice
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
     return redirect(url_for('order'))
+
 
 @app.route('/checkpayment', methods=['POST'])
 def CheckPaymentMethod():
@@ -1252,9 +1307,10 @@ def CheckPaymentMethod():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = str(DBdata[key]["linkTotal"])
-    Tax = str(round((float(DBdata[key]["linkTotal"]) * 0.1),2))
-    Total = str(round((float(subTotal) + float(Tax) + 0.1),2))
-    return render_template("paymentMethod.html", btn="nextPay", subTotal=subTotal, tax = Tax, total=Total)
+    Tax = str(round((float(DBdata[key]["linkTotal"]) * 0.1), 2))
+    Total = str(round((float(subTotal) + float(Tax) + 0.1), 2))
+    return render_template("paymentMethod.html", btn="nextPay", subTotal=subTotal, tax=Tax, total=Total)
+
 
 @app.route('/nextPay', methods=['POST'])
 def nextPayment():
@@ -1279,9 +1335,11 @@ def nextPayment():
     rsp = ((request.form))
     print(rsp)
     finalOrd = ""
-    if(rsp["item"] == "yes"):
+    if (rsp["item"] == "yes"):
+        itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
         itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
         if (itms != None):
+            finalOrd = ""
             dispKeys = list(itms.keys())
             for itmX in range(len(dispKeys)):
                 try:
@@ -1289,19 +1347,24 @@ def nextPayment():
                         print(itms[dispKeys[itmX]])
                         skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
                         for sk in range(len(skuKeys)):
-                            currentSku = database.get("/log/" + estName + "/" + str(logYM) + "/" + "skus/", itms[dispKeys[itmX]]["skus"][itms[dispKeys[itmX]]["skus"][skuKeys[sk]]])
+                            currentSku = database.get("/log/" + estName + "/" + str(logYM) + "/" + "skus/",
+                                                      itms[dispKeys[itmX]]["skus"][skuKeys[sk]])
                             if (currentSku != None):
                                 numsold = currentSku["numSold"] + int(itms[dispKeys[itmX]]["qty"])
                                 rev = currentSku["rev"] + (
-                                            float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
-                                database.put("/log/" + uid + "/" + logYM, "/skus/" + str(itms[dispKeys[itmX]]["skus"][itms[dispKeys[itmX]]["skus"][skuKeys[sk]]]) + "/rev/", rev)
-                                database.put("/log/" + uid + "/" + logYM, "/skus/" + str(itms[dispKeys[itmX]]["skus"][itms[dispKeys[itmX]]["skus"][skuKeys[sk]]]) + "/numSold/",
+                                        float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
+                                database.put("/log/" + uid + "/" + logYM,
+                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
+                                database.put("/log/" + uid + "/" + logYM,
+                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
                                              numsold)
                             else:
                                 numsold = int(itms[dispKeys[itmX]]["qty"])
                                 rev = (float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
-                                database.put("/log/" + uid + "/" + logYM, "/skus/" + str(itms[dispKeys[itmX]]["skus"][itms[dispKeys[itmX]]["skus"][skuKeys[sk]]]) + "/rev/", rev)
-                                database.put("/log/" + uid + "/" + logYM, "/skus/" + str(itms[dispKeys[itmX]]["skus"][itms[dispKeys[itmX]]["skus"][skuKeys[sk]]]) + "/numSold/",
+                                database.put("/log/" + uid + "/" + logYM,
+                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
+                                database.put("/log/" + uid + "/" + logYM,
+                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
                                              numsold)
                         wrtStr = ""
                         if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
@@ -1332,9 +1395,16 @@ def nextPayment():
                             print(wrtStr)
                             finalOrd += wrtStr + " - "
                 except KeyError:
+                    print("exec")
                     pass
+        print(finalOrd)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
-        link = str(genPayment(str(currentTotal), "", UUID))
+        DBdata = database.get("/restaurants/" + estName, "orders")
+        subTotal = str(DBdata[key]["linkTotal"])
+        Tax = str(round((float(DBdata[key]["linkTotal"]) * 0.1), 2))
+        Total = str(round((float(subTotal) + float(Tax) + 0.1), 2))
+        link = str(genPayment(str(Total), "", UUID))
+        session.clear()
         return redirect(link)
     else:
         print(number)
@@ -1352,17 +1422,25 @@ def nextPayment():
                         print(itms[dispKeys[itmX]])
                         skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
                         for sk in range(len(skuKeys)):
-                            currentSku = database.get("/log/" + estName + "/"+str(logYM)+"/" + "skus/", itms[dispKeys[itmX]]["skus"][skuKeys[sk]])
-                            if(currentSku != None):
+                            currentSku = database.get("/log/" + estName + "/" + str(logYM) + "/" + "skus/",
+                                                      itms[dispKeys[itmX]]["skus"][skuKeys[sk]])
+                            if (currentSku != None):
                                 numsold = currentSku["numSold"] + int(itms[dispKeys[itmX]]["qty"])
-                                rev = currentSku["rev"] + (float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
-                                database.put("/log/" + uid + "/" + logYM, "/skus/" +str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]])+"/rev/", rev)
-                                database.put("/log/" + uid + "/" + logYM, "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/", numsold)
+                                rev = currentSku["rev"] + (
+                                            float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
+                                database.put("/log/" + uid + "/" + logYM,
+                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
+                                database.put("/log/" + uid + "/" + logYM,
+                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
+                                             numsold)
                             else:
                                 numsold = int(itms[dispKeys[itmX]]["qty"])
                                 rev = (float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
-                                database.put("/log/" + uid + "/" + logYM, "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
-                                database.put("/log/" + uid + "/" + logYM, "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/", numsold)
+                                database.put("/log/" + uid + "/" + logYM,
+                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
+                                database.put("/log/" + uid + "/" + logYM,
+                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
+                                             numsold)
                         wrtStr = ""
                         if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
                             wrtStr += str(itms[dispKeys[itmX]]["size"])
@@ -1393,16 +1471,21 @@ def nextPayment():
                             finalOrd += wrtStr + " - "
                 except KeyError:
                     pass
+        print(finalOrd)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
         DBdata = database.get("/restaurants/" + estName, "orders")
         duration = time.time() - float(DBdata[dbItems]["startTime"])
         numItms = len(DBdata[dbItems]["item"])
         orderIndx = DBdata[dbItems]["orderIndx"]
         usrIndx = DBdata[dbItems]["userIndx"]
-        database.put("/users/" + str(usrIndx) + "/restaurants/"+estNameStr+"/"+str(orderIndx)+"/","total", ((DBdata[dbItems]["linkTotal"]+0.1)*1.1))
-        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "tickSize", numItms)
-        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items", DBdata[dbItems]["item"])
-        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "duration", duration)
+        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
+                     ((DBdata[dbItems]["linkTotal"] + 0.1) * 1.1))
+        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "tickSize",
+                     numItms)
+        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
+                     DBdata[dbItems]["item"])
+        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "duration",
+                     duration)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "tickSize/", numItms)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "filled/", "1")
@@ -1435,24 +1518,19 @@ def nextPayment():
             database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
         totalRev += float(DBdata[dbItems]["linkTotal"])
         database.put("/log/" + uid + "/" + logYM, "/totalRev/", totalRev)
-        reply = "Thank you for your order, you can pick it up and pay at the counter when you arrive"
+        reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
         client.send_message({
             'from': NexmoNumber,
             'to': number,
             'text': reply
         })
-
         session.clear()
         return render_template("thankMsg.html")
 
 
-
-
-
-
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
-    app.secret_key = 'key'
+    app.secret_key = 'ssKEY'
     app.config['SESSION_TYPE'] = 'filesystem'
     sess = Session()
     sess.init_app(app)
