@@ -350,7 +350,7 @@ def ipn():
                 'to': number,
                 'text': reply
             })
-            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/number/", str(number) + ".")
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
     return (" ", 200)
 
 
@@ -1489,7 +1489,7 @@ def nextPayment():
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "tickSize/", numItms)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "filled/", "1")
-        database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str(number) + ".")
+        database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "endTime/", time.time())
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "duration/", duration)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/day/",
