@@ -1012,7 +1012,7 @@ def addCpnResp():
         except ValueError:
             database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/0/1/", amt)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/0/", "limit")
-        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/1/", limit)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/extras/1/1/", (limit-1))
         menu = (database.get("restaurants/" + uid, "/menu/items/"))
         return render_template('coupon.html', restName=estNameStr)
     else:

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added coupon support">
-      <change afterPath="$PROJECT_DIR$/flask_session/2e941f0a9674d3217881cb47232f8863" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/423241a287721e65c73c8c825cdb5cc0" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/a2898f44f57374378ca18b730da5eaa9" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flask_session/ebad95eefaf926775f7dfe3745872b63" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
+      <change afterPath="$PROJECT_DIR$/flask_session/3ea10724f6c3462e2c809e80121efb4d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/b42bc44c236be8e3228721f91063e400" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flask_session/78b18e43c59e80e12ff1ed1794bfcba7" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/b36299fb2e43b77164f910f6aaac4024" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -258,13 +256,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00008" summary="updated sear alg">
-      <created>1564469973352</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1564469973352</updated>
     </task>
     <task id="LOCAL-00009" summary="finalized translation algorithms">
       <created>1564531236743</created>
@@ -602,7 +593,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566626503033</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="minor bug fix">
+      <created>1566628077997</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1566628077997</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -642,12 +640,12 @@
     <MESSAGE value="basic ordering GUI" />
     <MESSAGE value="finished front end part 1" />
     <MESSAGE value="added Fb accounting" />
-    <MESSAGE value="minor bug fix" />
     <MESSAGE value="almost done just need to fix currency rounding" />
     <MESSAGE value="fixed currency formatting need to add accounting in gsheets next" />
     <MESSAGE value="added logging to gsheets" />
     <MESSAGE value="minor bug fix in itm display" />
     <MESSAGE value="added coupon support" />
-    <option name="LAST_COMMIT_MESSAGE" value="added coupon support" />
+    <MESSAGE value="minor bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
   </component>
 </project>
