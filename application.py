@@ -107,7 +107,7 @@ def updateLog():
                                 print("found size")
                                 if(str(menuItems[men]["sizes"][sz][0]).lower() != "u"):
                                     name = str(menuItems[men]["name"]).lower()
-                                    name += " "
+                                    name += "-"
                                     name += str(menuItems[men]["sizes"][sz][0]).lower()
                                     SKUnames.append(name)
 
@@ -123,6 +123,7 @@ def updateLog():
                                         name = str(menuItems[men]["name"]).lower()
                                         name += " "
                                         name += str(menuItems[men]["extras"][ex][0]).lower()
+                                        name += "* TOPPING "
                                         SKUnames.append(name)
 
                                         break
