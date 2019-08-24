@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix in itm display" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix in itm display">
+      <change afterPath="$PROJECT_DIR$/flask_session/08745025510d6009ede4dca60d0017ff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/28b2d2ff713d8607c83ca2b915533784" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/3330e500917f2827cd31576a0e25fdd4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/7093eb9086515176fa4acf18c271fcae" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/742026ae752643823bc96225b8caf5b0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/78b18e43c59e80e12ff1ed1794bfcba7" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/b36299fb2e43b77164f910f6aaac4024" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/b63e506fe2fbd130a70e0a42e85985b0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/be2d644c11a9df026ceb5c54f9c2b852" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/c6ad5f967aec698ce8d750601320e3b3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/e77723e0855b17b4ef089479c144ee90" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/9453170434a156c3928c57abf07e4d15" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/94a912f8b8d79d7de2e6c52c6799d736" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/d795317bfb9d9f2d85838b3c4a5acc52" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/coupon.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coupon.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +49,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/testFIles/testSheets.py" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/application.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/application.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1P2Dui2ZxLEnlFRxSydyezKjzHW" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -229,10 +253,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.application" />
+        <item itemvalue="Python.genPDF" />
         <item itemvalue="Python.testAppck" />
         <item itemvalue="Python.logSkus" />
         <item itemvalue="Python.testUploadMenus" />
-        <item itemvalue="Python.genPDF" />
       </list>
     </recent_temporary>
   </component>
@@ -246,13 +270,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00006" summary="fixed inputting items">
-      <created>1564383598652</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1564383598652</updated>
     </task>
     <task id="LOCAL-00007" summary="scarped data from receipt">
       <created>1564424104927</created>
@@ -590,7 +607,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566604924665</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="minor bug fix in itm display">
+      <created>1566605253226</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1566605253226</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="UnknownFeatures">
