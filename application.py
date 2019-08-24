@@ -1498,7 +1498,7 @@ def nextPayment():
                             wrtStr += " x "
                             wrtStr += str(itms[dispKeys[itmX]]["qty"])
                             wrtStr += " $"
-                            wrtStr += str(itms[dispKeys[itmX]]["price"])
+                            wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
                             print(wrtStr)
                             finalOrd += wrtStr + " - "
                         else:
@@ -1510,7 +1510,7 @@ def nextPayment():
                             wrtStr += " x "
                             wrtStr += str(itms[dispKeys[itmX]]["qty"])
                             wrtStr += " $"
-                            wrtStr += str(itms[dispKeys[itmX]]["price"])
+                            wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
                             print(wrtStr)
                             finalOrd += wrtStr + " - "
                 except KeyError:
@@ -1551,7 +1551,7 @@ def nextPayment():
                     wrtStr += " x "
                     wrtStr += str(itms[dispKeys[itmX]]["qty"])
                     wrtStr += " $"
-                    wrtStr += str(itms[dispKeys[itmX]]["price"])
+                    wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
                     print(wrtStr)
                     finalOrd += wrtStr + " - "
                 else:
@@ -1563,7 +1563,7 @@ def nextPayment():
                     wrtStr += " x "
                     wrtStr += str(itms[dispKeys[itmX]]["qty"])
                     wrtStr += " $"
-                    wrtStr += str(itms[dispKeys[itmX]]["price"])
+                    wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
                     print(wrtStr)
                     finalOrd += wrtStr + " - "
                 if (itms[dispKeys[itmX]] != None):
@@ -1651,8 +1651,7 @@ def nextPayment():
 
 @app.route('/')
 def mainPage():
-
-    return "main"
+    return " "
 
 
 # when you run the code through terminal, this will allow Flask to work
