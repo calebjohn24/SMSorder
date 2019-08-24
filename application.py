@@ -546,7 +546,7 @@ def view():
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
                 print(TotalStr)
-                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) \
+                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"])+ " " + str(orders[ords]["discStr"]) \
                            + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
                                                                                                        "" + TotalStr + " || " + str(
                     orders[ords]["cash"])
@@ -588,7 +588,7 @@ def button():
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
                 print(TotalStr)
-                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) \
+                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) + " " + str(orders[ords]["discStr"]) \
                            + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
                                                                                                        "" + TotalStr + " || " + str(
                     orders[ords]["cash"])
@@ -1469,12 +1469,13 @@ def CheckPaymentMethod():
                                                          "/discUsed/"))
                                         discTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key),
                                                                    "/discTotal/"))
-                                        if (cpnUsed < limit):
+                                        print(cpnUsed,limit,discTotal)
+                                        if (cpnUsed <= limit):
                                             try:
                                                 float(discAmt)
                                                 discAmtflt = float(discAmt)
                                                 print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
-                                                while cpnUsed < limit and cpnUsed < int(itms[dispKeys[itmX]]["qty"]):
+                                                while cpnUsed <= limit and cpnUsed <= int(itms[dispKeys[itmX]]["qty"]):
                                                     print((float(discAmtflt) * (float(itms[dispKeys[itmX]]["price"]))/float(itms[dispKeys[itmX]]["qty"])))
                                                     print("iid")
                                                     discTotal -= discAmtflt
@@ -1484,12 +1485,13 @@ def CheckPaymentMethod():
                                                 discAmtflt = float(discAmt)
                                                 print(discAmtflt)
                                                 print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
-                                                while cpnUsed < limit and cpnUsed < int(itms[dispKeys[itmX]]["qty"]):
+                                                while cpnUsed <= limit and cpnUsed <= int(itms[dispKeys[itmX]]["qty"]):
                                                     discTotal -= (float(discAmtflt) * ((float(itms[dispKeys[itmX]]["price"]))/float(itms[dispKeys[itmX]]["qty"])))
                                                     print(discTotal)
                                                     cpnUsed += 1
                                                     print(cpnUsed)
                                                 print(discTotal)
+                                            print(cpnUsed)
                                             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
                                                          "/discUsed/", cpnUsed)
                                             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
@@ -1528,7 +1530,7 @@ def CheckPaymentMethod():
                                                              "/discUsed/"))
                                             discTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key),
                                                                    "/discTotal/"))
-                                            if (cpnUsed < limit):
+                                            if (cpnUsed <= limit):
                                                 try:
                                                     float(discAmt)
                                                     discAmtflt = float(discAmt)
@@ -1657,7 +1659,7 @@ def nextPayment():
                                                 cpnUsed = int(database.get("/restaurants/" + estName + "/orders/" + str(key), "/discUsed/"))
                                                 discTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key),
                                                                    "/discTotal/"))
-                                                if(cpnUsed < limit):
+                                                if(cpnUsed <= limit):
                                                     try:
                                                         float(discAmt)
                                                         discAmtflt =  float(discAmt)
@@ -1682,7 +1684,7 @@ def nextPayment():
                                                             str(menuItems[mmn]["name"]) + " x " + str(
                                                                 cpnUsed) + " -$" + str(float(discTotal * -1))))
 
-                                                    finalOrd += menuItems[mmn]["name"] + " x " + str(cpnUsed) + " -$" + (discTotal*-1) + " :: "
+                                                    finalOrd += menuItems[mmn]["name"] + " x " + str(cpnUsed) + " -$" + str(round((discTotal*-1),2)) + " :: "
                                                     break
                         else:
                             wrtStr = str(itms[dispKeys[itmX]]["name"])
@@ -1710,7 +1712,7 @@ def nextPayment():
                                                                  "/discUsed/"))
                                                 discTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key),
                                                                    "/discTotal/"))
-                                                if (cpnUsed < limit):
+                                                if (cpnUsed <= limit):
                                                     try:
                                                         float(discAmt)
                                                         discAmtflt = float(discAmt)
@@ -1738,7 +1740,7 @@ def nextPayment():
                                                             str(menuItems[mmn]["name"]) + " x " + str(
                                                                 cpnUsed) + " -$" + str(float(discTotal * -1))))
                                                     finalOrd += menuItems[mmn]["name"] + " x " + str(
-                                                        cpnUsed) + " -$" + (discTotal * -1) + " :: "
+                                                        cpnUsed) + " -$" + str( round((discTotal * -1),2)) + " :: "
                                                     break
                 except KeyError:
                     print("exec")
@@ -1795,7 +1797,8 @@ def nextPayment():
                                                                    "/discUsed/"))
                                         discTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key),
                                                                    "/discTotal/"))
-                                        if (cpnUsed < limit):
+                                        if (cpnUsed <=
+                                                limit):
                                             try:
                                                 float(discAmt)
                                                 discAmtflt = float(discAmt)
@@ -1848,7 +1851,7 @@ def nextPayment():
                                                                    "/discUsed/"))
                                         discTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key),
                                                                    "/discTotal/"))
-                                        if (cpnUsed < limit):
+                                        if (cpnUsed <= limit):
                                             try:
                                                 float(discAmt)
                                                 discAmtflt = float(discAmt)
@@ -1874,9 +1877,6 @@ def nextPayment():
                                                     str(menuItems[mmn]["name"]) + " x " + str(
                                                         cpnUsed) + " -$" + str(float(discTotal * -1))))
                                             finalOrd += menuItems[mmn]["name"] + " x " + str(cpnUsed) + " -$" + str(
-                                                round((
-                                                        discTotal * -1), 2)) + " :: "
-                                            finalOrd += str(menuItems[mmn]["name"]) + " x " + str(cpnUsed) + " -$" + str(
                                                 round((
                                                         discTotal * -1), 2)) + " :: "
                                             break
