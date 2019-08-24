@@ -110,11 +110,11 @@ def updateLog():
                                     name += " "
                                     name += str(menuItems[men]["sizes"][sz][0]).lower()
                                     SKUnames.append(name)
-                                    print(name)
+
                                 else:
                                     name = str(menuItems[men]["name"]).lower()
                                     SKUnames.append(name)
-                                    print(name)
+
                                 break
                             if(len(menuItems[men]["sizes"]) - sz == 1):
                                 for ex in range(len(menuItems[men]["extras"])):
@@ -124,7 +124,7 @@ def updateLog():
                                         name += " "
                                         name += str(menuItems[men]["extras"][ex][0]).lower()
                                         SKUnames.append(name)
-                                        print(name)
+
                                         break
 
     SKUkeysDF = pd.DataFrame()
@@ -182,8 +182,13 @@ def getReply(msg, number):
         DBdata = database.get("/restaurants/" + estName, "/orders")
         UserData = database.get("/", "users")
         if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr" or msg == "ordee"):
+            client.send_message({
+                'from': NexmoNumber,
+                'to': number,
+                'text': "Hi! Welcome to "+estNameStr+", please wait one moment..."
+            })
             UUID = random.randint(9999999, 100000000)
-            reply = "Hi welcome to " + estNameStr + " please enter your name to continue"
+            reply = "Hi, welcome to " + estNameStr + " please enter your name to continue"
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", "")
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/number/", str(number))
@@ -258,7 +263,7 @@ def getReply(msg, number):
                              str(timeStamp))
                 database.put("/users/", "/" + str((DBdata[indx]["userIndx"])) + "/loyalty/" + estNameStr + "/points/",
                              0)
-                reply = "Hi, " + str(msg).capitalize() + " is this order for-here or to-go?"
+                reply =  "is this order for-here or to-go?"
                 usrIndx = DBdata[indx]["userIndx"]
                 database.put("/users", "/" + str(DBdata[indx]["userIndx"]) + "/name", str(msg.capitalize()))
                 client.send_message({
@@ -1218,6 +1223,7 @@ def orderX():
         dispTotal = "$0.00"
     names = []
     keys = []
+    print(finalOrd)
     for men in range(len(menuItems)):
         if (menuItems[men] != None and (menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
             if (menuItems[men]["sizes"][0][1] != -1):
@@ -1494,6 +1500,7 @@ def nextPayment():
                             wrtStr += " $"
                             wrtStr += str(itms[dispKeys[itmX]]["price"])
                             print(wrtStr)
+                            finalOrd += wrtStr + " - "
                         else:
                             wrtStr = str(itms[dispKeys[itmX]]["name"])
                             wrtStr += " "
@@ -1509,82 +1516,83 @@ def nextPayment():
                 except KeyError:
                     print("exec")
                     pass
-        print(finalOrd)
-        database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
-        DBdata = database.get("/restaurants/" + estName, "orders")
-        subTotal = str(DBdata[key]["linkTotal"])
-        Tax = str(round((float(DBdata[key]["linkTotal"]) * 0.1), 2))
-        Total = str(round((float(subTotal) + float(Tax) + 0.15), 2))
-        link = str(genPayment(str(Total), "", UUID))
-        session.clear()
-        return redirect(link)
+            print(finalOrd)
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
+            print("final put")
+            DBdata = database.get("/restaurants/" + estName, "orders")
+            subTotal = str(DBdata[key]["linkTotal"])
+            Tax = str(round((float(DBdata[key]["linkTotal"]) * 0.1), 2))
+            Total = str(round((float(subTotal) + float(Tax) + 0.15), 2))
+            link = str(genPayment(str(Total), "", UUID))
+            session.clear()
+            return redirect(link)
     else:
-        print(number)
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                          'cajohn0205@gmail.com', extra={'id': 123})
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                 authentication=authentication)
         itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
+        finalOrd = ""
         if (itms != None):
             finalOrd = ""
             dispKeys = list(itms.keys())
             for itmX in range(len(dispKeys)):
-                try:
-                    if (itms[dispKeys[itmX]] != None):
-                        print(itms[dispKeys[itmX]])
-                        skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
-                        for sk in range(len(skuKeys)):
-                            currentSku = database.get("/log/" + estName + "/" + str(logYM) + "/" + "skus/",
-                                                      itms[dispKeys[itmX]]["skus"][skuKeys[sk]])
-                            if (currentSku != None):
-                                numsold = currentSku["numSold"] + int(itms[dispKeys[itmX]]["qty"])
-                                rev = currentSku["rev"] + (
-                                        float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
-                                database.put("/log/" + uid + "/" + logYM,
-                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
-                                database.put("/log/" + uid + "/" + logYM,
-                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
-                                             numsold)
-                            else:
-                                numsold = int(itms[dispKeys[itmX]]["qty"])
-                                rev = (float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
-                                database.put("/log/" + uid + "/" + logYM,
-                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
-                                database.put("/log/" + uid + "/" + logYM,
-                                             "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
-                                             numsold)
-                        wrtStr = ""
-                        if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
-                            wrtStr += str(itms[dispKeys[itmX]]["size"])
-                            wrtStr += " "
-                            print(wrtStr)
-                            print(str(itms[dispKeys[itmX]]["size"]))
-                            wrtStr += str(itms[dispKeys[itmX]]["name"])
-                            wrtStr += " "
-                            wrtStr += str(itms[dispKeys[itmX]]["toppings"])
-                            wrtStr += " "
-                            wrtStr += str(itms[dispKeys[itmX]]["notes"])
-                            wrtStr += " x "
-                            wrtStr += str(itms[dispKeys[itmX]]["qty"])
-                            wrtStr += " $"
-                            wrtStr += str(itms[dispKeys[itmX]]["price"])
-                            print(wrtStr)
+                wrtStr = ""
+                if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
+                    wrtStr += str(itms[dispKeys[itmX]]["size"])
+                    wrtStr += " "
+                    print(wrtStr)
+                    print(str(itms[dispKeys[itmX]]["size"]))
+                    wrtStr += str(itms[dispKeys[itmX]]["name"])
+                    wrtStr += " "
+                    wrtStr += str(itms[dispKeys[itmX]]["toppings"])
+                    wrtStr += " "
+                    wrtStr += str(itms[dispKeys[itmX]]["notes"])
+                    wrtStr += " x "
+                    wrtStr += str(itms[dispKeys[itmX]]["qty"])
+                    wrtStr += " $"
+                    wrtStr += str(itms[dispKeys[itmX]]["price"])
+                    print(wrtStr)
+                    finalOrd += wrtStr + " - "
+                else:
+                    wrtStr = str(itms[dispKeys[itmX]]["name"])
+                    wrtStr += " "
+                    wrtStr += str(itms[dispKeys[itmX]]["toppings"])
+                    wrtStr += " "
+                    wrtStr += str(itms[dispKeys[itmX]]["notes"])
+                    wrtStr += " x "
+                    wrtStr += str(itms[dispKeys[itmX]]["qty"])
+                    wrtStr += " $"
+                    wrtStr += str(itms[dispKeys[itmX]]["price"])
+                    print(wrtStr)
+                    finalOrd += wrtStr + " - "
+                if (itms[dispKeys[itmX]] != None):
+                    print(itms[dispKeys[itmX]])
+                    skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
+                    for sk in range(len(skuKeys)):
+                        currentSku = database.get("/log/" + estName + "/" + str(logYM) + "/" + "skus/",
+                                                  itms[dispKeys[itmX]]["skus"][skuKeys[sk]])
+                        if (currentSku != None):
+                            numsold = currentSku["numSold"] + int(itms[dispKeys[itmX]]["qty"])
+                            rev = currentSku["rev"] + (
+                                    float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
+                            database.put("/log/" + uid + "/" + logYM,
+                                         "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
+                            database.put("/log/" + uid + "/" + logYM,
+                                         "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
+                                         numsold)
                         else:
-                            wrtStr = str(itms[dispKeys[itmX]]["name"])
-                            wrtStr += " "
-                            wrtStr += str(itms[dispKeys[itmX]]["toppings"])
-                            wrtStr += " "
-                            wrtStr += str(itms[dispKeys[itmX]]["notes"])
-                            wrtStr += " x "
-                            wrtStr += str(itms[dispKeys[itmX]]["qty"])
-                            wrtStr += " $"
-                            wrtStr += str(itms[dispKeys[itmX]]["price"])
-                            print(wrtStr)
-                            finalOrd += wrtStr + " - "
-                except KeyError:
-                    pass
+                            numsold = int(itms[dispKeys[itmX]]["qty"])
+                            rev = (float(itms[dispKeys[itmX]]["qty"]) * float(itms[dispKeys[itmX]]["price"]))
+                            database.put("/log/" + uid + "/" + logYM,
+                                         "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/rev/", rev)
+                            database.put("/log/" + uid + "/" + logYM,
+                                         "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
+                                         numsold)
+
         print(finalOrd)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
+        print(finalOrd, "put")
         DBdata = database.get("/restaurants/" + estName, "orders")
         duration = time.time() - float(DBdata[dbItems]["startTime"])
         numItms = len(DBdata[dbItems]["item"])
