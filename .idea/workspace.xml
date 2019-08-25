@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="reformatted for aws">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="updated">
       <change afterPath="$PROJECT_DIR$/bin/cygdb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cython" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cythonize" afterDir="false" />
@@ -16,48 +16,8 @@
       <change afterPath="$PROJECT_DIR$/bin/pyrsa-priv2pub" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/pyrsa-sign" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/pyrsa-verify" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/LICENSE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/__future__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/_bootlocale.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/_collections_abc.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/_dummy_thread.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/_weakrefset.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/abc.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/base64.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/bisect.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/codecs.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/collections" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/config-3.6m-darwin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/copy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/copyreg.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/distutils/__init__.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/distutils/distutils.cfg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/encodings" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/enum.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/fnmatch.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/functools.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/genericpath.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/hashlib.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/heapq.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/hmac.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/imp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/importlib" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/io.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/keyword.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/lib-dynload" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/linecache.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/locale.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/ntpath.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/operator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/orig-prefix.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/os.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/posixpath.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/random.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/re.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/readline.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/reprlib.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/rlcompleter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/shutil.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/Brotli-1.0.7.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/Brotli-1.0.7.dist-info/LICENSE" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/Brotli-1.0.7.dist-info/METADATA" afterDir="false" />
@@ -770,8 +730,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/Werkzeug-0.15.5.dist-info/RECORD" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/Werkzeug-0.15.5.dist-info/WHEEL" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/Werkzeug-0.15.5.dist-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/_brotli.cpython-36m-darwin.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/_cffi_backend.cpython-36m-darwin.so" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/apiclient/__init__.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/asn1crypto-0.24.0.dist-info/DESCRIPTION.rst" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/asn1crypto-0.24.0.dist-info/INSTALLER" afterDir="false" />
@@ -807,7 +765,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/asn1crypto/util.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/asn1crypto/version.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/asn1crypto/x509.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/brotli.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/cachetools-3.1.1.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/cachetools-3.1.1.dist-info/LICENSE" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/cachetools-3.1.1.dist-info/METADATA" afterDir="false" />
@@ -1022,7 +979,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/cryptography/x509/name.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/cryptography/x509/ocsp.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/cryptography/x509/oid.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/cython.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/dateutil/__init__.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/dateutil/_common.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/dateutil/_version.py" afterDir="false" />
@@ -1042,13 +998,11 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/dateutil/zoneinfo/__init__.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/dateutil/zoneinfo/dateutil-zoneinfo.tar.gz" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/dateutil/zoneinfo/rebuild.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/easy_install.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/entrypoints-0.3.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/entrypoints-0.3.dist-info/LICENSE" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/entrypoints-0.3.dist-info/METADATA" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/entrypoints-0.3.dist-info/RECORD" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/entrypoints-0.3.dist-info/WHEEL" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/entrypoints.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/firebase-3.0.1.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/firebase-3.0.1.dist-info/LICENCE" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/firebase-3.0.1.dist-info/METADATA" afterDir="false" />
@@ -1514,7 +1468,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_api_python_client-1.7.11.dist-info/RECORD" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_api_python_client-1.7.11.dist-info/WHEEL" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_api_python_client-1.7.11.dist-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth-1.6.3-py3.5-nspkg.pth" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth-1.6.3.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth-1.6.3.dist-info/LICENSE" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth-1.6.3.dist-info/METADATA" afterDir="false" />
@@ -1529,7 +1482,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth_httplib2-0.0.3.dist-info/WHEEL" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth_httplib2-0.0.3.dist-info/metadata.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth_httplib2-0.0.3.dist-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth_httplib2.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth_oauthlib-0.4.0.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth_oauthlib-0.4.0.dist-info/LICENSE" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/google_auth_oauthlib-0.4.0.dist-info/METADATA" afterDir="false" />
@@ -1558,7 +1510,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/googleapiclient/model.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/googleapiclient/sample_tools.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/googleapiclient/schema.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/googleapis_common_protos-1.6.0-py3.6-nspkg.pth" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/googleapis_common_protos-1.6.0.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/googleapis_common_protos-1.6.0.dist-info/LICENSE" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/googleapis_common_protos-1.6.0.dist-info/METADATA" afterDir="false" />
@@ -1606,7 +1557,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/ipaddr-2.2.0.dist-info/RECORD" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/ipaddr-2.2.0.dist-info/WHEEL" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/ipaddr-2.2.0.dist-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/ipaddr.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/itsdangerous-1.1.0.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/itsdangerous-1.1.0.dist-info/LICENSE.rst" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/itsdangerous-1.1.0.dist-info/METADATA" afterDir="false" />
@@ -2467,7 +2417,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/ordereddict-1.1.dist-info/RECORD" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/ordereddict-1.1.dist-info/WHEEL" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/ordereddict-1.1.dist-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/ordereddict.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/pandas-0.25.0.dist-info/AUTHORS.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/pandas-0.25.0.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/pandas-0.25.0.dist-info/LICENSE" afterDir="false" />
@@ -3694,7 +3643,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/pkg_resources/_vendor/six.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/pkg_resources/extern/__init__.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/pkg_resources/py31compat.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/protobuf-3.9.1-py3.6-nspkg.pth" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/protobuf-3.9.1.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/protobuf-3.9.1.dist-info/METADATA" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/protobuf-3.9.1.dist-info/RECORD" afterDir="false" />
@@ -4783,7 +4731,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/six-1.12.0.dist-info/RECORD" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/six-1.12.0.dist-info/WHEEL" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/six-1.12.0.dist-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/six.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/soundex-1.1.3.dist-info/AUTHORS" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/soundex-1.1.3.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/soundex-1.1.3.dist-info/LICENSE" afterDir="false" />
@@ -4999,7 +4946,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/wincertstore-0.2.dist-info/WHEEL" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/wincertstore-0.2.dist-info/pydist.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/wincertstore-0.2.dist-info/top_level.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/wincertstore.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num-0.2.3.dist-info/INSTALLER" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num-0.2.3.dist-info/METADATA" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num-0.2.3.dist-info/RECORD" afterDir="false" />
@@ -5009,22 +4955,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/base.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/core.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/lang_EN_US.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/site.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/sre_compile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/sre_constants.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/sre_parse.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/stat.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/struct.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/tarfile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/tempfile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/token.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/tokenize.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/types.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/warnings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/weakref.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.fish" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.fish" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.ps1" afterDir="false" />
@@ -5056,14 +4986,7 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/include/python3.6m" beforeDir="false" afterPath="$PROJECT_DIR$/include/python3.6m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainOrderBtn.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrderBtn.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickToppings.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickToppings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/tickets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/python3.6/no-global-site-packages.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/tickets.txt" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5308,20 +5231,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00013" summary="minor bug fix">
-      <created>1564624705414</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1564624705414</updated>
-    </task>
-    <task id="LOCAL-00014" summary="minor bug fix">
-      <created>1564630941469</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1564630941469</updated>
     </task>
     <task id="LOCAL-00015" summary="minor bug fix">
       <created>1564636623204</created>
@@ -5652,7 +5561,21 @@
       <option name="project" value="LOCAL" />
       <updated>1566709751610</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="updated ui">
+      <created>1566719199079</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1566719199079</updated>
+    </task>
+    <task id="LOCAL-00063" summary="updated ui">
+      <created>1566719243401</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1566719243401</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5673,7 +5596,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="added IPN request still need to integrate with bot" />
     <MESSAGE value="added coupon support, rebuilt translation engine" />
     <MESSAGE value="integrated with app still testing" />
     <MESSAGE value="loads menu from firebase" />
@@ -5698,6 +5620,7 @@
     <MESSAGE value="added coupon support" />
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="reformatted for aws" />
-    <option name="LAST_COMMIT_MESSAGE" value="reformatted for aws" />
+    <MESSAGE value="updated ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated ui" />
   </component>
 </project>
