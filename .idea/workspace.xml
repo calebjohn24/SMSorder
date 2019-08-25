@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="updated">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="updated ui">
       <change afterPath="$PROJECT_DIR$/bin/cygdb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cython" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cythonize" afterDir="false" />
@@ -4986,7 +4986,6 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/include/python3.6m" beforeDir="false" afterPath="$PROJECT_DIR$/include/python3.6m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/tickets.txt" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5231,13 +5230,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00015" summary="minor bug fix">
-      <created>1564636623204</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1564636623204</updated>
     </task>
     <task id="LOCAL-00016" summary="minor bug fix on order logging, added timing for orders">
       <created>1564698305795</created>
@@ -5575,7 +5567,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566719243401</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="updated ui">
+      <created>1566720042120</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1566720042120</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="UnknownFeatures">
