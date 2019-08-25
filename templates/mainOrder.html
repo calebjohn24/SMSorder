@@ -90,14 +90,14 @@ text-align:center;
 <body>
 <div class="split right">
   <div class="right">
-     <h1>Tap Item to Add</h1>
-      <h6 align="center"><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Items" title="Type in a name" align="center"></h6>
+     <h1 align="center">Menu</h1>
+      <h6 align="center"><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search Categories" title="Type in a name" align="center"></h6>
       <br>
         <ul id="myUL">
             <h4 align="center">
                 {%for i in range(0, len)%}
                 <form action="{{btn}}" method="post">
-                    <li><button onclick="{{btn}}" name="item" value={{keys[i]}} type="submit">{{names[i]}}</button><br>{{descrips[i]}}</li>
+                    <li><button onclick="{{btn}}" name="item" value={{keys[i]}} type="submit">{{names[i]}}</button></li>
                         <br>
                 </form>
                 {%endfor%}

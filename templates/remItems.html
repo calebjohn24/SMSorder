@@ -25,22 +25,61 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<style>
+    ul {
+list-style-type: none;
+text-align:center;
+ padding: 0;
+ margin:0 auto;
+}
+#myInput {
+    border-radius: 25px;
+    border: 2px solid #000000;
+    text-align:center;
+ padding: 0;
+ margin:0 auto;
+     width: 170px;
+    height: 50px;
+}
+</style>
 </head>
 <body>
 <br>
-<h1>Edit {{restName}} Menu</h1>
+<h1>Remove Items</h1>
 <br>
-<h2>Remove Items</h2>
+<h3>Click Item to Remove</h3>
 <br>
+<h4 align="center"><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search" title="Type in a name" align="center"></h4>
+      <br>
 <!-- For loop logic of jinja template -->
 {%for i in range(0, len)%}
-<h3>
-    <form action="{{btn}}" method="post">
-        {{names[i]}}
-    <button type="submit" name="item" value="{{keys[i]}}">Remove</button>
-    </form>
-</h3>
-{%endfor%}
 
+        <ul id="myUL">
+<h4>
+    <form action="{{btn}}" method="post">
+    <li><button type="submit" name="item" value="{{keys[i]}}">{{names[i]}}</button></li>
+    </form>
+    <br>
+</h4>
+{%endfor%}
+        </ul>
+<script>
+        function myFunction() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("myUL");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("button")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+        </script>
 </body>
 </html>
