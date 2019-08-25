@@ -1,11 +1,8 @@
-import datetime
-import json
-import random
-import urllib.request
 import nexmo
-import nltk
+import logging
+import logging.handlers
+from wsgiref.simple_server import make_server
 import pygsheets
-import time
 import pandas as pd
 import paypalrestsdk
 from firebase import firebase
@@ -17,17 +14,21 @@ from flask import Flask, escape, request, session
 from flask_session import Session
 import pyrebase as fbAuth
 from fpdf import FPDF
-import os
 from words2num import w2n
-from spellchecker import SpellChecker
+import os
 import calendar
 import random
+import datetime
+import json
+import time
+import urllib.request
+
 sessionTime = 1000
 infoFile = open("info.json")
 info = json.load(infoFile)
 uid = info['uid']
 gc = pygsheets.authorize(service_file='static/CedarChatbot-70ec2d781527.json')
-email = "cedarchatbot@appspot.gserviceaccount.com"
+email = "cedarchatbot@applicationspot.gserviceaccount.com"
 estName = info['uid']
 estNameStr = info['name']
 shortUID = info['shortUID']
@@ -56,9 +57,10 @@ remPass = "remove-" + str(estName)
 fontName = "helvetica"
 smsTest = "sms:13166009096?body=order"
 sh = gc.open('TestRaunt')
-linkOrder = "http://0f66029e.ngrok.io/" + uid +"check"
+linkOrderLong = "cedarrestaurants.us-east-2.elasticbeanstalk.com" + uid +"check"
+
 webLink = "sms:+"+ NexmoNumber + "?body=order"
-app = Flask(__name__)
+application= Flask(__name__)
 
 def updateLog():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))
@@ -175,8 +177,6 @@ def getReply(msg, number):
     startHr = float(database.get("restaurants/" + uid, "/OChrs/open/"))
     endHr = float(database.get("restaurants/" + uid, "/OChrs/close/"))
     if (startHr <= float(currentTime) < endHr):
-        spell = SpellChecker()
-        # msg = spell.correction(msg)
         msg = msg.lower()
         indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")
@@ -343,6 +343,7 @@ def getReply(msg, number):
                 database.put("/users/",
                              "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                                  (len(numOrders) - 1)) + "/pickup-time", str(msg))
+                linkOrder = database.get("/restaurants/" + estName, "/orderLink")
                 reply = "Got it! click this link below to view the menu and continue ordering " + str(linkOrder)
 
                 client.send_message({
@@ -356,7 +357,7 @@ def getReply(msg, number):
         return ("no msg")
 
 
-@app.route('/sms', methods=['GET', 'POST'])
+@application.route('/sms', methods=['GET', 'POST'])
 def inbound_sms():
     data = dict(request.form) or dict(request.args)
     print(data["text"])
@@ -367,7 +368,7 @@ def inbound_sms():
     return ('', 200)
 
 
-@app.route('/ipn', methods=['POST'])
+@application.route('/ipn', methods=['POST'])
 def ipn():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -456,7 +457,7 @@ def ipn():
     return (" ", 200)
 
 
-@app.route('/' + estNameStr, methods=['GET'])
+@application.route('/' + estNameStr, methods=['GET'])
 def loginPage():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                             authentication=authentication)
@@ -464,7 +465,7 @@ def loginPage():
     return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + estNameStr, methods=['POST'])
+@application.route('/' + estNameStr, methods=['POST'])
 def loginPageCheck():
     rsp = ((request.form))
     email = str(rsp["email"])
@@ -500,7 +501,7 @@ def loginPageCheck():
         return render_template("login2.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + uid, methods=['GET'])
+@application.route('/' + uid, methods=['GET'])
 def panel():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -524,7 +525,7 @@ def panel():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + uid + "view", methods=['GET'])
+@application.route('/' + uid + "view", methods=['GET'])
 def view():
     orders = database.get("/restaurants/" + estName, "orders")
     webDataDisp = []
@@ -560,7 +561,7 @@ def view():
                            btn=str(uid + "view"), restName=estNameStr)
 
 
-@app.route('/' + uid + "view", methods=['POST'])
+@application.route('/' + uid + "view", methods=['POST'])
 def button():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -599,7 +600,7 @@ def button():
                            btn=str(uid + "view"))
 
 
-@app.route('/' + remPass, methods=['GET'])
+@application.route('/' + remPass, methods=['GET'])
 def removeItemsDisp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -621,7 +622,7 @@ def removeItemsDisp():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + remPass, methods=['POST'])
+@application.route('/' + remPass, methods=['POST'])
 def removeItems():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -729,7 +730,7 @@ def removeItems():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + addPass, methods=['GET'])
+@application.route('/' + addPass, methods=['GET'])
 def addItmDisp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -743,7 +744,7 @@ def addItmDisp():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + addPass, methods=['POST'])
+@application.route('/' + addPass, methods=['POST'])
 def addItmForm():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -780,7 +781,7 @@ def addItmForm():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + addPass + "2", methods=['POST'])
+@application.route('/' + addPass + "2", methods=['POST'])
 def addItmResp2():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -826,7 +827,7 @@ def addItmResp2():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + addPass + "3", methods=['GET'])
+@application.route('/' + addPass + "3", methods=['GET'])
 def addItmForm3():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -845,7 +846,7 @@ def addItmForm3():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + addPass + "3", methods=['POST'])
+@application.route('/' + addPass + "3", methods=['POST'])
 def addItmResp3():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -964,7 +965,7 @@ def addItmResp3():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + promoPass, methods=['GET'])
+@application.route('/' + promoPass, methods=['GET'])
 def addCpn():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -978,7 +979,7 @@ def addCpn():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route('/' + promoPass, methods=['POST'])
+@application.route('/' + promoPass, methods=['POST'])
 def addCpnResp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -1019,12 +1020,12 @@ def addCpnResp():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route("/" + uid + "check", methods=['GET'])
+@application.route("/" + uid + "check", methods=['GET'])
 def loginUUID():
     return render_template("verifyCode.html", btn=str(uid + "check"))
 
 
-@app.route('/' + uid + 'check', methods=['POST'])
+@application.route('/' + uid + 'check', methods=['POST'])
 def getUUID():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1044,7 +1045,7 @@ def getUUID():
             return render_template("verifyCode2.html", btn=str(uid + "check"))
 
 
-@app.route('/' + uid + 'order', methods=['GET'])
+@application.route('/' + uid + 'order', methods=['GET'])
 def order():
     UUID = session.get('UUID', None)
     key = session.get('key', None)
@@ -1135,7 +1136,7 @@ def order():
                            total=dispTotal, btn3=uid + "checkpayment")
 
 
-@app.route('/' + uid + 'order', methods=['POST'])
+@application.route('/' + uid + 'order', methods=['POST'])
 def orderX():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1243,7 +1244,7 @@ def orderX():
                            btn2=uid + "order", btn3=uid + "checkpayment")
 
 
-@app.route('/' + uid + 'orderSz', methods=['POST'])
+@application.route('/' + uid + 'orderSz', methods=['POST'])
 def orderNm():
     newItmKey = session.get('itmKey', None)
     UUID = session.get('UUID', None)
@@ -1282,7 +1283,7 @@ def orderNm():
                            btn=uid + "ordertopping")
 
 
-@app.route('/' + uid + 'ordertopping', methods=['POST'])
+@application.route('/' + uid + 'ordertopping', methods=['POST'])
 def ordertp():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1326,7 +1327,7 @@ def ordertp():
                            btn=uid + "ordertoppingConfirm")
 
 
-@app.route('/' + uid + 'ordertoppingConfirm', methods=['POST'])
+@application.route('/' + uid + 'ordertoppingConfirm', methods=['POST'])
 def ConfirmItm():
     UUID = session.get('UUID', None)
     key = session.get('key', None)
@@ -1421,7 +1422,7 @@ def ConfirmItm():
     return redirect(url_for('order'))
 
 
-@app.route('/' + uid + 'checkpayment', methods=['POST'])
+@application.route('/' + uid + 'checkpayment', methods=['POST'])
 def CheckPaymentMethod():
     UUID = session.get('UUID', None)
     key = session.get('key', None)
@@ -1574,7 +1575,7 @@ def CheckPaymentMethod():
     return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr, total=TotalStr,CPN=disc)
 
 
-@app.route('/' + uid + 'nextPay', methods=['POST'])
+@application.route('/' + uid + 'nextPay', methods=['POST'])
 def nextPayment():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))
     UUID = session.get('UUID', None)
@@ -1965,15 +1966,17 @@ def nextPayment():
         return render_template("thankMsg.html")
 
 
-@app.route('/')
+@application.route('/')
+@application.route('/index')
 def mainPage():
     return " "
 
 
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
-    app.secret_key = 'ssKEY'
-    app.config['SESSION_TYPE'] = 'filesystem'
+    application.secret_key = 'ssKEY'
+    application.config['SESSION_TYPE'] = 'filesystem'
     sess = Session()
-    sess.init_app(app)
-    app.run(host='0.0.0.0', port=5000)
+    sess.init_app(application)
+    application.debug = True
+    application.run(host="0.0.0.0")

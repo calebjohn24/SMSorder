@@ -1,2 +1,0 @@
-https://erikrood.com/Posts/py_gsheets.html
-- gsheets
