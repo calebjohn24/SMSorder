@@ -1,7 +1,10 @@
 
 GenJson.py
 /flask_session/
-
+/bin
+/include
+/lib
+/menus
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

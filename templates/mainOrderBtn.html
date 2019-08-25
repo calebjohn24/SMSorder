@@ -39,13 +39,14 @@ body {
   z-index: 1;
   top: 0;
   overflow-x: hidden;
-  padding-top: 10px;
+  padding-top: 20px;
   text-align: center;
 }
 .left {
   left: 0;
   background-color: black;
   text-align: center;
+  justify-content: center;
 }
 .left li {
     display: inline-block;
@@ -56,6 +57,7 @@ body {
   right: 0;
   background-color: black;
   text-align: center;
+  justify-content: center;
 }
 .centered {
   position: absolute;
@@ -70,25 +72,36 @@ body {
 }
 ul {
 list-style-type: none;
-margin-right: auto;
- margin-left: auto;
+text-align:center;
+ padding: 0;
+ margin:0 auto;
 }
-
+#myInput {
+    border-radius: 25px;
+    border: 2px solid #000000;
+    text-align:center;
+ padding: 0;
+ margin:0 auto;
+     width: 170px;
+    height: 50px;
+}
 </style>
 </head>
 <body>
 <div class="split right">
   <div class="right">
      <h1>Tap Item to Add</h1>
-      <h3><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Items" title="Type in a name" align="center"></h3>
+      <h6 align="center"><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Items" title="Type in a name" align="center"></h6>
       <br>
         <ul id="myUL" >
+            <h4 align="center">
                 {%for i in range(0, len)%}
                 <form action="{{btn}}" method="post">
-                    <li><button onclick="{{btn}}" name="item" value={{keys[i]}} type="submit">{{names[i]}}</button></li>
-                        <br>
+                    <li><button onclick="{{btn}}" name="item" value={{keys[i]}} type="submit">{{names[i]}}</button><br>{{descrips[i]}}</li>
+                        <hr>
                 </form>
                 {%endfor%}
+            </h4>
         </ul>
         <script>
         function myFunction() {
@@ -139,9 +152,3 @@ margin-right: auto;
 
 </body>
 </html>
-
-
-
-
-
-

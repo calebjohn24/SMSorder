@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
-      <change afterPath="$PROJECT_DIR$/.ebignore" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="reformatted for aws">
       <change afterPath="$PROJECT_DIR$/bin/cygdb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cython" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cythonize" afterDir="false" />
@@ -48,7 +47,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/lib-dynload" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/linecache.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/locale.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/python3.6/no-global-site-packages.txt" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/ntpath.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/operator.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/orig-prefix.txt" afterDir="false" />
@@ -5024,9 +5022,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/types.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/warnings.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/weakref.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.Python" beforeDir="false" afterPath="$PROJECT_DIR$/.Python" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
@@ -5061,30 +5056,14 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/include/python3.6m" beforeDir="false" afterPath="$PROJECT_DIR$/include/python3.6m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/CedarChatbot-70ec2d781527.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/TestRaunt-breakfast-menu.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/TranslationEngV2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/credentials.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/fbtest.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/genPDF.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/genTD2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/generateTD.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/info.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/logSkus.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/menu.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/phone.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/proscessPaypal.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/readEmail.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/readMenu.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/testAppck.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/testLog.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/testSheets.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/testUploadMenus.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/tickets.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/todo.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/translateSMS.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/mainOrderBtn.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrderBtn.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/pickToppings.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickToppings.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/tickets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/python3.6/no-global-site-packages.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5329,20 +5308,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00011" summary="minor bug fix">
-      <created>1564622381566</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1564622381566</updated>
-    </task>
-    <task id="LOCAL-00012" summary="minor bug fix">
-      <created>1564622601823</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1564622601823</updated>
     </task>
     <task id="LOCAL-00013" summary="minor bug fix">
       <created>1564624705414</created>
@@ -5673,7 +5638,21 @@
       <option name="project" value="LOCAL" />
       <updated>1566629833163</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="reformatted for aws">
+      <created>1566709680036</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1566709680037</updated>
+    </task>
+    <task id="LOCAL-00061" summary="reformatted for aws">
+      <created>1566709751610</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1566709751610</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5694,7 +5673,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="added email scraping" />
     <MESSAGE value="added IPN request still need to integrate with bot" />
     <MESSAGE value="added coupon support, rebuilt translation engine" />
     <MESSAGE value="integrated with app still testing" />
@@ -5719,6 +5697,7 @@
     <MESSAGE value="minor bug fix in itm display" />
     <MESSAGE value="added coupon support" />
     <MESSAGE value="minor bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
+    <MESSAGE value="reformatted for aws" />
+    <option name="LAST_COMMIT_MESSAGE" value="reformatted for aws" />
   </component>
 </project>
