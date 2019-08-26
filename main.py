@@ -1,4 +1,6 @@
-import nexmo
+import plivo
+from plivo import plivoxml
+from flask import Response
 import logging
 import logging.handlers
 from wsgiref.simple_server import make_server
@@ -14,24 +16,27 @@ from flask import Flask, escape, request, session
 from flask_session import Session
 import pyrebase as fbAuth
 from fpdf import FPDF
-from words2num import w2n
 import os
+from flask import jsonify
 import calendar
 import random
 import datetime
 import json
 import time
 import urllib.request
+from datetime import timedelta
 
 sessionTime = 1000
 infoFile = open("info.json")
 info = json.load(infoFile)
 uid = info['uid']
 gc = pygsheets.authorize(service_file='static/CedarChatbot-70ec2d781527.json')
-email = "cedarchatbot@applicationspot.gserviceaccount.com"
+email = "cedarchatbot@appspot.gserviceaccount.com"
 estName = info['uid']
 estNameStr = info['name']
 shortUID = info['shortUID']
+botNumber = info["number"]
+client = plivo.RestClient(auth_id='MAYTVHN2E1ZDY4ZDA2YZ', auth_token='ODgzZDA1OTFiMjE2ZTRjY2U4ZTVhYzNiODNjNDll')
 mainLink = ""
 authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W', 'cajohn0205@gmail.com',
                                                  extra={'id': 123})
@@ -46,10 +51,6 @@ config = {
 }
 firebaseAuth = fbAuth.initialize_app(config)
 auth = firebaseAuth.auth()
-client = nexmo.Client(key='8558cb90', secret='PeRbp1ciHeqS8sDI')
-pointAlg = "x.10"
-pointThresh = 1000
-NexmoNumber = info['number']
 databse = firebase.FirebaseApplication("https://cedarrestaurants-ad912.firebaseio.com/")
 promoPass = "promo-" + str(estName)
 addPass = "add-" + str(estName)
@@ -59,9 +60,10 @@ smsTest = "sms:13166009096?body=order"
 sh = gc.open('TestRaunt')
 linkOrderLong = "cedarrestaurants.us-east-2.elasticbeanstalk.com" + uid + "check"
 
-webLink = "sms:+" + NexmoNumber + "?body=order"
-application = Flask(__name__)
+webLink = "sms:+" + botNumber + "?body=order"
 
+app = Flask(__name__)
+app.secret_key = 'CedarKey02'
 
 def updateLog():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))
@@ -102,7 +104,7 @@ def updateLog():
                 if ((menuItems[men]["sizes"][0][1] != -1)):
                     for sz in range(len(menuItems[men]["sizes"])):
                         if (skuKeys[sk] == str(menuItems[men]["sizes"][sz][2])):
-                            #print("found size")
+                            # print("found size")
                             if (str(menuItems[men]["sizes"][sz][0]).lower() != "u"):
                                 name = str(menuItems[men]["name"]).lower()
                                 name += "-"
@@ -120,7 +122,7 @@ def updateLog():
                         if (len(menuItems[men]["sizes"]) - sz == 1):
                             for ex in range(len(menuItems[men]["extras"])):
                                 if (skuKeys[sk] == str(menuItems[men]["extras"][ex][2])):
-                                    #print("found ex")
+                                    # print("found ex")
                                     name = str(menuItems[men]["name"]).lower()
                                     name += "||"
                                     name += str(menuItems[men]["extras"][ex][0]).lower()
@@ -160,8 +162,8 @@ def genUsr(name, number, dbIndx):
 
 
 def genPayment(total, name, UUIDcode):
-    #print(UUIDcode)
-    #print(name)
+    # print(UUIDcode)
+    # print(name)
     apiurl = "http://tinyurl.com/api-create.php?url="
     paymentLink = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-ninhv43009@business.example.com&currency_code=USD&amount=' \
                   '' + str(total) + '&item_name=' + str(UUIDcode)
@@ -179,15 +181,11 @@ def getReply(msg, number):
     endHr = float(database.get("restaurants/" + uid, "/OChrs/close/"))
     if (startHr <= float(currentTime) < endHr):
         msg = msg.lower()
+        print(msg)
         indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")
         UserData = database.get("/", "users")
         if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr" or msg == "ordee"):
-            client.send_message({
-                'from': NexmoNumber,
-                'to': number,
-                'text': "Hi! Welcome to " + estNameStr + ", please wait one moment..."
-            })
             UUID = random.randint(9999999, 100000000)
             reply = "Hi, welcome to " + estNameStr + " please enter your name to continue"
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
@@ -208,7 +206,7 @@ def getReply(msg, number):
             UserData = database.get("/", "users")
             for usr in range(len(UserData)):
                 if (number == UserData[usr]["number"]):
-                    #print("found user")
+                    # print("found user")
                     timeStamp = datetime.datetime.today()
                     reply = "Hi " + str(
                         UserData[usr]["name"]) + "! welcome to " + estNameStr + " is this order or to go?"
@@ -228,7 +226,7 @@ def getReply(msg, number):
                                  "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders))) + "/startTime",
                                  str(timeStamp))
-                    break
+                    return reply
                 if ((len(UserData) - usr) == 1):
                     genUsr("", number, (len(DBdata)))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/",
@@ -236,12 +234,7 @@ def getReply(msg, number):
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                                  0)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 1)
-            client.send_message({
-                'from': NexmoNumber,
-                'to': number,
-                'text': reply
-            })
-            return reply
+                    return reply
         else:
             for db in range(len(DBdata)):
                 phoneNumDB = DBdata[db]['number']
@@ -249,8 +242,8 @@ def getReply(msg, number):
                     indx = db
                     break
                 elif ((len(DBdata) - db) == 1):
-                    #print("no msg")
-                    return 200
+                    # print("no msg")
+                    return "no msg"
             if (DBdata[indx]['stage'] == 1):
                 name = msg
                 DBdata = database.get("/restaurants/" + estName, "/orders")
@@ -269,11 +262,7 @@ def getReply(msg, number):
                 reply = "is this order for-here or to-go?"
                 usrIndx = DBdata[indx]["userIndx"]
                 database.put("/users", "/" + str(DBdata[indx]["userIndx"]) + "/name", str(msg.capitalize()))
-                client.send_message({
-                    'from': NexmoNumber,
-                    'to': number,
-                    'text': reply
-                })
+                return reply
             elif (DBdata[indx]['stage'] == 2):
                 if (
                         msg == "for here" or msg == "fo here" or msg == "for her" or msg == "for herw" or msg == "for herr" or msg == "here"):
@@ -281,18 +270,15 @@ def getReply(msg, number):
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", "HERE")
                     usrIndx = DBdata[indx]["userIndx"]
                     numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
-                    #print((len(numOrders)))
+                    # print((len(numOrders)))
                     database.put("/users/",
                                  "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders) - 1)) + "/to-go",
                                  str("here"))
+                    reply = "-Sounds good! your order will be " + "for-here\n" + "-if you want" \
+                                                                                 " your order now enter" + ' "asap" otherwise enter your preferred time.(EX 11:15am)'
 
-                    client.send_message({
-                        'from': NexmoNumber,
-                        'to': number,
-                        'text': "-Sounds good! your order will be " + "for-here\n" + "-if you want"
-                                                                                     " your order now enter" + ' "asap" otherwise enter your preferred time.(EX 11:15am)'
-                    })
+                    return reply
                 else:
                     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                                      'cajohn0205@gmail.com', extra={'id': 123})
@@ -306,12 +292,10 @@ def getReply(msg, number):
                                  "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders) - 1)) + "/to-go",
                                  str("to-go"))
-                    client.send_message({
-                        'from': NexmoNumber,
-                        'to': number,
-                        'text': "-Sounds good! your order will be " + "to-go\n" + "-if you want"
-                                                                                  " your order now enter " + '"asap" otherwise enter the time your preferred time.(EX 11:15am)'
-                    })
+                    reply = "-Sounds good! your order will be " + "to-go\n" + "-if you want" \
+                                                                              " your order now enter " + '"asap" otherwise enter the time your preferred time.(EX 11:15am)'
+                    return reply
+
             elif (DBdata[indx]['stage'] == 3):
                 currentMenu = ""
                 menuIndx = 0
@@ -330,8 +314,8 @@ def getReply(msg, number):
                     startHrMn = (float(MenuHrs[menKeys[mnx]]["startHr"]))
                     endHrMn = (float(MenuHrs[menKeys[mnx]]["endHr"]))
                     if (startHrMn <= float(currentTime) < endHrMn):
-                        #print("current menu")
-                        #print(menKeys[mnx])
+                        # print("current menu")
+                        # print(menKeys[mnx])
                         menuIndx = mnx
                         currentMenu = str(menKeys[mnx])
                         menuLink = str(MenuHrs[menKeys[mnx]]["link"])
@@ -340,36 +324,51 @@ def getReply(msg, number):
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
                 usrIndx = DBdata[indx]["userIndx"]
                 numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
-                #print(numOrders)
+                # print(numOrders)
                 database.put("/users/",
                              "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                                  (len(numOrders) - 1)) + "/pickup-time", str(msg))
                 linkOrder = database.get("/restaurants/" + estName, "/orderLink")
                 reply = "Got it! click this link below to view the menu and continue ordering " + str(linkOrder)
-
-                client.send_message({
-                    'from': NexmoNumber,
-                    'to': number,
-                    'text': reply
-                })
-                #print("m0")
                 return reply
     else:
         return ("no msg")
 
 
-@application.route('/sms', methods=['GET', 'POST'])
+@app.route('/sms')
 def inbound_sms():
-    data = dict(request.form) or dict(request.args)
-    #print(data["text"])
-    number = str(data['msisdn'][0])
-    msg = str(data["text"][0])
-    #print(number, msg)
-    getReply(msg, number)
-    return ('', 200)
+    # Sender's phone number
+    from_number = request.values.get('From')
+    # Receiver's phone number - Plivo number
+    to_number = request.values.get('To')
+    # The text which was received
+    text = request.values.get('Text')
+    print('Message received - From: %s, To: %s, Text: %s' % (from_number, to_number, text))
+    resp = getReply(text, from_number)
+    print(str(resp))
+    if (resp != "no msg"):
+        client.messages.create(
+            src=botNumber,
+            dst=from_number,
+            text=resp
+        )
+        '''
+        response = plivoxml.ResponseElement()
+        response.add(
+            plivoxml.MessageElement(
+                str(resp),
+                src=to_number,
+                dst=from_number,
+                type='sms',
+                callback_url='https://61296054.ngrok.io/sms status/',
+                callback_method='POST'))
+        # print(response.to_string())  # Prints the XML
+        return Response(response.to_string(), mimetype='application/xml')
+        '''
+    return '200'
 
 
-@application.route('/ipn', methods=['POST'])
+@app.route('/ipn', methods=['POST'])
 def ipn():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -379,7 +378,7 @@ def ipn():
     rsp = ((request.form))
     DBdata = database.get("/restaurants/" + estName, "orders")
     for dbItems in range(len(DBdata)):
-        #print(rsp["item_name"])
+        # print(rsp["item_name"])
         if (DBdata[dbItems]["UUID"] == rsp["item_name"]):
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/paid/", 1)
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/filled/", "1")
@@ -446,19 +445,19 @@ def ipn():
             database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
                          "duration",
                          duration)
-            #print("sending")
+            # print("sending")
             reply = "-Thank you for your order, you can pick it up when you arrive and skip the line \n-To order again just text " + '"order"'
             updateLog()
-            client.send_message({
-                'from': NexmoNumber,
-                'to': number,
-                'text': reply
-            })
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
+            client.messages.create(
+                src=botNumber,
+                dst=number,
+                text=reply
+            )
     return (" ", 200)
 
 
-@application.route('/' + estNameStr, methods=['GET'])
+@app.route('/' + estNameStr, methods=['GET'])
 def loginPage():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                             authentication=authentication)
@@ -466,20 +465,20 @@ def loginPage():
     return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + estNameStr, methods=['POST'])
+@app.route('/' + estNameStr, methods=['POST'])
 def loginPageCheck():
     rsp = ((request.form))
     email = str(rsp["email"])
     pw = str(rsp["pw"])
     try:
         user = auth.sign_in_with_email_and_password(str(rsp["email"]), pw)
-        #print(user['localId'])
+        # print(user['localId'])
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                          'cajohn0205@gmail.com', extra={'id': 123})
         fireapp = firebase.FirebaseApplication('https://cedarchatbot.firebaseio.com/', authentication=authentication)
         testDB = (fireapp.get("/restaurants/", user["localId"]))
         if (str(user["localId"]) == str(uid) and testDB != None):
-            #print("found")
+            # print("found")
             database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                     authentication=authentication)
             database.put("/restaurants/" + uid + "/", "loginTime", time.time())
@@ -487,7 +486,7 @@ def loginPageCheck():
         else:
             authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                              'cajohn0205@gmail.com', extra={'id': 123})
-            #print("incorrect password")
+            # print("incorrect password")
             database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                     authentication=authentication)
             database.put("/restaurants/" + uid + "/", "loginTime", 0)
@@ -498,11 +497,11 @@ def loginPageCheck():
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                 authentication=authentication)
         database.put("/restaurants/" + uid + "/", "loginTime", 0)
-        #print("incorrect password")
+        # print("incorrect password")
         return render_template("login2.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + uid, methods=['GET'])
+@app.route('/' + uid, methods=['GET'])
 def panel():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -517,25 +516,25 @@ def panel():
         for menuNames in range(len(keys)):
             names.append(str([keys[menuNames]][0]))
             links.append(str(hours[keys[menuNames]]["link"]))
-            #print(links)
+            # print(links)
         updateLog()
         return render_template("panel.html", len=len(links), menuLinks=links, menuNames=names, restName=estNameStr,
                                viewOrders=(uid + "view"), addItm=(addPass), remItms=remPass, addCpn=promoPass,
-                               signOut=estNameStr,outStck=str(uid+"outstock"))
+                               signOut=estNameStr, outStck=str(uid + "outstock"))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + uid + "view", methods=['GET'])
+@app.route('/' + uid + "view", methods=['GET'])
 def view():
     orders = database.get("/restaurants/" + estName, "orders")
     webDataDisp = []
     keys = []
-    #print(orders)
+    # print(orders)
     for ords in range(len(orders)):
         try:
             filled = orders[ords]["filled"]
-            #print(filled)
+            # print(filled)
             if (filled == "1"):
                 UUID = orders[ords]["UUID"]
                 try:
@@ -547,32 +546,32 @@ def view():
                 subTotalStr = ('$' + format(subTotal, ',.2f'))
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
-                #print(TotalStr)
+                # print(TotalStr)
                 writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) + " " + str(
                     orders[ords]["discStr"]) \
                            + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
                                                                                                        "" + TotalStr + " || " + str(
                     orders[ords]["cash"])
                 keys.append(UUID)
-                #print(writeStr)
+                # print(writeStr)
                 webDataDisp.append(writeStr)
         except KeyError:
-            #print("exec")
+            # print("exec")
             pass
     return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys,
                            btn=str(uid + "view"), restName=estNameStr)
 
 
-@application.route('/' + uid + "view", methods=['POST'])
+@app.route('/' + uid + "view", methods=['POST'])
 def button():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     item = (rsp['item'])
-    #print(item)
+    # print(item)
     orders = database.get("/restaurants/" + estName, "orders")
     webDataDisp = []
     keys = []
-    #print(orders)
+    # print(orders)
     for ords in range(len(orders)):
         UUID = orders[ords]["UUID"]
         if (item == UUID):
@@ -590,19 +589,20 @@ def button():
                 subTotalStr = ('$' + format(subTotal, ',.2f'))
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
-                #print(TotalStr)
+                # print(TotalStr)
                 writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) + " " + str(
                     orders[ords]["discStr"]) \
                            + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
                                                                                                        "" + TotalStr + " || " + str(
                     orders[ords]["cash"])
                 keys.append(UUID)
-                #print(writeStr)
+                # print(writeStr)
                 webDataDisp.append(writeStr)
     return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys,
                            btn=str(uid + "view"))
 
-@application.route('/' + uid +"outstock", methods=['GET'])
+
+@app.route('/' + uid + "outstock", methods=['GET'])
 def outStockg():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -619,7 +619,7 @@ def outStockg():
             if (menuItems[men]["descrip"] != "REMOVEDITM!"):
                 dispStr = ""
                 keys.append(men)
-                if(menuItems[men]["time"] == "oos"):
+                if (menuItems[men]["time"] == "oos"):
                     dispStr += menuItems[men]["name"].lower()
                     dispStr += "-"
                     dispStr += "OUT OF STOCK"
@@ -629,12 +629,12 @@ def outStockg():
                     dispStr += "In Stock"
                 names.append(dispStr)
 
-        return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=uid+"outstock")
+        return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=uid + "outstock")
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + uid +"outstock", methods=['POST'])
+@app.route('/' + uid + "outstock", methods=['POST'])
 def outStockp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -649,7 +649,7 @@ def outStockp():
         keys = []
         menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
         itx = menuItems[item]["time"]
-        if(itx == "oos"):
+        if (itx == "oos"):
             rm = menuItems[item]["rm"]
             database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "rm", "oos")
             database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "time", rm)
@@ -662,17 +662,17 @@ def outStockp():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + remPass, methods=['GET'])
+@app.route('/' + remPass, methods=['GET'])
 def removeItemsDisp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    #print()
+    # print()
     if ((currentTime - lastLogin) < sessionTime):
         menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-        #print(menuItems)
+        # print(menuItems)
         names = []
         keys = []
         for men in range(len(menuItems)):
@@ -684,7 +684,7 @@ def removeItemsDisp():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + remPass, methods=['POST'])
+@app.route('/' + remPass, methods=['POST'])
 def removeItems():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -697,7 +697,7 @@ def removeItems():
         item = int(rsp['item'])
         names = []
         keys = []
-        database.put("/restaurants/" + estName + "/menu/items/" +str(item)+"/", "descrip", "REMOVEDITM!")
+        database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "descrip", "REMOVEDITM!")
         database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "sizes/0/1", -1)
         menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
         for men in range(len(menuItems)):
@@ -712,7 +712,7 @@ def removeItems():
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
         menu = (database.get("restaurants/" + uid, "/menu/items/"))
         hours = (database.get("restaurants/" + uid, "/Hours/"))
-        #print(hours)
+        # print(hours)
         keys = list(hours.keys())
         for menuNames in range(len(keys)):
             pdf = FPDF()
@@ -726,11 +726,11 @@ def removeItems():
                 if (menu[dt] != None):
                     if ((menu[dt]["sizes"][0][1] != -1)):
                         name = menu[dt]["name"].lower()
-                        #print(name)
-                        #print(menu[dt]["time"], str([keys[menuNames]][0]))
-                        #print(menu[dt]["time"] == str([keys[menuNames]][0]))
-                        #print(str(menu[dt]["time"]).lower() == "all")
-                        #print("\n")
+                        # print(name)
+                        # print(menu[dt]["time"], str([keys[menuNames]][0]))
+                        # print(menu[dt]["time"] == str([keys[menuNames]][0]))
+                        # print(str(menu[dt]["time"]).lower() == "all")
+                        # print("\n")
                         if (str(menu[dt]["time"]).lower() == "all" or str(menu[dt]["time"]).lower() == str(
                                 [keys[menuNames]][0]).lower()):
                             name = menu[dt]["name"].lower()
@@ -787,34 +787,34 @@ def removeItems():
             pdf.output(fileName)
             storage = firebaseAuth.storage()
             storage.child(estNameStr + "/" + fileName).put(fileName)
-            #print("\n")
+            # print("\n")
         return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + addPass, methods=['GET'])
+@app.route('/' + addPass, methods=['GET'])
 def addItmDisp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    #print()
+    # print()
     if ((currentTime - lastLogin) < sessionTime):
         return render_template('addform.html', btn=addPass, restName=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + addPass, methods=['POST'])
+@app.route('/' + addPass, methods=['POST'])
 def addItmForm():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    #print()
+    # print()
     if ((currentTime - lastLogin) < sessionTime):
         request.parameter_storage_class = ImmutableOrderedMultiDict
         rsp = ((request.form))
@@ -823,8 +823,8 @@ def addItmForm():
         menTime = str(rsp['time']).lower()
         descrip = str(rsp['desc']).lower() + " "
         cat = str(rsp['category']).lower()
-        #print(name)
-        #print(numSizes)
+        # print(name)
+        # print(numSizes)
         menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
         keyVal = 0
         for mmx in range(len(menuItems)):
@@ -848,7 +848,7 @@ def addItmForm():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + addPass + "2", methods=['POST'])
+@app.route('/' + addPass + "2", methods=['POST'])
 def addItmResp2():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -892,7 +892,7 @@ def addItmResp2():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + addPass + "3", methods=['GET'])
+@app.route('/' + addPass + "3", methods=['GET'])
 def addItmForm3():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -910,14 +910,14 @@ def addItmForm3():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + addPass + "3", methods=['POST'])
+@app.route('/' + addPass + "3", methods=['POST'])
 def addItmResp3():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    #print()
+    # print()
     if ((currentTime - lastLogin) < sessionTime):
         request.parameter_storage_class = ImmutableOrderedMultiDict
         rsp = ((request.form))
@@ -1013,42 +1013,42 @@ def addItmResp3():
                             yStart += 7
                             text = ""
             fileName = "menus/" + estNameStr + "-" + str([keys[menuNames]][0]) + "-" + "menu.pdf"
-            #print(fileName)
+            # print(fileName)
             pdf.output(fileName)
             storage = firebaseAuth.storage()
             storage.child(estNameStr + "/" + fileName).put(fileName)
-            #print("\n")
+            # print("\n")
         return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + promoPass, methods=['GET'])
+@app.route('/' + promoPass, methods=['GET'])
 def addCpn():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    #print()
+    # print()
     if ((currentTime - lastLogin) < sessionTime):
         return render_template('coupon.html', restName=estNameStr)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route('/' + promoPass, methods=['POST'])
+@app.route('/' + promoPass, methods=['POST'])
 def addCpnResp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    #print()
+    # print()
     if ((currentTime - lastLogin) < sessionTime):
         request.parameter_storage_class = ImmutableOrderedMultiDict
         rsp = ((request.form))
-        #print(rsp)
+        # print(rsp)
         name = rsp['name']
         item = rsp['itm']
         amt = rsp['amt']
@@ -1080,12 +1080,12 @@ def addCpnResp():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@application.route("/" + uid + "check", methods=['GET'])
+@app.route("/" + uid + "check", methods=['GET'])
 def loginUUID():
     return render_template("verifyCode.html", btn=str(uid + "check"))
 
 
-@application.route('/' + uid + 'check', methods=['POST'])
+@app.route('/' + uid + 'check', methods=['POST'])
 def getUUID():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1104,13 +1104,15 @@ def getUUID():
         elif ((len(tickets) - tx) == 1):
             return render_template("verifyCode2.html", btn=str(uid + "check"))
 
-@application.route('/' + uid + 'order', methods=['GET'])
+
+@app.route('/' + uid + 'order', methods=['GET'])
 def order():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     UUID = session.get('UUID', None)
     key = session.get('key', None)
-    #print(UUID, key, itmKey)
-    #print(rsp)
+    # print(UUID, key, itmKey)
+    # print(rsp)
+    print(UUID)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
@@ -1135,8 +1137,8 @@ def order():
         startHrMn = (float(MenuHrs[menKeys[mnx]]["startHr"]))
         endHrMn = (float(MenuHrs[menKeys[mnx]]["endHr"]))
         if (startHrMn <= float(currentTime) < endHrMn):
-            #print("current menu")
-            #print(menKeys[mnx])
+            # print("current menu")
+            # print(menKeys[mnx])
             menuIndx = mnx
             currentMenu = str(menKeys[mnx])
             break
@@ -1165,10 +1167,10 @@ def order():
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
-                        wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
+                        wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
                         currentItems.append(wrtStr)
                         currKeys.append(dispKeys[itmX])
-                        #print(wrtStr)
+                        # print(wrtStr)
                     else:
                         wrtStr = str(itms[dispKeys[itmX]]["name"])
                         wrtStr += " "
@@ -1178,10 +1180,10 @@ def order():
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
-                        wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
+                        wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
                         currentItems.append(wrtStr)
                         currKeys.append(dispKeys[itmX])
-                        #print(wrtStr)
+                        # print(wrtStr)
             except KeyError:
                 pass
     else:
@@ -1196,28 +1198,30 @@ def order():
     cats = list(dict.fromkeys(cats))
     for cc in range(len(cats)):
         catkeys2.append(cc)
-   #print(catkeys2)
-    return render_template("mainOrder.html", len=len(cats), names=cats,keys=catkeys2, btn=uid + "ordercat",
-                           len2=(len(currentItems)),currentItms=currentItems, total=dispTotal, currKeys=currKeys,
+    # print(catkeys2)
+    return render_template("mainOrder.html", len=len(cats), names=cats, keys=catkeys2, btn=uid + "ordercat",
+                           len2=(len(currentItems)), currentItms=currentItems, total=dispTotal, currKeys=currKeys,
                            btn2=uid + "order", btn3=uid + "checkpayment")
 
-@application.route('/' + uid + 'order', methods=['POST'])
+
+@app.route('/' + uid + 'order', methods=['POST'])
 def orderX():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     UUID = session.get('UUID', None)
     key = session.get('key', None)
     itmKey = random.randint(9999, 1000000)
-    #print(UUID, key, itmKey)
-   #print(rsp)
+    # print(UUID, key, itmKey)
+    print(UUID)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str((rsp["rem"])), "price"))
-   #print(currentPrice)
+    currentPrice = float(
+        database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str((rsp["rem"])), "price"))
+    # print(currentPrice)
     currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
     currentTotal -= currentPrice
-   #print(currentTotal)
+    # print(currentTotal)
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = (currentTotal)
     Tax = float(subTotal * 0.1)
@@ -1239,8 +1243,8 @@ def orderX():
         startHrMn = (float(MenuHrs[menKeys[mnx]]["startHr"]))
         endHrMn = (float(MenuHrs[menKeys[mnx]]["endHr"]))
         if (startHrMn <= float(currentTime) < endHrMn):
-            #print("current menu")
-            #print(menKeys[mnx])
+            # print("current menu")
+            # print(menKeys[mnx])
             menuIndx = mnx
             currentMenu = str(menKeys[mnx])
             break
@@ -1269,10 +1273,10 @@ def orderX():
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
-                        wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
+                        wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
                         currentItems.append(wrtStr)
                         currKeys.append(dispKeys[itmX])
-                        #print(wrtStr)
+                        # print(wrtStr)
                     else:
                         wrtStr = str(itms[dispKeys[itmX]]["name"])
                         wrtStr += " "
@@ -1282,10 +1286,10 @@ def orderX():
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
-                        wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
+                        wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
                         currentItems.append(wrtStr)
                         currKeys.append(dispKeys[itmX])
-                        #print(wrtStr)
+                        # print(wrtStr)
             except KeyError:
                 pass
     else:
@@ -1296,22 +1300,24 @@ def orderX():
         if ((menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
             if (menuItems[men]["sizes"][0][1] != -1):
                 cats.append(str(menuItems[men]["cat"]).upper())
-   #print(cats)
+    # print(cats)
     cats = list(dict.fromkeys(cats))
-   #print(cats)
+    # print(cats)
     for cc in range(len(cats)):
         catKeys2.append(cc)
-   #print(catKeys2)
-    return render_template("mainOrder.html", len=len(cats), names=cats,keys=catKeys2, btn=uid + "ordercat",
-                           len2=(len(currentItems)),currentItms=currentItems, total=dispTotal, currKeys=currKeys,
+    # print(catKeys2)
+    return render_template("mainOrder.html", len=len(cats), names=cats, keys=catKeys2, btn=uid + "ordercat",
+                           len2=(len(currentItems)), currentItms=currentItems, total=dispTotal, currKeys=currKeys,
                            btn2=uid + "order", btn3=uid + "checkpayment")
 
-@application.route('/' + uid + 'ordercat', methods=['POST'])
+
+@app.route('/' + uid + 'ordercat', methods=['POST'])
 def orderCat():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
-   #print(rsp)
+    # print(rsp)
     key = session.get('key', None)
+    UUID = session.get('UUID', None)
     catTgt = rsp["item"]
     names = []
     keys = []
@@ -1349,27 +1355,29 @@ def orderCat():
         if ((menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
             if (menuItems[men]["sizes"][0][1] != -1):
                 cats.append(str(menuItems[men]["cat"]).upper())
-   #print(cats)
+    # print(cats)
     cats = list(dict.fromkeys(cats))
-   #print(cats)
+    # print(cats)
     ct = cats[int(catTgt)]
     for men in range(len(menuItems)):
-        if (menuItems[men]["cat"].upper() == ct  and (menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
+        if (menuItems[men]["cat"].upper() == ct and (
+                menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
             if (menuItems[men]["sizes"][0][1] != -1):
                 names.append(str(menuItems[men]["name"]).upper())
                 descrips.append(str(menuItems[men]["descrip"]).lower())
                 keys.append(men)
     return render_template("pickcat.html", len=len(names), names=names, keys=keys, prices=prices, descrips=descrips,
-                           btn=uid + "orderSz", btn2=uid+"order")
+                           btn=uid + "orderSz", btn2=uid + "order")
 
-@application.route('/' + uid + 'orderSz', methods=['POST'])
+
+@app.route('/' + uid + 'orderSz', methods=['POST'])
 def orderNm():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     itmKey = random.randint(9999, 1000000)
     UUID = session.get('UUID', None)
     key = session.get('key', None)
-    #print(UUID, key)
+    print(UUID, key)
     names = []
     keys = []
     prices = []
@@ -1399,7 +1407,8 @@ def orderNm():
     return render_template("picksize.html", len=len(prices), names=names, keys=keys, prices=prices,
                            btn=uid + "ordertopping")
 
-@application.route('/' + uid + 'ordertopping', methods=['POST'])
+
+@app.route('/' + uid + 'ordertopping', methods=['POST'])
 def ordertp():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1411,7 +1420,7 @@ def ordertp():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    #print(menuItems[nameKey], "current item")
+    # print(menuItems[nameKey], "current item")
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/size/",
                  str(menuItems[nameKey]['sizes'][int(rsp['item'])][0].lower()))
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",
@@ -1438,28 +1447,28 @@ def ordertp():
             putStr += str(toppings[ex][1])
             names.append(putStr)
             keys.append(ex)
-    #print(rsp)
+    # print(rsp)
     return render_template("pickToppings.html", len=len(names), names=names, keys=keys, prices=prices,
                            btn=uid + "ordertoppingConfirm")
 
 
-@application.route('/' + uid + 'ordertoppingConfirm', methods=['POST'])
+@app.route('/' + uid + 'ordertoppingConfirm', methods=['POST'])
 def ConfirmItm():
     UUID = session.get('UUID', None)
     key = session.get('key', None)
     itmKey = session.get('itmKey', None)
     nameKey = session.get('nameKey', None)
-    #print("nameKEY", nameKey)
+    # print("nameKEY", nameKey)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-   #print(menuItems[nameKey], "topping")
-   #print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
-   #print(rsp, "rsp")
-    #print(len(rsp))
+    # print(menuItems[nameKey], "topping")
+    # print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
+    # print(rsp, "rsp")
+    # print(len(rsp))
     putStr = ""
     addPrice = 0
     extraIndxs = []
@@ -1470,13 +1479,13 @@ def ConfirmItm():
             try:
                 extraIndxs.append(int(rsp[str(itx)]))
             except Exception:
-                #print(str(itx), "not found")
+                # print(str(itx), "not found")
                 pass
-       #print(extraIndxs)
+        # print(extraIndxs)
         for exx in range(len(extraIndxs)):
-           #print(menuItems[nameKey]["extras"][extraIndxs[exx]])
+            # print(menuItems[nameKey]["extras"][extraIndxs[exx]])
             putStr += str(menuItems[nameKey]["extras"][extraIndxs[exx]][0])
-            #print(menuItems[nameKey]["extras"][extraIndxs[exx]])
+            # print(menuItems[nameKey]["extras"][extraIndxs[exx]])
             addPrice += float(menuItems[nameKey]["extras"][extraIndxs[exx]][1])
             addPrice = round(addPrice, 2)
             putStr += " "
@@ -1485,9 +1494,10 @@ def ConfirmItm():
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
                          "/item/" + str(itmKey) + "/skus/" + str(skuKey) + "/",
                          str(menuItems[nameKey]["extras"][extraIndxs[exx]][2]))
-        currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
-       #print(currentPrice,"100")
-       #print(addPrice,"200")
+        currentPrice = float(
+            database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
+        # print(currentPrice,"100")
+        # print(addPrice,"200")
         currentPrice += addPrice
         round(currentPrice, 2)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/toppings/",
@@ -1497,17 +1507,21 @@ def ConfirmItm():
         if (rsp["quantity"] == ""):
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/", 1)
         else:
-            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/", int(rsp["quantity"]))
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/",
+                         int(rsp["quantity"]))
             currentPrice = currentPrice * int(rsp["quantity"])
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",rsp["notes"])
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",currentPrice)
-       #print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
+                     rsp["notes"])
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",
+                     currentPrice)
+        # print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
         currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
         currentTotal += currentPrice
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
     else:
-        currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
-       #print(currentPrice)
+        currentPrice = float(
+            database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
+        # print(currentPrice)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/toppings/",
                      putStr)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
@@ -1517,30 +1531,19 @@ def ConfirmItm():
             currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
             currentTotal += currentPrice
             round(currentPrice, 2)
-           #print(currentPrice)
+            # print(currentPrice)
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
         else:
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/",
                          int(rsp["quantity"]))
             currentPrice = currentPrice * int(rsp["quantity"])
-           #print(currentPrice,"2")
+        # print(currentPrice,"2")
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
                      rsp["notes"])
-        '''
-        currentPrice = float(
-            database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
-        round(currentPrice, 2)
-       #print(currentPrice,"3")
-        currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
-       #print(currentTotal,"4")
-        currentTotal += currentPrice
-       #print(currentTotal,"5")
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
-        '''
     return redirect(url_for('order'))
 
 
-@application.route('/' + uid + 'checkpayment', methods=['POST'])
+@app.route('/' + uid + 'checkpayment', methods=['POST'])
 def CheckPaymentMethod():
     UUID = session.get('UUID', None)
     key = session.get('key', None)
@@ -1554,14 +1557,14 @@ def CheckPaymentMethod():
         dispKeys = list(itms.keys())
         for itmX in range(len(dispKeys)):
             if (itms[dispKeys[itmX]] != None):
-                #print(itms[dispKeys[itmX]])
+                # print(itms[dispKeys[itmX]])
                 skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
                 wrtStr = ""
                 if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
                     wrtStr += str(itms[dispKeys[itmX]]["size"])
                     wrtStr += " "
-                    #print(wrtStr)
-                    #print(str(itms[dispKeys[itmX]]["size"]))
+                    # print(wrtStr)
+                    # print(str(itms[dispKeys[itmX]]["size"]))
                     wrtStr += str(itms[dispKeys[itmX]]["name"])
                     wrtStr += " "
                     wrtStr += str(itms[dispKeys[itmX]]["toppings"])
@@ -1571,7 +1574,7 @@ def CheckPaymentMethod():
                     wrtStr += str(itms[dispKeys[itmX]]["qty"])
                     wrtStr += " $"
                     wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
-                    #print(wrtStr)
+                    # print(wrtStr)
                     finalOrd += wrtStr + " :: "
                     skuKeyItm = list(itms[dispKeys[itmX]]["skus"].keys())
                     for skk in range(len(skuKeyItm)):
@@ -1580,7 +1583,7 @@ def CheckPaymentMethod():
                             if (menuItems[mmn] != None):
                                 if (menuItems[mmn]["sizes"][0][1] == -1 and menuItems[mmn]["descrip"] != "REMOVEDITM!"):
                                     if (str(menuItems[mmn]["extras"][0][0]) == str(currentSkuItm)):
-                                        #print("ggbrgebrgebr")
+                                        # print("ggbrgebrgebr")
                                         discAmt = menuItems[mmn]["extras"][0][1]
                                         limit = int(menuItems[mmn]["extras"][1][1])
                                         cpnUsed = int(
@@ -1589,30 +1592,30 @@ def CheckPaymentMethod():
                                         discTotal = float(
                                             database.get("/restaurants/" + estName + "/orders/" + str(key),
                                                          "/discTotal/"))
-                                        #print(cpnUsed, limit, discTotal)
+                                        # print(cpnUsed, limit, discTotal)
                                         if (cpnUsed <= limit):
                                             try:
                                                 float(discAmt)
                                                 discAmtflt = float(discAmt)
-                                                #print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
+                                                # print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
                                                 while cpnUsed <= limit and cpnUsed <= int(itms[dispKeys[itmX]]["qty"]):
-                                                    #print("iid")
+                                                    # print("iid")
                                                     discTotal -= discAmtflt
                                                     cpnUsed += 1
                                             except ValueError:
                                                 discAmt = discAmt[:-1]
                                                 discAmtflt = float(discAmt)
-                                                #print(discAmtflt)
-                                                #print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
+                                                # print(discAmtflt)
+                                                # print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
                                                 while cpnUsed <= limit and cpnUsed <= int(itms[dispKeys[itmX]]["qty"]):
                                                     discTotal -= (float(discAmtflt) * (
-                                                                (float(itms[dispKeys[itmX]]["price"])) / float(
-                                                            itms[dispKeys[itmX]]["qty"])))
-                                                    #print(discTotal)
+                                                            (float(itms[dispKeys[itmX]]["price"])) / float(
+                                                        itms[dispKeys[itmX]]["qty"])))
+                                                    # print(discTotal)
                                                     cpnUsed += 1
-                                                    #print(cpnUsed)
-                                                #print(discTotal)
-                                            #print(cpnUsed)
+                                                    # print(cpnUsed)
+                                                # print(discTotal)
+                                            # print(cpnUsed)
                                             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
                                                          "/discUsed/", cpnUsed)
                                             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
@@ -1636,14 +1639,15 @@ def CheckPaymentMethod():
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
                         wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
-                        #print(wrtStr)
+                        # print(wrtStr)
                         finalOrd += wrtStr + " :: "
                         skuKeyItm = list(itms[dispKeys[itmX]]["skus"].keys())
                         for skk in range(len(skuKeyItm)):
                             currentSkuItm = itms[dispKeys[itmX]]["skus"][skuKeyItm[skk]]
                             for mmn in range(len(menuItems)):
                                 if (menuItems[mmn] != None):
-                                    if (menuItems[mmn]["sizes"][0][1] == -1 and menuItems[mmn]["descrip"] != "REMOVEDITM!"):
+                                    if (menuItems[mmn]["sizes"][0][1] == -1 and menuItems[mmn][
+                                        "descrip"] != "REMOVEDITM!"):
                                         if (str(menuItems[mmn]["extras"][0][0]) == str(currentSkuItm)):
                                             discAmt = menuItems[mmn]["extras"][0][1]
                                             limit = int(menuItems[mmn]["extras"][1][1])
@@ -1664,16 +1668,16 @@ def CheckPaymentMethod():
                                                 except ValueError:
                                                     discAmt = discAmt[:-1]
                                                     discAmtflt = float(discAmt)
-                                                    #print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
+                                                    # print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
                                                     while cpnUsed < limit and cpnUsed < int(
                                                             itms[dispKeys[itmX]]["qty"]):
-                                                        #print(cpnUsed)
-                                                        #print("fsfwrrw")
+                                                        # print(cpnUsed)
+                                                        # print("fsfwrrw")
                                                         discTotal -= float(
                                                             float(discAmtflt) * float(itms[dispKeys[itmX]]["price"]))
-                                                        #print(discTotal)
+                                                        # print(discTotal)
                                                         cpnUsed += 1
-                                                #print(discTotal)
+                                                # print(discTotal)
                                                 database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
                                                              "/discUsed/", cpnUsed)
                                                 database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
@@ -1690,7 +1694,7 @@ def CheckPaymentMethod():
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = (DBdata[key]["linkTotal"])
     subTotal += DBdata[key]["discTotal"]
-    #print(subTotal)
+    # print(subTotal)
     disc = (DBdata[key]["discStr"])
     Tax = float(subTotal * 0.1)
     Total = float(subTotal + float(Tax) + 0.15)
@@ -1701,7 +1705,7 @@ def CheckPaymentMethod():
                            CPN=disc)
 
 
-@application.route('/' + uid + 'nextPay', methods=['POST'])
+@app.route('/' + uid + 'nextPay', methods=['POST'])
 def nextPayment():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))
     UUID = session.get('UUID', None)
@@ -1724,7 +1728,7 @@ def nextPayment():
     number = str(database.get("/restaurants/" + estName + "/orders/" + str(key), "/number"))
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
-    #print(rsp)
+    # print(rsp)
     finalOrd = ""
     if (rsp["item"] == "yes"):
         itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
@@ -1735,7 +1739,7 @@ def nextPayment():
             for itmX in range(len(dispKeys)):
                 try:
                     if (itms[dispKeys[itmX]] != None):
-                        #print(itms[dispKeys[itmX]])
+                        # print(itms[dispKeys[itmX]])
                         skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
                         for sk in range(len(skuKeys)):
                             currentSku = database.get("/log/" + estName + "/" + str(logYM) + "/" + "skus/",
@@ -1761,8 +1765,8 @@ def nextPayment():
                         if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
                             wrtStr += str(itms[dispKeys[itmX]]["size"])
                             wrtStr += " "
-                            #print(wrtStr)
-                            #print(str(itms[dispKeys[itmX]]["size"]))
+                            # print(wrtStr)
+                            # print(str(itms[dispKeys[itmX]]["size"]))
                             wrtStr += str(itms[dispKeys[itmX]]["name"])
                             wrtStr += " "
                             wrtStr += str(itms[dispKeys[itmX]]["toppings"])
@@ -1772,7 +1776,7 @@ def nextPayment():
                             wrtStr += str(itms[dispKeys[itmX]]["qty"])
                             wrtStr += " $"
                             wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
-                            #print(wrtStr)
+                            # print(wrtStr)
                             finalOrd += wrtStr + " :: "
                             skuKeyItm = list(itms[dispKeys[itmX]]["skus"].keys())
                             for skk in range(len(skuKeyItm)):
@@ -1803,8 +1807,8 @@ def nextPayment():
                                                         while cpnUsed < limit and cpnUsed < int(
                                                                 itms[dispKeys[itmX]]["qty"]):
                                                             discTotal -= (float(discAmtflt) * (
-                                                                        (float(itms[dispKeys[itmX]]["price"])) / float(
-                                                                    itms[dispKeys[itmX]]["qty"])))
+                                                                    (float(itms[dispKeys[itmX]]["price"])) / float(
+                                                                itms[dispKeys[itmX]]["qty"])))
                                                             cpnUsed += 1
                                                     database.put(
                                                         "/restaurants/" + estName + "/orders/" + str(key) + "/",
@@ -1831,7 +1835,7 @@ def nextPayment():
                             wrtStr += str(itms[dispKeys[itmX]]["qty"])
                             wrtStr += " $"
                             wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
-                            #print(wrtStr)
+                            # print(wrtStr)
                             finalOrd += wrtStr + " :: "
                             skuKeyItm = list(itms[dispKeys[itmX]]["skus"].keys())
                             for skk in range(len(skuKeyItm)):
@@ -1879,11 +1883,11 @@ def nextPayment():
                                                         cpnUsed) + " -$" + str(round((discTotal * -1), 2)) + " :: "
                                                     break
                 except KeyError:
-                    #print("exec")
+                    # print("exec")
                     pass
-            #print(finalOrd)
+            # print(finalOrd)
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
-            #print("final put")
+            # print("final put")
             DBdata = database.get("/restaurants/" + estName, "orders")
             subTotal = float(DBdata[key]["linkTotal"])
             subTotal += DBdata[dbItems]["discTotal"]
@@ -1907,8 +1911,8 @@ def nextPayment():
                 if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
                     wrtStr += str(itms[dispKeys[itmX]]["size"])
                     wrtStr += " "
-                    #print(wrtStr)
-                    #print(str(itms[dispKeys[itmX]]["size"]))
+                    # print(wrtStr)
+                    # print(str(itms[dispKeys[itmX]]["size"]))
                     wrtStr += str(itms[dispKeys[itmX]]["name"])
                     wrtStr += " "
                     wrtStr += str(itms[dispKeys[itmX]]["toppings"])
@@ -1918,7 +1922,7 @@ def nextPayment():
                     wrtStr += str(itms[dispKeys[itmX]]["qty"])
                     wrtStr += " $"
                     wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
-                    #print(wrtStr)
+                    # print(wrtStr)
                     finalOrd += wrtStr + " :: "
                     skuKeyItm = list(itms[dispKeys[itmX]]["skus"].keys())
                     for skk in range(len(skuKeyItm)):
@@ -1948,7 +1952,7 @@ def nextPayment():
                                                 while cpnUsed < limit and cpnUsed < int(itms[dispKeys[itmX]]["qty"]):
                                                     discTotal -= (float(discAmtflt) * float(
                                                         itms[dispKeys[itmX]]["price"]))
-                                                    #print(discTotal)
+                                                    # print(discTotal)
                                                     cpnUsed += 1
                                             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
                                                          "/discUsed/", cpnUsed)
@@ -1974,7 +1978,7 @@ def nextPayment():
                     wrtStr += str(itms[dispKeys[itmX]]["qty"])
                     wrtStr += " $"
                     wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
-                    #print(wrtStr)
+                    # print(wrtStr)
                     finalOrd += wrtStr + " :: "
                     skuKeyItm = list(itms[dispKeys[itmX]]["skus"].keys())
                     for skk in range(len(skuKeyItm)):
@@ -2001,10 +2005,10 @@ def nextPayment():
                                                 discAmt = discAmt[:-1]
                                                 discAmtflt = float(discAmt)
                                                 while cpnUsed < limit and cpnUsed < int(itms[dispKeys[itmX]]["qty"]):
-                                                    #print(discAmtflt, "effee")
+                                                    # print(discAmtflt, "effee")
                                                     discTotal -= (float(discAmtflt) * float(
                                                         itms[dispKeys[itmX]]["price"]))
-                                                    #print(discTotal)
+                                                    # print(discTotal)
                                                     cpnUsed += 1
                                             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
                                                          "/discUsed/", cpnUsed)
@@ -2020,7 +2024,7 @@ def nextPayment():
                                                         discTotal * -1), 2)) + " :: "
                                             break
                 if (itms[dispKeys[itmX]] != None):
-                    #print(itms[dispKeys[itmX]])
+                    # print(itms[dispKeys[itmX]])
                     skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
                     for sk in range(len(skuKeys)):
                         currentSku = database.get("/log/" + estName + "/" + str(logYM) + "/" + "skus/",
@@ -2043,9 +2047,9 @@ def nextPayment():
                                          "/skus/" + str(itms[dispKeys[itmX]]["skus"][skuKeys[sk]]) + "/numSold/",
                                          numsold)
 
-        #print(finalOrd)
+        # print(finalOrd)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
-        #print(finalOrd, "put")
+        # print(finalOrd, "put")
         DBdata = database.get("/restaurants/" + estName, "orders")
         duration = time.time() - float(DBdata[dbItems]["startTime"])
         subTotal = float(DBdata[key]["linkTotal"])
@@ -2096,26 +2100,32 @@ def nextPayment():
             database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
         reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
         updateLog()
-        client.send_message({
-            'from': NexmoNumber,
-            'to': number,
-            'text': reply
-        })
+        client.messages.create(
+            src=botNumber,
+            dst=number,
+            text=reply
+        )
         session.clear()
         return render_template("thankMsg.html")
 
 
-@application.route('/')
-@application.route('/index')
+@app.route('/')
+@app.route('/index')
 def mainPage():
     return " "
 
 
 # when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
-    application.secret_key = 'ssKEY'
-    application.config['SESSION_TYPE'] = 'filesystem'
+    app.secret_key = 'CedarKey02'
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.config['SESSION_PERMANENT'] = True
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=5)
+
+    # The maximum number of items the session stores
+    # before it starts deleting some, default 500
+    app.config['SESSION_FILE_THRESHOLD'] = 500
     sess = Session()
-    sess.init_app(application)
-    application.debug = True
-    application.run(host="0.0.0.0")
+    sess.init_app(app)
+    # app.debug = True
+    app.run(host="0.0.0.0", port=8080)
