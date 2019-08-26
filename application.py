@@ -1108,9 +1108,7 @@ def getUUID():
 def order():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     UUID = session.get('UUID', None)
-    #key = session.get('key', None)
-    key = 0
-    session['key'] = key
+    key = session.get('key', None)
     #print(UUID, key, itmKey)
     #print(rsp)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
