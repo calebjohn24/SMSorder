@@ -521,7 +521,7 @@ def panel():
         updateLog()
         return render_template("panel.html", len=len(links), menuLinks=links, menuNames=names, restName=estNameStr,
                                viewOrders=(uid + "view"), addItm=(addPass), remItms=remPass, addCpn=promoPass,
-                               signOut=estNameStr)
+                               signOut=estNameStr,outStck=str(uid+"outstock"))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -602,6 +602,65 @@ def button():
     return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys,
                            btn=str(uid + "view"))
 
+@application.route('/' + uid +"outstock", methods=['GET'])
+def outStockg():
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    # print()
+    if ((currentTime - lastLogin) < sessionTime):
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        # print(menuItems)
+        names = []
+        keys = []
+        for men in range(len(menuItems)):
+            if (menuItems[men]["descrip"] != "REMOVEDITM!"):
+                dispStr = ""
+                keys.append(men)
+                if(menuItems[men]["time"] == "oos"):
+                    dispStr += menuItems[men]["name"].lower()
+                    dispStr += "-"
+                    dispStr += "OUT OF STOCK"
+                else:
+                    dispStr += menuItems[men]["name"].lower()
+                    dispStr += "-"
+                    dispStr += "In Stock"
+                names.append(dispStr)
+
+        return render_template("remItems.html", len=len(names), names=names, keys=keys, btn=uid+"outstock")
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
+
+@application.route('/' + uid +"outstock", methods=['POST'])
+def outStockp():
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    if ((currentTime - lastLogin) < sessionTime):
+        request.parameter_storage_class = ImmutableOrderedMultiDict
+        rsp = ((request.form))
+        item = int(rsp['item'])
+        names = []
+        keys = []
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        itx = menuItems[item]["time"]
+        if(itx == "oos"):
+            rm = menuItems[item]["rm"]
+            database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "rm", "oos")
+            database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "time", rm)
+        else:
+            database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "rm", itx)
+            database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "time", "oos")
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        return redirect(url_for('outStockg'))
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 
 @application.route('/' + remPass, methods=['GET'])
 def removeItemsDisp():
@@ -617,7 +676,6 @@ def removeItemsDisp():
         names = []
         keys = []
         for men in range(len(menuItems)):
-
             if (menuItems[men]["descrip"] != "REMOVEDITM!"):
                 names.append(menuItems[men]["name"])
                 keys.append(men)
@@ -777,7 +835,7 @@ def addItmForm():
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/name/", name)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/time/", menTime)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/descrip/", descrip)
-        atabase.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/cat/", cat)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/cat/", cat)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/inp/", "inp")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/extras/" + str(0), "/0/", "")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/extras/" + str(0), "/1/", 0)
