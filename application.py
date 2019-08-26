@@ -609,10 +609,10 @@ def outStockg():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    # print()
+    ##print()
     if ((currentTime - lastLogin) < sessionTime):
         menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-        # print(menuItems)
+        ##print(menuItems)
         names = []
         keys = []
         for men in range(len(menuItems)):
@@ -1167,7 +1167,7 @@ def order():
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
-                        wrtStr += str(itms[dispKeys[itmX]]["price"])
+                        wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
                         currentItems.append(wrtStr)
                         currKeys.append(dispKeys[itmX])
                         #print(wrtStr)
@@ -1180,7 +1180,7 @@ def order():
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
-                        wrtStr += str(itms[dispKeys[itmX]]["price"])
+                        wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
                         currentItems.append(wrtStr)
                         currKeys.append(dispKeys[itmX])
                         #print(wrtStr)
@@ -1195,8 +1195,10 @@ def order():
             if (menuItems[men]["sizes"][0][1] != -1):
                 currentCat = menuItems[men]["cat"].upper()
                 cats.append(currentCat)
-                catkeys2.append(men)
     cats = list(dict.fromkeys(cats))
+    for cc in range(len(cats)):
+        catkeys2.append(cc)
+   #print(catkeys2)
     return render_template("mainOrder.html", len=len(cats), names=cats,keys=catkeys2, btn=uid + "ordercat",
                            len2=(len(currentItems)),currentItms=currentItems, total=dispTotal, currKeys=currKeys,
                            btn2=uid + "order", btn3=uid + "checkpayment")
@@ -1209,15 +1211,15 @@ def orderX():
     key = session.get('key', None)
     itmKey = random.randint(9999, 1000000)
     #print(UUID, key, itmKey)
-    print(rsp)
+   #print(rsp)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str((rsp["rem"])), "price"))
-    print(currentPrice)
+   #print(currentPrice)
     currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
     currentTotal -= currentPrice
-    print(currentTotal)
+   #print(currentTotal)
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = (currentTotal)
     Tax = float(subTotal * 0.1)
@@ -1269,7 +1271,7 @@ def orderX():
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
-                        wrtStr += str(itms[dispKeys[itmX]]["price"])
+                        wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
                         currentItems.append(wrtStr)
                         currKeys.append(dispKeys[itmX])
                         #print(wrtStr)
@@ -1282,7 +1284,7 @@ def orderX():
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
-                        wrtStr += str(itms[dispKeys[itmX]]["price"])
+                        wrtStr += str(round(itms[dispKeys[itmX]]["price"],2))
                         currentItems.append(wrtStr)
                         currKeys.append(dispKeys[itmX])
                         #print(wrtStr)
@@ -1296,9 +1298,12 @@ def orderX():
         if ((menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
             if (menuItems[men]["sizes"][0][1] != -1):
                 cats.append(str(menuItems[men]["cat"]).upper())
-                catKeys2.append(men)
+   #print(cats)
     cats = list(dict.fromkeys(cats))
-    print(cats)
+   #print(cats)
+    for cc in range(len(cats)):
+        catKeys2.append(cc)
+   #print(catKeys2)
     return render_template("mainOrder.html", len=len(cats), names=cats,keys=catKeys2, btn=uid + "ordercat",
                            len2=(len(currentItems)),currentItms=currentItems, total=dispTotal, currKeys=currKeys,
                            btn2=uid + "order", btn3=uid + "checkpayment")
@@ -1307,7 +1312,7 @@ def orderX():
 def orderCat():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
-    print(rsp)
+   #print(rsp)
     key = session.get('key', None)
     catTgt = rsp["item"]
     names = []
@@ -1346,7 +1351,9 @@ def orderCat():
         if ((menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
             if (menuItems[men]["sizes"][0][1] != -1):
                 cats.append(str(menuItems[men]["cat"]).upper())
+   #print(cats)
     cats = list(dict.fromkeys(cats))
+   #print(cats)
     ct = cats[int(catTgt)]
     for men in range(len(menuItems)):
         if (menuItems[men]["cat"].upper() == ct  and (menuItems[men]["time"] == currentMenu or menuItems[men]["time"] == "all")):
@@ -1451,9 +1458,9 @@ def ConfirmItm():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    print(menuItems[nameKey], "topping")
-    print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
-    print(rsp, "rsp")
+   #print(menuItems[nameKey], "topping")
+   #print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
+   #print(rsp, "rsp")
     #print(len(rsp))
     putStr = ""
     addPrice = 0
@@ -1467,9 +1474,9 @@ def ConfirmItm():
             except Exception:
                 #print(str(itx), "not found")
                 pass
-        print(extraIndxs)
+       #print(extraIndxs)
         for exx in range(len(extraIndxs)):
-            print(menuItems[nameKey]["extras"][extraIndxs[exx]])
+           #print(menuItems[nameKey]["extras"][extraIndxs[exx]])
             putStr += str(menuItems[nameKey]["extras"][extraIndxs[exx]][0])
             #print(menuItems[nameKey]["extras"][extraIndxs[exx]])
             addPrice += float(menuItems[nameKey]["extras"][extraIndxs[exx]][1])
@@ -1481,8 +1488,8 @@ def ConfirmItm():
                          "/item/" + str(itmKey) + "/skus/" + str(skuKey) + "/",
                          str(menuItems[nameKey]["extras"][extraIndxs[exx]][2]))
         currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
-        print(currentPrice,"100")
-        print(addPrice,"200")
+       #print(currentPrice,"100")
+       #print(addPrice,"200")
         currentPrice += addPrice
         round(currentPrice, 2)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/toppings/",
@@ -1496,13 +1503,13 @@ def ConfirmItm():
             currentPrice = currentPrice * int(rsp["quantity"])
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",rsp["notes"])
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",currentPrice)
-        print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
+       #print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
         currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
         currentTotal += currentPrice
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
     else:
         currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
-        print(currentPrice)
+       #print(currentPrice)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/toppings/",
                      putStr)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
@@ -1512,24 +1519,24 @@ def ConfirmItm():
             currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
             currentTotal += currentPrice
             round(currentPrice, 2)
-            print(currentPrice)
+           #print(currentPrice)
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
         else:
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/",
                          int(rsp["quantity"]))
             currentPrice = currentPrice * int(rsp["quantity"])
-            print(currentPrice,"2")
+           #print(currentPrice,"2")
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
                      rsp["notes"])
         '''
         currentPrice = float(
             database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
         round(currentPrice, 2)
-        print(currentPrice,"3")
+       #print(currentPrice,"3")
         currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
-        print(currentTotal,"4")
+       #print(currentTotal,"4")
         currentTotal += currentPrice
-        print(currentTotal,"5")
+       #print(currentTotal,"5")
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
         '''
     return redirect(url_for('order'))

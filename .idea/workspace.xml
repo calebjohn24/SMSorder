@@ -4955,7 +4955,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/base.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/core.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/lang_EN_US.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/outStockv.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate" afterDir="false" />
@@ -4988,7 +4987,6 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5233,20 +5231,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00018" summary="added email scraping">
-      <created>1564707042514</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1564707042514</updated>
-    </task>
-    <task id="LOCAL-00019" summary="added IPN request still need to integrate with bot">
-      <created>1564733634877</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1564733634877</updated>
     </task>
     <task id="LOCAL-00020" summary="added coupon support">
       <created>1564807547679</created>
@@ -5577,7 +5561,21 @@
       <option name="project" value="LOCAL" />
       <updated>1566777278941</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="set items to in and out of stock">
+      <created>1566778511948</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1566778511948</updated>
+    </task>
+    <task id="LOCAL-00068" summary="set items to in and out of stock">
+      <created>1566778590522</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1566778590522</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="UnknownFeatures">
