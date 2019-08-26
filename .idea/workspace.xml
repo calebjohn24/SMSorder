@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="updated ui">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="set items to in and out of stock">
       <change afterPath="$PROJECT_DIR$/bin/cygdb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cython" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cythonize" afterDir="false" />
@@ -4988,6 +4988,7 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5597,7 +5598,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="loads menu from firebase" />
     <MESSAGE value="added order display still need CSS" />
     <MESSAGE value="added support for adding and removing items and coupons" />
     <MESSAGE value="added CSS Styling" />
@@ -5622,6 +5622,7 @@
     <MESSAGE value="updated ui" />
     <MESSAGE value="updated ui 3" />
     <MESSAGE value="added categories" />
-    <option name="LAST_COMMIT_MESSAGE" value="added categories" />
+    <MESSAGE value="set items to in and out of stock" />
+    <option name="LAST_COMMIT_MESSAGE" value="set items to in and out of stock" />
   </component>
 </project>
