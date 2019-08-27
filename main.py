@@ -2156,16 +2156,11 @@ def robotDeploy():
     rbX = len((database.get("/restaurants/" + uid, "/robots/")))
     return render_template("robotDeploy.html",max=maxTables, rbtNum=rbX)
 
-
-
-
-# when you run the code through terminal, this will allow Flask to work
 if __name__ == '__main__':
     app.secret_key = 'CedarKey02'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.config['SESSION_PERMANENT'] = True
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=5)
-
     # The maximum number of items the session stores
     # before it starts deleting some, default 500
     app.config['SESSION_FILE_THRESHOLD'] = 500
