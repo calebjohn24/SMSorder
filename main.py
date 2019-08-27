@@ -67,9 +67,6 @@ app = Flask(__name__)
 sslify = SSLify(app)
 app.secret_key = 'CedarKey02'
 
-@app.errorhandler(500)
-def not_found_error(error):
-    redirect()
 
 def updateLog():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))

@@ -4955,8 +4955,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/base.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/core.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/lang_EN_US.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/verifyCode3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.fish" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.fish" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.ps1" afterDir="false" />
@@ -4987,8 +4985,6 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/tsms.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/tsms.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5234,13 +5230,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00029" summary="added support for adding and removing items and coupons">
-      <created>1565921735760</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1565921735760</updated>
     </task>
     <task id="LOCAL-00030" summary="added CSS Styling">
       <created>1565934804999</created>
@@ -5578,7 +5567,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566932714344</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="added error handling fixed a few bugs">
+      <created>1566948596237</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1566948596237</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5599,7 +5595,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="minor bug fixes" />
     <MESSAGE value="added basic gsheet logging and support for multiple menus" />
     <MESSAGE value="added detailed logging" />
     <MESSAGE value="minor bugfix" />
@@ -5624,6 +5619,7 @@
     <MESSAGE value="minor bug fix deployed to gcloud" />
     <MESSAGE value="minor bug fix added back btn" />
     <MESSAGE value="minor bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
+    <MESSAGE value="added error handling fixed a few bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="added error handling fixed a few bugs" />
   </component>
 </project>
