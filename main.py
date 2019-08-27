@@ -67,6 +67,10 @@ app = Flask(__name__)
 sslify = SSLify(app)
 app.secret_key = 'CedarKey02'
 
+@app.errorhandler(500)
+def not_found_error(error):
+    redirect()
+
 def updateLog():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))
     sh = gc.open('TestRaunt')
@@ -186,6 +190,12 @@ def getReply(msg, number):
         UserData = database.get("/", "users")
         if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr" or msg == "ordee"):
             UUID = random.randint(9999999, 100000000)
+            for dbxv in range(len(DBdata)):
+                try:
+                    if(DBdata[dbxv]["number"] == number):
+                        database.put("/restaurants/" + estName + "/orders/" + str(dbxv) + "/", "/number/", str(number)+".")
+                except KeyError:
+                    pass
             reply = "Hi, welcome to " + estNameStr + " please enter your name to continue"
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", "")
@@ -236,13 +246,16 @@ def getReply(msg, number):
                     return reply
         else:
             for db in range(len(DBdata)):
-                phoneNumDB = DBdata[db]['number']
-                if (phoneNumDB == number):
-                    indx = db
-                    break
-                elif ((len(DBdata) - db) == 1):
-                    # print("no msg")
-                    return "no msg"
+                try:
+                    phoneNumDB = DBdata[db]['number']
+                    if (phoneNumDB == number):
+                        indx = db
+                        break
+                    elif ((len(DBdata) - db) == 1):
+                        # print("no msg")
+                        return "no msg"
+                except Exception:
+                    pass
             if (DBdata[indx]['stage'] == 1):
                 name = msg
                 DBdata = database.get("/restaurants/" + estName, "/orders")
@@ -264,8 +277,8 @@ def getReply(msg, number):
                 return reply
             elif (DBdata[indx]['stage'] == 2):
                 if (
-                        msg == "for here" or msg == "fo here" or msg == "for her" or msg == "for herw" or msg == "for herr" or msg == "here" or msg == "herw"
-                or msg == "herr" or msg == "for herr"):
+                        msg == "for here" or msg == "fo here" or msg == "for her" or msg == "for herw" or msg == "for hete" or msg == "for herr" or msg == "here" or msg == "herw"
+                or msg == "herr" or msg == "for herr" or ("fo" in msg) or ("he" in msg)):
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", "HERE")
                     usrIndx = DBdata[indx]["userIndx"]
@@ -275,7 +288,7 @@ def getReply(msg, number):
                                  "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders) - 1)) + "/to-go",
                                  str("here"))
-                    reply = "-Sounds good! your order will be " + "for-here\n" + "-please enter your table number"
+                    reply = "-Sounds good! your order will be " + "for-here\n" + "-please enter your table number EX. Table 12"
                     return reply
                 else:
                     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -322,12 +335,15 @@ def getReply(msg, number):
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", msg.upper())
                 else:
                     tableStr = "TABLE #"
+                    curLen = len(tableStr)
                     for mm in range(len(msg)):
                         try:
                             int(msg[mm])
                             tableStr += msg[mm]
                         except Exception:
                             pass
+                    if(len(tableStr) == curLen):
+                        tableStr = msg.lower()
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", tableStr)
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
                 usrIndx = DBdata[indx]["userIndx"]
@@ -443,9 +459,9 @@ def ipn():
                          duration)
             # print("sending")
             if (DBdata[dbItems]["togo"] == "TO_GO"):
-                reply = "-Thank you for your order, you can pick it up when you arrive and skip the line \n-To order again just text " + '"order"'
+                reply = "-Thank you for your order, you can pick it up and skip the line when you arrive\n-To order again just text " + '"order"'
             else:
-                reply = "-Thank you for your order, your food will be delivered shortly \n-To order again just text " + '"order"'
+                reply = "-Thank you for your order, your food will be delivered to your table shortly \n-To order again just text " + '"order"'
             client.messages.create(
                 src=botNumber,
                 dst=number,
@@ -1083,6 +1099,10 @@ def addCpnResp():
 @app.route("/" + uid + "check", methods=['GET'])
 def loginUUID():
     return render_template("verifyCode.html", btn=str(uid + "check"))
+
+@app.route("/" + uid + "chec2", methods=['GET'])
+def loginRedo():
+    return render_template("verifyCode3.html", btn=str(uid + "check"))
 
 
 @app.route('/' + uid + 'check', methods=['POST'])
@@ -2111,7 +2131,7 @@ def nextPayment():
         if(DBdata[dbItems]["togo"] == "TO_GO"):
             reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
         else:
-            reply = "-Thank you for your order, your order will be delivered to you shortly \n-To order again just text " + '"order"'
+            reply = "-Thank you for your order, please pay at the counter, after you pay your food will be delivered to your table \n-To order again just text " + '"order"'
         updateLog()
         client.messages.create(
             src=botNumber,
@@ -2160,6 +2180,22 @@ def robotDeploy():
     maxTables = len((database.get("/restaurants/" + uid, "/robots/0/")))
     rbX = len((database.get("/restaurants/" + uid, "/robots/")))
     return render_template("robotDeploy.html",max=maxTables, rbtNum=rbX)
+
+@app.errorhandler(500)
+def not_found_error(error):
+    return redirect(url_for("loginRedo"))
+@app.errorhandler(502)
+def not_found_error():
+    return redirect(url_for("loginRedo"))
+@app.errorhandler(400)
+def not_found_error():
+    return redirect(url_for("loginRedo"))
+@app.errorhandler(404)
+def not_found_error():
+    return redirect(url_for("loginRedo"))
+@app.errorhandler(403)
+def not_found_error():
+    return redirect(url_for("loginRedo"))
 
 if __name__ == '__main__':
     app.secret_key = 'CedarKey02'
