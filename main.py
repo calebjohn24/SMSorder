@@ -442,7 +442,10 @@ def ipn():
                          "duration",
                          duration)
             # print("sending")
-            reply = "-Thank you for your order, you can pick it up when you arrive and skip the line \n-To order again just text " + '"order"'
+            if (DBdata[dbItems]["togo"] == "TO_GO"):
+                reply = "-Thank you for your order, you can pick it up when you arrive and skip the line \n-To order again just text " + '"order"'
+            else:
+                reply = "-Thank you for your order, your food will be delivered shortly \n-To order again just text " + '"order"'
             client.messages.create(
                 src=botNumber,
                 dst=number,
@@ -2105,7 +2108,10 @@ def nextPayment():
         else:
             newCust += 1
             database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
-        reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
+        if(DBdata[dbItems]["togo"] == "TO_GO"):
+            reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
+        else:
+            reply = "-Thank you for your order, your order will be delivered to you shortly \n-To order again just text " + '"order"'
         updateLog()
         client.messages.create(
             src=botNumber,
@@ -2160,8 +2166,6 @@ if __name__ == '__main__':
     app.config['SESSION_TYPE'] = 'filesystem'
     app.config['SESSION_PERMANENT'] = True
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=5)
-    # The maximum number of items the session stores
-    # before it starts deleting some, default 500
     app.config['SESSION_FILE_THRESHOLD'] = 500
     sess = Session()
     sess.init_app(app)
