@@ -1,0 +1,19 @@
+{
+  "short_name": "Cedar Ordering",
+  "name": "Cedar Robotics Food ordering app",
+  "icons": [
+    {
+      "src": "https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305",
+      "type": "image/jpg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305",
+      "type": "image/jpg",
+      "sizes": "512x512"
+    }
+  ],
+  "background_color": "#000000",
+  "display": "standalone",
+  "theme_color": "#FFFFFF"
+}

@@ -161,7 +161,7 @@ def genUsr(name, number, dbIndx):
     database.put("/restaurants/" + estName + "/orders/" + str(dbIndx) + "/", "/usrIndx/", len(UserData))
 
 
-def genPayment(total, name, UUIDcode):
+def genPayment(total, UUIDcode):
     # print(UUIDcode)
     # print(name)
     apiurl = "http://tinyurl.com/api-create.php?url="
@@ -447,13 +447,14 @@ def ipn():
                          duration)
             # print("sending")
             reply = "-Thank you for your order, you can pick it up when you arrive and skip the line \n-To order again just text " + '"order"'
-            updateLog()
-            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
             client.messages.create(
                 src=botNumber,
                 dst=number,
                 text=reply
             )
+            updateLog()
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
+
     return (" ", 200)
 
 
@@ -1494,8 +1495,8 @@ def ConfirmItm():
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
                          "/item/" + str(itmKey) + "/skus/" + str(skuKey) + "/",
                          str(menuItems[nameKey]["extras"][extraIndxs[exx]][2]))
-        currentPrice = float(
-            database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
+
+        currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
         # print(currentPrice,"100")
         # print(addPrice,"200")
         currentPrice += addPrice
@@ -1506,21 +1507,27 @@ def ConfirmItm():
                      putStr)
         if (rsp["quantity"] == ""):
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/", 1)
+            currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
+            currentTotal += currentPrice
+            round(currentPrice, 2)
+            # print(currentPrice)
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "linkTotal", currentTotal)
         else:
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/",
                          int(rsp["quantity"]))
             currentPrice = currentPrice * int(rsp["quantity"])
+            currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
+            currentTotal += currentPrice
+            round(currentPrice, 2)
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "linkTotal", currentTotal)
+
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
                      rsp["notes"])
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",
                      currentPrice)
-        # print(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
-        currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
-        currentTotal += currentPrice
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
+
     else:
-        currentPrice = float(
-            database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
+        currentPrice = float(database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str(itmKey), "price"))
         # print(currentPrice)
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/toppings/",
                      putStr)
@@ -1537,9 +1544,12 @@ def ConfirmItm():
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/qty/",
                          int(rsp["quantity"]))
             currentPrice = currentPrice * int(rsp["quantity"])
-        # print(currentPrice,"2")
-        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/notes/",
-                     rsp["notes"])
+            currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
+            currentTotal += currentPrice
+            currentPrice = round(currentPrice, 2)
+            currentTotal = round(currentTotal,2)
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "linkTotal", currentTotal)
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",currentPrice)
     return redirect(url_for('order'))
 
 
@@ -1891,9 +1901,10 @@ def nextPayment():
             DBdata = database.get("/restaurants/" + estName, "orders")
             subTotal = float(DBdata[key]["linkTotal"])
             subTotal += DBdata[dbItems]["discTotal"]
-            Tax = str(round((float(subTotal * 0.1), 2)))
-            Total = str(round((float(subTotal) + float(Tax) + 0.15), 2))
-            link = str(genPayment(str(Total), "", UUID))
+            UUIDcode = DBdata[dbItems]["UUID"]
+            Tax = subTotal * 0.1
+            Total = float(subTotal) + float(Tax) + 0.15
+            link = str(genPayment(str(Total), UUIDcode))
             session.clear()
             return redirect(link)
     else:
