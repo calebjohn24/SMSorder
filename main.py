@@ -61,7 +61,6 @@ fontName = "helvetica"
 smsTest = "sms:13166009096?body=order"
 sh = gc.open('TestRaunt')
 linkOrderLong = "cedarrestaurants.us-east-2.elasticbeanstalk.com" + uid + "check"
-robotViewID = random.randint(999999,999999)
 webLink = "sms:+" + botNumber + "?body=order"
 
 app = Flask(__name__)
@@ -209,7 +208,7 @@ def getReply(msg, number):
                     # print("found user")
                     timeStamp = datetime.datetime.today()
                     reply = "Hi " + str(
-                        UserData[usr]["name"]) + "! welcome to " + estNameStr + " is this order or to go?"
+                        UserData[usr]["name"]) + "! welcome to " + estNameStr + " is this order for here or to go?"
                     database.put("/restaurants/" + estName + "/orders/" + str((len(DBdata))) + "/", "/name/",
                                  str(UserData[usr]["name"]))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/filled/", "0")
@@ -338,7 +337,7 @@ def getReply(msg, number):
                              "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                                  (len(numOrders) - 1)) + "/pickup-time", str(msg))
                 linkOrder = database.get("/restaurants/" + estName, "/orderLink")
-                reply = "Got it! click this link below to view the menu and continue ordering " + str(linkOrder)
+                reply = "Got it! click the link below to view the menu and continue ordering " + str(linkOrder)
                 return reply
     else:
         return ("no msg")

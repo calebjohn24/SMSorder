@@ -4987,8 +4987,6 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5234,13 +5232,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00026" summary="integrated with app still testing">
-      <created>1565477352934</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1565477352934</updated>
     </task>
     <task id="LOCAL-00027" summary="loads menu from firebase">
       <created>1565499839285</created>
@@ -5578,7 +5569,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566927189189</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="minor bug fix">
+      <created>1566930712339</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1566930712339</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5620,10 +5618,10 @@
     <MESSAGE value="updated ui 3" />
     <MESSAGE value="added categories" />
     <MESSAGE value="set items to in and out of stock" />
-    <MESSAGE value="minor bug fix" />
     <MESSAGE value="migrated to pilvo fixed minor bugs still testing" />
     <MESSAGE value="minor bug fix deployed to gcloud" />
     <MESSAGE value="minor bug fix added back btn" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix added back btn" />
+    <MESSAGE value="minor bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
   </component>
 </project>
