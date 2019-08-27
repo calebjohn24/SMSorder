@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Deploy Robots</title>
 <meta charset="UTF-8">
-    <title>{{restName}} Control Panel</title>
-<link rel="apple-touch-icon" sizes="60x60" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="57x57" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="72x72" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="76x76" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
@@ -25,72 +25,32 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<style>
+input {
+    border: 2px solid #000000;
+    text-align:center;
+ padding: 0;
+ margin:0 auto;
+     width: 200px;
+    height: 50px;
+}
+</style>
 </head>
 <body>
-<h1>{{restName}} Control Panel</h1>
 <br>
-<h2>
- <form action="{{viewOrders}}" method="GET">
-    <button type="submit" name="viewOrds" value="">View Orders</button>
- </form>
-    </h2>
+<h1>Deploy Robot</h1>
 <br>
 <br>
 <h2>
-<form action="{{addItm}}" method="GET">
-    <button type="submit" name="addItm" value="">Add Items</button>
- </form>
-    </h2>
-<br>
-<br>
-<h2>
-<form action="{{remItms}}" method="GET">
-    <button type="submit" name="addItm" value="">Remove Items or Coupons</button>
- </form>
-    </h2>
-<br>
-<br>
-<h2>
-<form action="{{addCpn}}" method="GET">
-    <button type="submit" name="addItm" value="">Add Coupon</button>
- </form>
-    </h2>
-<br>
-<br>
-<h2>
-<form action="{{outStck}}" method="GET">
-    <button type="submit" name="addItm" value="">Set Items Out/In Stock</button>
- </form>
-    </h2>
-<br>
-<br>
-<form action="{{robotDeploy}}" method="GET">
-    <button type="submit" name="addItm" value="">Deploy Robot</button>
- </form>
-    </h2>
-<br>
-<h2>View Menus</h2>
-{%for i in range(0, len)%}
-<h2>
-    <form action="{{menuLinks[i]}}">
-         <button type="submit">{{menuNames[i]}}</button>
-      </form>
+<form method="POST" action="{{btn}}">
+    <h2>Enter Robot Number</h2>
+    <input type="number" min="1" step="1" max="{{rbtNum}}" name="robot">
+    <h2>Enter Table Number</h2>
+    <input type="number" min="1" step="1" max="{{max}}" name="table">
+    <br>
+    <br>
+    <button type="submit" value="{{btn}}">Deploy</button>
+</form>
 </h2>
-{%endfor%}
-<br>
-<br>
-<h2>
-<form action="https://docs.google.com/spreadsheets/d/14NtYvDzCWJcpclphJlxFRtJcz4VlY7syVXYcU3cm3vk/edit?usp=sharing" method="GET">
-    <button type="submit" name="addItm" value="">Go to Google Sheets</button>
- </form>
-    </h2>
-<br>
-<h2>
-<form action="{{signOut}}" method="GET">
-    <button type="submit" name="addItm" value="">Sign Out</button>
- </form>
-    <h2>
-
-
 </body>
 </html>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="migrated to pilvo fixed minor bugs still testing">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix deployed to gcloud">
       <change afterPath="$PROJECT_DIR$/bin/cygdb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cython" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cythonize" afterDir="false" />
@@ -4955,9 +4955,10 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/base.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/core.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/lang_EN_US.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/robotDeploy.html" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/testFIles/info.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/testFIles/tsms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.fish" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.fish" afterDir="false" />
@@ -4990,6 +4991,9 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/outStockv.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/outStockv.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testFIles/tickets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/tickets.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5004,8 +5008,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Jupyter Notebook" />
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -5235,13 +5239,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00023" summary="minor bugfix">
-      <created>1565311863960</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1565311863960</updated>
     </task>
     <task id="LOCAL-00024" summary="minor bugfix">
       <created>1565312201854</created>
@@ -5579,7 +5576,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566859144653</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="minor bug fix deployed to gcloud">
+      <created>1566866143565</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1566866143565</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5600,7 +5604,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="added support for adding and removing items and coupons" />
     <MESSAGE value="added CSS Styling" />
     <MESSAGE value="minor bug fixes" />
     <MESSAGE value="added basic gsheet logging and support for multiple menus" />
@@ -5625,6 +5628,7 @@
     <MESSAGE value="set items to in and out of stock" />
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="migrated to pilvo fixed minor bugs still testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="migrated to pilvo fixed minor bugs still testing" />
+    <MESSAGE value="minor bug fix deployed to gcloud" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix deployed to gcloud" />
   </component>
 </project>

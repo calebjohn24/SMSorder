@@ -7,6 +7,7 @@ from wsgiref.simple_server import make_server
 import pygsheets
 import pandas as pd
 import paypalrestsdk
+from flask_sslify import SSLify
 from firebase import firebase
 from flask import Flask, request, redirect, url_for
 from werkzeug.datastructures import ImmutableOrderedMultiDict
@@ -16,6 +17,7 @@ from flask import Flask, escape, request, session
 from flask_session import Session
 import pyrebase as fbAuth
 from fpdf import FPDF
+from flask_sslify import SSLify
 import os
 from flask import jsonify
 import calendar
@@ -59,10 +61,11 @@ fontName = "helvetica"
 smsTest = "sms:13166009096?body=order"
 sh = gc.open('TestRaunt')
 linkOrderLong = "cedarrestaurants.us-east-2.elasticbeanstalk.com" + uid + "check"
-
+robotViewID = random.randint(999999,999999)
 webLink = "sms:+" + botNumber + "?body=order"
 
 app = Flask(__name__)
+sslify = SSLify(app)
 app.secret_key = 'CedarKey02'
 
 def updateLog():
@@ -164,11 +167,8 @@ def genUsr(name, number, dbIndx):
 def genPayment(total, UUIDcode):
     # print(UUIDcode)
     # print(name)
-    apiurl = "http://tinyurl.com/api-create.php?url="
     paymentLink = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-ninhv43009@business.example.com&currency_code=USD&amount=' \
                   '' + str(total) + '&item_name=' + str(UUIDcode)
-    tinyurl = urllib.request.urlopen(apiurl + paymentLink).read()
-    shortLink = tinyurl.decode("utf-8")
     return paymentLink
 
 
@@ -265,7 +265,8 @@ def getReply(msg, number):
                 return reply
             elif (DBdata[indx]['stage'] == 2):
                 if (
-                        msg == "for here" or msg == "fo here" or msg == "for her" or msg == "for herw" or msg == "for herr" or msg == "here"):
+                        msg == "for here" or msg == "fo here" or msg == "for her" or msg == "for herw" or msg == "for herr" or msg == "here" or msg == "herw"
+                or msg == "herr" or msg == "for herr"):
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
                     database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", "HERE")
                     usrIndx = DBdata[indx]["userIndx"]
@@ -275,9 +276,7 @@ def getReply(msg, number):
                                  "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders) - 1)) + "/to-go",
                                  str("here"))
-                    reply = "-Sounds good! your order will be " + "for-here\n" + "-if you want" \
-                                                                                 " your order now enter" + ' "asap" otherwise enter your preferred time.(EX 11:15am)'
-
+                    reply = "-Sounds good! your order will be " + "for-here\n" + "-please enter your table number"
                     return reply
                 else:
                     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -320,7 +319,17 @@ def getReply(msg, number):
                         currentMenu = str(menKeys[mnx])
                         menuLink = str(MenuHrs[menKeys[mnx]]["link"])
                         break
-                database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", msg.upper())
+                if(DBdata[indx]["togo"] == "TO_GO"):
+                    database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", msg.upper())
+                else:
+                    tableStr = "TABLE #"
+                    for mm in range(len(msg)):
+                        try:
+                            int(msg[mm])
+                            tableStr += msg[mm]
+                        except Exception:
+                            pass
+                    database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", tableStr)
                 database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
                 usrIndx = DBdata[indx]["userIndx"]
                 numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
@@ -333,6 +342,7 @@ def getReply(msg, number):
                 return reply
     else:
         return ("no msg")
+
 
 
 @app.route('/sms')
@@ -352,19 +362,6 @@ def inbound_sms():
             dst=from_number,
             text=resp
         )
-        '''
-        response = plivoxml.ResponseElement()
-        response.add(
-            plivoxml.MessageElement(
-                str(resp),
-                src=to_number,
-                dst=from_number,
-                type='sms',
-                callback_url='https://61296054.ngrok.io/sms status/',
-                callback_method='POST'))
-        # print(response.to_string())  # Prints the XML
-        return Response(response.to_string(), mimetype='application/xml')
-        '''
     return '200'
 
 
@@ -521,7 +518,7 @@ def panel():
         updateLog()
         return render_template("panel.html", len=len(links), menuLinks=links, menuNames=names, restName=estNameStr,
                                viewOrders=(uid + "view"), addItm=(addPass), remItms=remPass, addCpn=promoPass,
-                               signOut=estNameStr, outStck=str(uid + "outstock"))
+                               signOut=estNameStr, outStck=str(uid + "outstock"), robotDeploy=str(uid + "rbt4813083403983494103934093480943109834093091341"))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -1400,7 +1397,7 @@ def orderNm():
             keys.append(sz)
             prices.append(menuItems[int(rsp['item'])]['sizes'][sz][1])
         else:
-            names.append("Standard")
+            names.append(str("Standard $") + str(menuItems[int(rsp['item'])]['sizes'][sz][1]))
             keys.append(0)
             prices.append(menuItems[int(rsp['item'])]['sizes'][sz][1])
     session['itmKey'] = itmKey
@@ -2123,7 +2120,47 @@ def nextPayment():
 @app.route('/')
 @app.route('/index')
 def mainPage():
-    return " "
+    return redirect(url_for('loginPage'))
+
+
+@app.route("/" + uid + "rbt4813083403983494103934093480943109834093091341")
+def robotInit():
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    ##print()
+    if ((currentTime - lastLogin) < sessionTime):
+        return redirect(url_for('robotDeploy'))
+    else:
+        return redirect(url_for('loginPage'))
+
+@app.route("/" + uid + "rbt1", methods=['POST'])
+def robotDeployX():
+    rsp = ((request.form))
+    table = int(rsp["table"]) -1
+    robot = int(rsp['robot']) -1
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    database.put("/restaurants/" + uid + "/robots/" + str(robot) + "/",str(table), 1)
+    return redirect(url_for('robotDeploy'))
+
+@app.route("/" + uid + "rbt1", methods=['GET'])
+def robotDeploy():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    maxTables = len((database.get("/restaurants/" + uid, "/robots/0/")))
+    rbX = len((database.get("/restaurants/" + uid, "/robots/")))
+    return render_template("robotDeploy.html",max=maxTables, rbtNum=rbX)
+
+
+
+
+
+
 
 
 # when you run the code through terminal, this will allow Flask to work
