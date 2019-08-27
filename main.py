@@ -1709,7 +1709,7 @@ def CheckPaymentMethod():
     TotalStr = ('$' + format(Total, ',.2f'))
     TaxStr = ('$' + format(Tax, ',.2f'))
     return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr, total=TotalStr,
-                           CPN=disc)
+                           CPN=disc, btn2=uid+"order")
 
 
 @app.route('/' + uid + 'nextPay', methods=['POST'])
@@ -2155,10 +2155,6 @@ def robotDeploy():
     maxTables = len((database.get("/restaurants/" + uid, "/robots/0/")))
     rbX = len((database.get("/restaurants/" + uid, "/robots/")))
     return render_template("robotDeploy.html",max=maxTables, rbtNum=rbX)
-
-
-
-
 
 
 
