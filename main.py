@@ -425,7 +425,6 @@ def panel():
             names.append(str([keys[menuNames]][0]))
             links.append(str(hours[keys[menuNames]]["link"]))
             # print(links)
-        updateLog()
         return render_template("panel.html", len=len(links), menuLinks=links, menuNames=names, restName=estNameStr,
                                viewOrders=(uid + "view"), addItm=(addPass), remItms=remPass, addCpn=promoPass,
                                signOut=estNameStr, outStck=str(uid + "outstock"), robotDeploy=str(uid + "rbt4813083403983494103934093480943109834093091341"))
@@ -744,6 +743,7 @@ def addItmForm():
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/time/", menTime)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/descrip/", descrip)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/cat/", cat)
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/rm/", "")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/inp/", "inp")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/extras/" + str(0), "/0/", "")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal) + "/extras/" + str(0), "/1/", 0)
@@ -1045,20 +1045,28 @@ def getTime():
     startHr = int(datetime.datetime.now().hour)
     day =datetime.datetime.today().weekday()
     if(startMin > 60):
-        startHr += 1
-        startMin -= 60
-    startStr = str(startHr)+":"+str(startMin)
+        if (startHr == 23):
+            startHr = 0
+            startMin -= 60
+        else:
+            startHr += 1
+            startMin -= 60
+    if(startHr > 9):
+        startStr = str(startHr)+":"+str(startMin)
+    else:
+        startStr = "0"+str(startHr) + ":" + str(startMin)
+    print(startStr)
     print(day)
     endHr = str(float(database.get("restaurants/" + uid, "/OChrs/"+str(day) +"/close/")))
     endSplt = endHr.split(".")
-    print(endSplt)
     endTimeHr = int(endSplt[0])
     endTimeMin = int(100 *(float(endSplt[1])/100))
     endTimeMin -= 15
     if(endTimeMin < 0):
-        endTimeHr += 1
-        endTimeMin = (60 - endTimeMin)
+        endTimeHr -= 1
+        endTimeMin += 60
     endStr = str(endTimeHr) +":"+str(endTimeMin)
+    print(endStr)
     return (render_template("getTime.html",btn=uid + 'order20',btn2=uid + 'order30',back=uid + 'order0', min=startStr,max=endStr))
 
 
@@ -1075,6 +1083,7 @@ def getTimeX():
     UUID = session.get('UUID', None)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
+    print(rsp)
     pickTime = "PICKUP @"+str(rsp["time"])
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", pickTime)
     return redirect(url_for('order'))

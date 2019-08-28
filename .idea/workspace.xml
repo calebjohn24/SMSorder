@@ -4987,6 +4987,8 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-breakfast-menu.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/menus/TestRaunt-lunch-dinner-menu.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/Name.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Name.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -5233,13 +5235,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00034" summary="added detailed logging">
-      <created>1566113727694</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1566113727694</updated>
     </task>
     <task id="LOCAL-00035" summary="minor bugfix">
       <created>1566114204504</created>
@@ -5577,7 +5572,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566968777744</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="minor bug fix">
+      <created>1566971515821</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1566971515822</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5619,10 +5621,10 @@
     <MESSAGE value="minor bug fix deployed to gcloud" />
     <MESSAGE value="minor bug fix added back btn" />
     <MESSAGE value="added error handling fixed a few bugs" />
-    <MESSAGE value="minor bug fix" />
     <MESSAGE value="revoked sms duties except for initialization" />
     <MESSAGE value="minor big fix" />
     <MESSAGE value="added manifest" />
-    <option name="LAST_COMMIT_MESSAGE" value="added manifest" />
+    <MESSAGE value="minor bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
   </component>
 </project>
