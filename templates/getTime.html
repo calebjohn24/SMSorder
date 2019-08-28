@@ -28,13 +28,28 @@
 </head>
 <body>
 <br>
-<h1>Please try again, enter the last 4 digits of your phone number or text order to {{number}}</h1>
+<h2>What time do you want to pick up your order</h2>
 <br>
+<br>
+<h3>
 <form method="POST" action="{{btn}}">
-    <input type="number" min="0" step="1"  name="tickID">
-    <br>
-    <br>
-    <button type="submit" value="{{btn}}">Done</button>
+    <button type="submit" value="{{btn}}">As Soon As Possible</button>
 </form>
+    <hr>
+</h3>
+<form method="POST" action="{{btn2}}">
+    <h3>Later</h3>
+  <input type="time" name="time" min="{{min}}" max="{{max}}">
+  <button type="submit" value="{{btn2}}">Done</button>
+</form>
+<br>
+<h3>
+    <hr>
+<form method="GET" action="{{back}}">
+    <button type="submit" value="{{back}}">Back</button>
+</form>
+    </h3>
+<br>
+<br>
 </body>
 </html>

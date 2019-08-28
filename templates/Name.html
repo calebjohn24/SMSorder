@@ -28,13 +28,25 @@
 </head>
 <body>
 <br>
-<h1>Please try again, enter the last 4 digits of your phone number or text order to {{number}}</h1>
 <br>
+<h3>
 <form method="POST" action="{{btn}}">
-    <input type="number" min="0" step="1"  name="tickID">
+    <h2>Enter Your Name</h2>
+    <input name="name">
+    <br>
+    <br>
+    <h2>Is the order for here or to go</h2>
+    <h3>To go
+    <input type="radio" name="togo" value="to-go">
+        </h3>
+    <br>
+    <h3>For Here
+    <input type="radio" name="togo" value="here">
+        </h3>
     <br>
     <br>
     <button type="submit" value="{{btn}}">Done</button>
 </form>
+</h3>
 </body>
 </html>

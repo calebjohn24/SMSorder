@@ -177,8 +177,9 @@ def getReply(msg, number):
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
-    startHr = float(database.get("restaurants/" + uid, "/OChrs/open/"))
-    endHr = float(database.get("restaurants/" + uid, "/OChrs/close/"))
+    day = datetime.datetime.today().weekday()
+    startHr = float(database.get("restaurants/" + uid, "/OChrs/"+str(day) +"/open/"))
+    endHr = float(database.get("restaurants/" + uid, "/OChrs/"+str(day) +"/close/"))
     if (startHr <= float(currentTime) < endHr):
         msg = msg.lower()
         print(msg)
@@ -212,10 +213,7 @@ def getReply(msg, number):
             UserData = database.get("/", "users")
             for usr in range(len(UserData)):
                 if (number == UserData[usr]["number"]):
-                    # print("found user")
                     timeStamp = datetime.datetime.today()
-                    reply = "Hi " + str(
-                        UserData[usr]["name"]) + "! welcome to " + estNameStr + " is this order for here or to go?"
                     database.put("/restaurants/" + estName + "/orders/" + str((len(DBdata))) + "/", "/name/",
                                  str(UserData[usr]["name"]))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/filled/", "0")
@@ -232,6 +230,9 @@ def getReply(msg, number):
                                  "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders))) + "/startTime",
                                  str(timeStamp))
+                    linkOrder = database.get("/restaurants/" + estName, "/orderLink")
+                    reply = "Hi welcome! click the link below to view the menu and order " + str(linkOrder)
+                    return reply
                     return reply
                 if ((len(UserData) - usr) == 1):
                     genUsr("", number, (len(DBdata)))
@@ -240,118 +241,11 @@ def getReply(msg, number):
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                                  0)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 1)
+                    linkOrder = database.get("/restaurants/" + estName, "/orderLink")
+                    reply = "Hi welcome! click the link below to view the menu and order " + str(linkOrder)
                     return reply
         else:
-            for db in range(len(DBdata)):
-                try:
-                    phoneNumDB = DBdata[db]['number']
-                    if (phoneNumDB == number):
-                        indx = db
-                        break
-                    elif ((len(DBdata) - db) == 1):
-                        # print("no msg")
-                        return "no msg"
-                except Exception:
-                    pass
-            if (DBdata[indx]['stage'] == 1):
-                name = msg
-                DBdata = database.get("/restaurants/" + estName, "/orders")
-                database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/name/", str(msg).capitalize())
-                database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 2)
-                UserData = database.get("/", "users")
-                timeStamp = datetime.datetime.today()
-                database.put("/users/", "/" + str(DBdata[indx]["userIndx"]) + "/name", name)
-                database.put("/users/", "/" + str(DBdata[indx]["userIndx"]) + "/number", number)
-                database.put("/users/",
-                             "/" + str(DBdata[indx]["userIndx"]) + "/restaurants/" + estNameStr + "/" + str(
-                                 0) + "/StartTime",
-                             str(timeStamp))
-                database.put("/users/", "/" + str((DBdata[indx]["userIndx"])) + "/loyalty/" + estNameStr + "/points/",
-                             0)
-                reply = "is this order for-here or to-go?"
-                usrIndx = DBdata[indx]["userIndx"]
-                database.put("/users", "/" + str(DBdata[indx]["userIndx"]) + "/name", str(msg.capitalize()))
-                return reply
-            elif (DBdata[indx]['stage'] == 2):
-                if (
-                        msg == "for here" or msg == "fo here" or msg == "for her" or msg == "for herw" or msg == "for hete" or msg == "for herr" or msg == "here" or msg == "herw"
-                or msg == "herr" or msg == "for herr" or ("fo" in msg) or ("he" in msg)):
-                    database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
-                    database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", "HERE")
-                    usrIndx = DBdata[indx]["userIndx"]
-                    numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
-                    # print((len(numOrders)))
-                    database.put("/users/",
-                                 "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
-                                     (len(numOrders) - 1)) + "/to-go",
-                                 str("here"))
-                    reply = "-Sounds good! your order will be " + "for-here\n" + "-please enter your table number EX. Table 12"
-                    return reply
-                else:
-                    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                                     'cajohn0205@gmail.com', extra={'id': 123})
-                    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
-                                                            authentication=authentication)
-                    database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/togo/", "TO_GO")
-                    database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 3)
-                    usrIndx = DBdata[indx]["userIndx"]
-                    numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
-                    database.put("/users/",
-                                 "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
-                                     (len(numOrders) - 1)) + "/to-go",
-                                 str("to-go"))
-                    reply = "-Sounds good! your order will be " + "to-go\n" + "-if you want" \
-                                                                              " your order now enter " + '"asap" otherwise enter the time your preferred time.(EX 11:15am)'
-                    return reply
-
-            elif (DBdata[indx]['stage'] == 3):
-                currentMenu = ""
-                menuIndx = 0
-                authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                                 'cajohn0205@gmail.com', extra={'id': 123})
-                database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
-                                                        authentication=authentication)
-                data = (database.get("restaurants/" + uid, "/menu/items/"))
-                currentTime = str(
-                    (float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
-                DBdata = database.get("/restaurants/" + estName, "orders")
-                MenuHrs = ((database.get("restaurants/" + uid, "/Hours/")))
-                menuLink = ""
-                menKeys = list(MenuHrs.keys())
-                for mnx in range(len(menKeys)):
-                    startHrMn = (float(MenuHrs[menKeys[mnx]]["startHr"]))
-                    endHrMn = (float(MenuHrs[menKeys[mnx]]["endHr"]))
-                    if (startHrMn <= float(currentTime) < endHrMn):
-                        # print("current menu")
-                        # print(menKeys[mnx])
-                        menuIndx = mnx
-                        currentMenu = str(menKeys[mnx])
-                        menuLink = str(MenuHrs[menKeys[mnx]]["link"])
-                        break
-                if(DBdata[indx]["togo"] == "TO_GO"):
-                    database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", msg.upper())
-                else:
-                    tableStr = "TABLE #"
-                    curLen = len(tableStr)
-                    for mm in range(len(msg)):
-                        try:
-                            int(msg[mm])
-                            tableStr += msg[mm]
-                        except Exception:
-                            pass
-                    if(len(tableStr) == curLen):
-                        tableStr = msg.lower()
-                    database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/time/", tableStr)
-                database.put("/restaurants/" + estName + "/orders/" + str(indx) + "/", "/stage/", 4)
-                usrIndx = DBdata[indx]["userIndx"]
-                numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
-                # print(numOrders)
-                database.put("/users/",
-                             "/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
-                                 (len(numOrders) - 1)) + "/pickup-time", str(msg))
-                linkOrder = database.get("/restaurants/" + estName, "/orderLink")
-                reply = "Got it! click the link below to view the menu and continue ordering " + str(linkOrder)
-                return reply
+            return ("no msg")
     else:
         return ("no msg")
 
@@ -360,6 +254,7 @@ def getReply(msg, number):
 @app.route('/sms')
 def inbound_sms():
     # Sender's phone number
+
     from_number = request.values.get('From')
     # Receiver's phone number - Plivo number
     to_number = request.values.get('To')
@@ -1117,9 +1012,90 @@ def getUUID():
             UUID = tickets[tx]["UUID"]
             session['UUID'] = UUID
             session['key'] = key
-            return redirect(url_for('order'))
+            return redirect(url_for('getName'))
         elif ((len(tickets) - tx) == 1):
-            return render_template("verifyCode2.html", btn=str(uid + "check"))
+            return render_template("verifyCode2.html", btn=str(uid + "check"), number=botNumber)
+
+@app.route('/' + uid + 'order0', methods=['GET'])
+def getName():
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    return (render_template("Name.html",btn=uid + 'order0'))
+
+@app.route('/' + uid + 'order0', methods=['POST'])
+def getNameTime2():
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
+    name = rsp['name']
+    togo = rsp['togo']
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/name/", name)
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/togo/", togo)
+    if(togo == "to-go"):
+        return redirect(url_for('getTime'))
+    else:
+        return redirect(url_for('getTable'))
+
+@app.route('/' + uid + 'order20', methods=['GET'])
+def getTime():
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    startMin = int(datetime.datetime.now().minute) + 20
+    startHr = int(datetime.datetime.now().hour)
+    day =datetime.datetime.today().weekday()
+    if(startMin > 60):
+        startHr += 1
+        startMin -= 60
+    startStr = str(startHr)+":"+str(startMin)
+    print(day)
+    endHr = str(float(database.get("restaurants/" + uid, "/OChrs/"+str(day) +"/close/")))
+    endSplt = endHr.split(".")
+    print(endSplt)
+    endTimeHr = int(endSplt[0])
+    endTimeMin = int(100 *(float(endSplt[1])/100))
+    endTimeMin -= 15
+    if(endTimeMin < 0):
+        endTimeHr -= 1
+        endTimeMin = (60 - endTimeMin)
+    endStr = str(endTimeHr) +":"+str(endTimeMin)
+    return (render_template("getTime.html",btn=uid + 'order20',btn2=uid + 'order30',back=uid + 'order0', min=startStr,max=endStr))
+
+
+@app.route('/' + uid + 'order20', methods=['POST'])
+def getTimeY():
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", "PICKUP ASAP")
+    return redirect(url_for('order'))
+
+@app.route('/' + uid + 'order30', methods=['POST'])
+def getTimeX():
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
+    pickTime = "PICKUP @"+str(rsp["time"])
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", pickTime)
+    return redirect(url_for('order'))
+
+@app.route('/' + uid + 'order1', methods=['GET'])
+def getTable():
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    return (render_template("getTable.html", btn=uid + 'order1', back=uid + 'order0'))
+
+@app.route('/' + uid + 'order1', methods=['POST'])
+def getTable2():
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
+    table = rsp['table']
+    putSTR = "Table #"+table
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", putSTR)
+    return redirect(url_for('order'))
+
 
 
 @app.route('/' + uid + 'order', methods=['GET'])
@@ -2179,15 +2155,12 @@ def robotDeploy():
     return render_template("robotDeploy.html",max=maxTables, rbtNum=rbX)
 
 @app.errorhandler(500)
-def not_found_error(error):
+def not_found_error():
     return redirect(url_for("loginRedo"))
 @app.errorhandler(502)
 def not_found_error():
     return redirect(url_for("loginRedo"))
 @app.errorhandler(400)
-def not_found_error():
-    return redirect(url_for("loginRedo"))
-@app.errorhandler(404)
 def not_found_error():
     return redirect(url_for("loginRedo"))
 @app.errorhandler(403)

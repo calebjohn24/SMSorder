@@ -20,7 +20,7 @@ def inbound_sms():
     text = request.values.get('Text')
     print('Message received - From: %s, To: %s, Text: %s' % (from_number, to_number, text))
     print(type(text))
-    resp = getResp(text)
+    resp = "Hi Caleb! welcome to TestRaunt is this order or to go?"
     response = plivoxml.ResponseElement()
     response.add(
         plivoxml.MessageElement(
@@ -30,6 +30,7 @@ def inbound_sms():
             type='sms',
             callback_url='https://61296054.ngrok.io/sms status/',
             callback_method='POST'))
+    print(response.to_string())  # Prints the XML
     return Response(response.to_string(), mimetype='application/xml')
 
 
