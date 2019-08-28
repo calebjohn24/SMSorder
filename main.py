@@ -2166,6 +2166,12 @@ def not_found_error400(error):
 @app.errorhandler(403)
 def not_found_error403(error):
     return redirect(url_for("loginRedo"))
+@app.errorhandler(405)
+def not_found_error405(error):
+    return redirect(url_for("loginRedo"))
+@app.errorhandler(404)
+def not_found_error404(error):
+    return redirect(url_for("loginRedo"))
 
 if __name__ == '__main__':
     app.secret_key = 'CedarKey02'

@@ -1,19 +1,53 @@
 {
-  "short_name": "Cedar Ordering",
-  "name": "Cedar Robotics Food ordering app",
+  "name": "Cedar Robotics Food Ordering",
+  "short_name": "Order Food",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "Scope": "/",
+  "start_url": "/vjsoqWdhbEYIKH4q00Zrp20UFHH3check",
   "icons": [
     {
-      "src": "https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305",
-      "type": "image/jpg",
-      "sizes": "192x192"
+      "src": "images/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
     },
     {
-      "src": "https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305",
-      "type": "image/jpg",
-      "sizes": "512x512"
+      "src": "images/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ],
-  "background_color": "#000000",
-  "display": "standalone",
-  "theme_color": "#FFFFFF"
+  "splash_pages": null
 }
