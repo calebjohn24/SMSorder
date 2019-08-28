@@ -1056,7 +1056,7 @@ def getTime():
     endTimeMin = int(100 *(float(endSplt[1])/100))
     endTimeMin -= 15
     if(endTimeMin < 0):
-        endTimeHr -= 1
+        endTimeHr += 1
         endTimeMin = (60 - endTimeMin)
     endStr = str(endTimeHr) +":"+str(endTimeMin)
     return (render_template("getTime.html",btn=uid + 'order20',btn2=uid + 'order30',back=uid + 'order0', min=startStr,max=endStr))
