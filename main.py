@@ -2155,16 +2155,16 @@ def robotDeploy():
     return render_template("robotDeploy.html",max=maxTables, rbtNum=rbX)
 
 @app.errorhandler(500)
-def not_found_error():
+def not_found_error500(error):
     return redirect(url_for("loginRedo"))
 @app.errorhandler(502)
-def not_found_error():
+def not_found_error502(error):
     return redirect(url_for("loginRedo"))
 @app.errorhandler(400)
-def not_found_error():
+def not_found_error400(error):
     return redirect(url_for("loginRedo"))
 @app.errorhandler(403)
-def not_found_error():
+def not_found_error403(error):
     return redirect(url_for("loginRedo"))
 
 if __name__ == '__main__':
