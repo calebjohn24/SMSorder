@@ -35,6 +35,7 @@ googleapis-common-protos==1.6.0
 greenlet==0.4.15
 httplib2==0.13.1
 idna==2.7
+email==4.0.2
 inexactsearch==1.0.2
 itsdangerous==1.1.0
 Jinja2==2.10.1

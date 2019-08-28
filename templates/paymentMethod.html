@@ -43,31 +43,26 @@
 <h3>Total::{{total}}</h3>
 <br>
 <br>
+<br>
 <h2>
     <form action="{{btn2}}" method="get">
     <button type="submit" name="item" value="yes">Back</button>
-
     </form>
 </h2>
-<br>
-<br>
-<h1>Would you like to pay now and skip the line?</h1>
-<br>
+<hr>
 <br>
 <h2>
     <form action="{{btn}}" method="post">
+         Email for receipt (optional)<br>
+    <input type="text" name="email">
+        <br><br>
     <button type="submit" name="item" value="yes">Yes!</button>
-
+        <br><br>
+        <button type="submit" name="item" value="no">No I want to pay at the restaurant</button>
     </form>
 </h2>
 <br>
 <br>
-<h3>
-    <form action="{{btn}}" method="post">
-    <button type="submit" name="item" value="no">No I want to pay at the restaurant</button>
-        	<br>
-        <br>
-    </form>
-</h3>
+<br><br><br>
 </body>
 </html>

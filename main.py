@@ -27,7 +27,7 @@ import json
 import time
 import urllib.request
 from datetime import timedelta
-
+import smtplib
 sessionTime = 1000
 infoFile = open("info.json")
 info = json.load(infoFile)
@@ -62,11 +62,13 @@ smsTest = "sms:13166009096?body=order"
 sh = gc.open('TestRaunt')
 linkOrderLong = "cedarrestaurants.us-east-2.elasticbeanstalk.com" + uid + "check"
 webLink = "sms:+" + botNumber + "?body=order"
-
+sender = 'receipts@cedarrobots.com'
+emailPass = "Cedar2421!"
+smtpObj = smtplib.SMTP_SSL("smtp.zoho.com",465)
+smtpObj.login(sender,emailPass)
 app = Flask(__name__)
 sslify = SSLify(app)
 app.secret_key = 'CedarKey02'
-
 
 def updateLog():
     logYM = (datetime.datetime.now().strftime("%Y-%m"))
@@ -564,7 +566,7 @@ def outStockp():
             database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "rm", itx)
             database.put("/restaurants/" + estName + "/menu/items/" + str(item) + "/", "time", "oos")
         menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-        return redirect(url_for('outStockg'))
+        return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -1906,6 +1908,35 @@ def nextPayment():
             Tax = subTotal * 0.1
             Total = float(subTotal) + float(Tax) + 0.15
             link = str(genPayment(str(Total), UUIDcode))
+            if (rsp['email'] != ""):
+                try:
+                    subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
+                except KeyError:
+                    subTotal = (DBdata[dbItems]["linkTotal"])
+                print(rsp['email'])
+                Tax = float(subTotal * 0.1)
+                Total = float(subTotal + float(Tax) + 0.1)
+                subTotalStr = ('$' + format(subTotal, ',.2f'))
+                TotalStr = ('$' + format(Total, ',.2f'))
+                TaxStr = ('$' + format(Tax, ',.2f'))
+                # print(TotalStr)
+                itms = str(DBdata[dbItems]["finalOrder"])
+                itms = itms.replace("::", "\n-")
+                now = datetime.datetime.now()
+                writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
+                    DBdata[dbItems]["name"]) + "\nItems\n-" + str(itms) + "\n" + str(
+                    DBdata[dbItems]["discStr"]) \
+                           + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(
+                    DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(
+                    round((Total - subTotal), 2)) + "\nTotal " + TotalStr
+                SUBJECT = "Your Order from " + estNameStr
+                message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
+                receivers = rsp['email']
+                try:
+                    smtpObj.sendmail(sender, receivers, message)
+                except Exception:
+                    print("email error")
+                    pass
             session.clear()
             return redirect(link)
     else:
@@ -2114,12 +2145,38 @@ def nextPayment():
             reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
         else:
             reply = "-Thank you for your order, please pay at the counter, after you pay your food will be delivered to your table \n-To order again just text " + '"order"'
-        updateLog()
         client.messages.create(
             src=botNumber,
             dst=number,
             text=reply
         )
+        updateLog()
+        if (rsp['email'] != ""):
+            try:
+                subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
+            except KeyError:
+                subTotal = (DBdata[dbItems]["linkTotal"])
+            print(rsp['email'])
+            Tax = float(subTotal * 0.1)
+            Total = float(subTotal + float(Tax) + 0.1)
+            subTotalStr = ('$' + format(subTotal, ',.2f'))
+            TotalStr = ('$' + format(Total, ',.2f'))
+            TaxStr = ('$' + format(Tax, ',.2f'))
+            # print(TotalStr)
+            itms = str(DBdata[dbItems]["finalOrder"])
+            itms = itms.replace("::","\n-")
+            now = datetime.datetime.now()
+            writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" +str(DBdata[dbItems]["name"]) + "\nItems\n-" + str(itms) + "\n" + str(
+                DBdata[dbItems]["discStr"]) \
+                       + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(DBdata[dbItems]["time"]) + "\nSubtotal "+str(subTotalStr)+"\nTaxes and fees $"+str(round((Total-subTotal),2))+"\nTotal " + TotalStr
+            SUBJECT = "Your Order from " + estNameStr
+            message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
+            receivers = rsp['email']
+            try:
+                smtpObj.sendmail(sender, receivers, message)
+            except Exception:
+                print("email error")
+                pass
         session.clear()
         return render_template("thankMsg.html")
 
