@@ -28,6 +28,7 @@ import time
 import urllib.request
 from datetime import timedelta
 import smtplib
+import pytz
 sessionTime = 1000
 infoFile = open("info.json")
 info = json.load(infoFile)
@@ -38,6 +39,9 @@ estName = info['uid']
 estNameStr = info['name']
 shortUID = info['shortUID']
 botNumber = info["number"]
+timez = info["timezone"]
+tz = pytz.timezone(timez)
+print(datetime.datetime.now(tz))
 client = plivo.RestClient(auth_id='MAYTVHN2E1ZDY4ZDA2YZ', auth_token='ODgzZDA1OTFiMjE2ZTRjY2U4ZTVhYzNiODNjNDll')
 mainLink = ""
 authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W', 'cajohn0205@gmail.com',
@@ -71,7 +75,7 @@ sslify = SSLify(app)
 app.secret_key = 'CedarKey02'
 
 def updateLog():
-    logYM = (datetime.datetime.now().strftime("%Y-%m"))
+    logYM = (datetime.datetime.now(tz).strftime("%Y-%m"))
     sh = gc.open('TestRaunt')
     wks = sh.worksheet_by_title(logYM + "-sales")
     logData = database.get("/log/" + uid + "/", logYM)
@@ -178,7 +182,7 @@ def getReply(msg, number):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
+    currentTime = str((float(datetime.datetime.now(tz).hour)) + ((float(datetime.datetime.now(tz).minute)) / 100.0))
     day = datetime.datetime.today().weekday()
     startHr = float(database.get("restaurants/" + uid, "/OChrs/"+str(day) +"/open/"))
     endHr = float(database.get("restaurants/" + uid, "/OChrs/"+str(day) +"/close/"))
@@ -276,7 +280,7 @@ def inbound_sms():
 
 @app.route('/ipn', methods=['POST'])
 def ipn():
-    logYM = (datetime.datetime.now().strftime("%Y-%m"))
+    logYM = (datetime.datetime.now(tz).strftime("%Y-%m"))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
@@ -297,15 +301,15 @@ def ipn():
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "tickSize/", numItms)
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/duration/", duration)
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/day/",
-                         calendar.day_name[datetime.datetime.now().today().weekday()])
+                         calendar.day_name[datetime.datetime.now(tz).today().weekday()])
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/hour/",
-                         int(datetime.datetime.now().hour))
+                         int(datetime.datetime.now(tz).hour))
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/month/",
-                         (datetime.datetime.now().strftime("%m")))
+                         (datetime.datetime.now(tz).strftime("%m")))
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/date/",
-                         (datetime.datetime.now().strftime("%d")))
+                         (datetime.datetime.now(tz).strftime("%d")))
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/year/",
-                         (datetime.datetime.now().strftime("%Y")))
+                         (datetime.datetime.now(tz).strftime("%Y")))
 
             numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
             database.put("/users/", "/" + str(usrIndx) + "/email", rsp["payer_email"])
@@ -1043,10 +1047,11 @@ def getNameTime2():
 def getTime():
     key = session.get('key', None)
     UUID = session.get('UUID', None)
-    startMin = int(datetime.datetime.now().minute) + 20
-    startHr = int(datetime.datetime.now().hour)
+    startMin = int(datetime.datetime.now(tz).minute) + 20
+    startHr = int(datetime.datetime.now(tz).hour)
+    print(startHr)
     day =datetime.datetime.today().weekday()
-    if(startMin > 60):
+    if(startMin > 59):
         if (startHr == 23):
             startHr = 0
             startMin -= 60
@@ -1057,6 +1062,8 @@ def getTime():
         startStr = str(startHr)+":"+str(startMin)
     else:
         startStr = "0"+str(startHr) + ":" + str(startMin)
+    if(startMin < 10):
+        startStr = str(startHr) + ":" + "0"+str(startMin)
     print(startStr)
     print(day)
     endHr = str(float(database.get("restaurants/" + uid, "/OChrs/"+str(day) +"/close/")))
@@ -1131,7 +1138,7 @@ def order():
     dispTotal = subTotalStr
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
     data = (database.get("restaurants/" + uid, "/menu/items/"))
-    currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
+    currentTime = str((float(datetime.datetime.now(tz).hour)) + ((float(datetime.datetime.now(tz).minute)) / 100.0))
     DBdata = database.get("/restaurants/" + estName, "orders")
     MenuHrs = ((database.get("restaurants/" + uid, "/Hours/")))
     menKeys = list(MenuHrs.keys())
@@ -1237,7 +1244,7 @@ def orderX():
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/linkTotal/", currentTotal)
     database.delete("/restaurants/" + estName + "/orders/" + str(key) + "/item/", (rsp["rem"]))
     data = (database.get("restaurants/" + uid, "/menu/items/"))
-    currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
+    currentTime = str((float(datetime.datetime.now(tz).hour)) + ((float(datetime.datetime.now(tz).minute)) / 100.0))
     DBdata = database.get("/restaurants/" + estName, "orders")
     MenuHrs = ((database.get("restaurants/" + uid, "/Hours/")))
     menKeys = list(MenuHrs.keys())
@@ -1326,7 +1333,7 @@ def orderCat():
     names = []
     keys = []
     prices = []
-    currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
+    currentTime = str((float(datetime.datetime.now(tz).hour)) + ((float(datetime.datetime.now(tz).minute)) / 100.0))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
@@ -1334,7 +1341,7 @@ def orderCat():
     UUID = session.get('UUID', None)
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     data = (database.get("restaurants/" + uid, "/menu/items/"))
-    currentTime = str((float(datetime.datetime.now().hour)) + ((float(datetime.datetime.now().minute)) / 100.0))
+    currentTime = str((float(datetime.datetime.now(tz).hour)) + ((float(datetime.datetime.now(tz).minute)) / 100.0))
     DBdata = database.get("/restaurants/" + estName, "orders")
     MenuHrs = ((database.get("restaurants/" + uid, "/Hours/")))
     menKeys = list(MenuHrs.keys())
@@ -1720,7 +1727,7 @@ def CheckPaymentMethod():
 
 @app.route('/' + uid + 'nextPay', methods=['POST'])
 def nextPayment():
-    logYM = (datetime.datetime.now().strftime("%Y-%m"))
+    logYM = (datetime.datetime.now(tz).strftime("%Y-%m"))
     UUID = session.get('UUID', None)
     key = session.get('key', None)
     dbItems = key
@@ -1909,11 +1916,14 @@ def nextPayment():
             Total = float(subTotal) + float(Tax) + 0.15
             link = str(genPayment(str(Total), UUIDcode))
             if (rsp['email'] != ""):
+                smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
+                smtpObj.login(sender, emailPass)
                 try:
                     subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
                 except KeyError:
                     subTotal = (DBdata[dbItems]["linkTotal"])
                 print(rsp['email'])
+                database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/email/", rsp['email'])
                 Tax = float(subTotal * 0.1)
                 Total = float(subTotal + float(Tax) + 0.1)
                 subTotalStr = ('$' + format(subTotal, ',.2f'))
@@ -1922,9 +1932,9 @@ def nextPayment():
                 # print(TotalStr)
                 itms = str(DBdata[dbItems]["finalOrder"])
                 itms = itms.replace("::", "\n-")
-                now = datetime.datetime.now()
+                now = datetime.datetime.now(tz)
                 writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
-                    DBdata[dbItems]["name"]) + "\nItems\n-" + str(itms) + "\n" + str(
+                    DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
                     DBdata[dbItems]["discStr"]) \
                            + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(
                     DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(
@@ -1932,11 +1942,8 @@ def nextPayment():
                 SUBJECT = "Your Order from " + estNameStr
                 message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
                 receivers = rsp['email']
-                try:
-                    smtpObj.sendmail(sender, receivers, message)
-                except Exception:
-                    print("email error")
-                    pass
+                smtpObj.sendmail(sender, receivers, message)
+                smtpObj.close()
             session.clear()
             return redirect(link)
     else:
@@ -2116,15 +2123,15 @@ def nextPayment():
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "endTime/", time.time())
         database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "duration/", duration)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/day/",
-                     calendar.day_name[datetime.datetime.now().today().weekday()])
+                     calendar.day_name[datetime.datetime.now(tz).today().weekday()])
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/hour/",
-                     int(datetime.datetime.now().hour))
+                     int(datetime.datetime.now(tz).hour))
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/month/",
-                     (datetime.datetime.now().strftime("%m")))
+                     (datetime.datetime.now(tz).strftime("%m")))
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/date/",
-                     (datetime.datetime.now().strftime("%d")))
+                     (datetime.datetime.now(tz).strftime("%d")))
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/year/",
-                     (datetime.datetime.now().strftime("%Y")))
+                     (datetime.datetime.now(tz).strftime("%Y")))
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "cash/", "NOT PAID")
         logData = database.get("/log/" + uid + "/", logYM)
         cdrFees = logData['CedarFees']
@@ -2152,11 +2159,14 @@ def nextPayment():
         )
         updateLog()
         if (rsp['email'] != ""):
+            smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
+            smtpObj.login(sender, emailPass)
             try:
                 subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
             except KeyError:
                 subTotal = (DBdata[dbItems]["linkTotal"])
             print(rsp['email'])
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/email/", rsp['email'])
             Tax = float(subTotal * 0.1)
             Total = float(subTotal + float(Tax) + 0.1)
             subTotalStr = ('$' + format(subTotal, ',.2f'))
@@ -2165,18 +2175,15 @@ def nextPayment():
             # print(TotalStr)
             itms = str(DBdata[dbItems]["finalOrder"])
             itms = itms.replace("::","\n-")
-            now = datetime.datetime.now()
-            writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" +str(DBdata[dbItems]["name"]) + "\nItems\n-" + str(itms) + "\n" + str(
+            now = datetime.datetime.now(tz)
+            writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" +str(DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
                 DBdata[dbItems]["discStr"]) \
                        + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(DBdata[dbItems]["time"]) + "\nSubtotal "+str(subTotalStr)+"\nTaxes and fees $"+str(round((Total-subTotal),2))+"\nTotal " + TotalStr
             SUBJECT = "Your Order from " + estNameStr
             message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
             receivers = rsp['email']
-            try:
-                smtpObj.sendmail(sender, receivers, message)
-            except Exception:
-                print("email error")
-                pass
+            smtpObj.sendmail(sender, receivers, message)
+            smtpObj.close()
         session.clear()
         return render_template("thankMsg.html")
 
