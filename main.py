@@ -188,6 +188,9 @@ def getReply(msg, number):
     endHr = float(database.get("restaurants/" + uid, "/OChrs/"+str(day) +"/close/"))
     if (startHr <= float(currentTime) < endHr):
         msg = msg.lower()
+        msg.replace("\n", "")
+        msg.replace(" ", "")
+        msg = ''.join(msg.split())
         print(msg)
         indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")

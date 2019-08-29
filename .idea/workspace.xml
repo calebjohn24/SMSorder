@@ -4986,13 +4986,7 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/info.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFIles/testemail.py" beforeDir="false" afterPath="$PROJECT_DIR$/testFIles/testemail.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5238,13 +5232,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00037" summary="added link to gsheets">
-      <created>1566184261969</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1566184261969</updated>
     </task>
     <task id="LOCAL-00038" summary="generates pdf">
       <created>1566197188889</created>
@@ -5582,7 +5569,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567023231786</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="minor bug">
+      <created>1567034082248</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1567034082249</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5603,7 +5597,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="generates pdf" />
     <MESSAGE value="minor bug fix auto updates pdf" />
     <MESSAGE value="basic ordering GUI" />
     <MESSAGE value="finished front end part 1" />
@@ -5628,6 +5621,7 @@
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="minor bug fixes in time for pickup" />
     <MESSAGE value="email recepits after checkout" />
-    <option name="LAST_COMMIT_MESSAGE" value="email recepits after checkout" />
+    <MESSAGE value="minor bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug" />
   </component>
 </project>
