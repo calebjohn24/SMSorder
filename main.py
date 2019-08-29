@@ -189,6 +189,7 @@ def getReply(msg, number):
     if (startHr <= float(currentTime) < endHr):
         msg = msg.lower()
         msg.replace("\n", "")
+        msg.replace(".", "")
         msg.replace(" ", "")
         msg = ''.join(msg.split())
         print(msg)
@@ -368,6 +369,34 @@ def ipn():
                 dst=number,
                 text=reply
             )
+
+            smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
+            smtpObj.login(sender, emailPass)
+            try:
+                subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
+            except KeyError:
+                subTotal = (DBdata[dbItems]["linkTotal"])
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/email/", rsp["payer_email"])
+            Tax = float(subTotal * 0.1)
+            Total = float(subTotal + float(Tax) + 0.1)
+            subTotalStr = ('$' + format(subTotal, ',.2f'))
+            TotalStr = ('$' + format(Total, ',.2f'))
+            TaxStr = ('$' + format(Tax, ',.2f'))
+            # print(TotalStr)
+            itms = str(DBdata[dbItems]["finalOrder"])
+            itms = itms.replace("::", "\n-")
+            now = datetime.datetime.now(tz)
+            writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
+                DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
+                DBdata[dbItems]["discStr"]) \
+                       + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(
+                DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(
+                round((Total - subTotal), 2)) + "\nTotal " + TotalStr
+            SUBJECT = "Your Order from " + estNameStr
+            message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
+            receivers = rsp["payer_email"]
+            smtpObj.sendmail(sender, receivers, message)
+            smtpObj.close()
             updateLog()
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
 
@@ -1171,13 +1200,13 @@ def order():
                 if (itms[dispKeys[itmX]] != None):
                     wrtStr = ""
                     if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
-                        wrtStr += str(itms[dispKeys[itmX]]["size"])
+                        wrtStr += str(itms[dispKeys[itmX]]["size"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["name"])
+                        wrtStr += str(itms[dispKeys[itmX]]["name"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["toppings"])
+                        wrtStr += str(itms[dispKeys[itmX]]["toppings"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["notes"])
+                        wrtStr += str(itms[dispKeys[itmX]]["notes"]).lower()
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
@@ -1186,11 +1215,11 @@ def order():
                         currKeys.append(dispKeys[itmX])
                         # print(wrtStr)
                     else:
-                        wrtStr = str(itms[dispKeys[itmX]]["name"])
+                        wrtStr = str(itms[dispKeys[itmX]]["name"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["toppings"])
+                        wrtStr += str(itms[dispKeys[itmX]]["toppings"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["notes"])
+                        wrtStr += str(itms[dispKeys[itmX]]["notes"]).lower()
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
@@ -1277,13 +1306,13 @@ def orderX():
                 if (itms[dispKeys[itmX]] != None):
                     wrtStr = ""
                     if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
-                        wrtStr += str(itms[dispKeys[itmX]]["size"])
+                        wrtStr += str(itms[dispKeys[itmX]]["size"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["name"])
+                        wrtStr += str(itms[dispKeys[itmX]]["name"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["toppings"])
+                        wrtStr += str(itms[dispKeys[itmX]]["toppings"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["notes"])
+                        wrtStr += str(itms[dispKeys[itmX]]["notes"]).lower()
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
@@ -1292,11 +1321,11 @@ def orderX():
                         currKeys.append(dispKeys[itmX])
                         # print(wrtStr)
                     else:
-                        wrtStr = str(itms[dispKeys[itmX]]["name"])
+                        wrtStr = str(itms[dispKeys[itmX]]["name"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["toppings"])
+                        wrtStr += str(itms[dispKeys[itmX]]["toppings"]).lower()
                         wrtStr += " "
-                        wrtStr += str(itms[dispKeys[itmX]]["notes"])
+                        wrtStr += str(itms[dispKeys[itmX]]["notes"]).lower()
                         wrtStr += " x "
                         wrtStr += str(itms[dispKeys[itmX]]["qty"])
                         wrtStr += " $"
@@ -1918,35 +1947,6 @@ def nextPayment():
             Tax = subTotal * 0.1
             Total = float(subTotal) + float(Tax) + 0.15
             link = str(genPayment(str(Total), UUIDcode))
-            if (rsp['email'] != ""):
-                smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
-                smtpObj.login(sender, emailPass)
-                try:
-                    subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
-                except KeyError:
-                    subTotal = (DBdata[dbItems]["linkTotal"])
-                print(rsp['email'])
-                database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/email/", rsp['email'])
-                Tax = float(subTotal * 0.1)
-                Total = float(subTotal + float(Tax) + 0.1)
-                subTotalStr = ('$' + format(subTotal, ',.2f'))
-                TotalStr = ('$' + format(Total, ',.2f'))
-                TaxStr = ('$' + format(Tax, ',.2f'))
-                # print(TotalStr)
-                itms = str(DBdata[dbItems]["finalOrder"])
-                itms = itms.replace("::", "\n-")
-                now = datetime.datetime.now(tz)
-                writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
-                    DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
-                    DBdata[dbItems]["discStr"]) \
-                           + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(
-                    DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(
-                    round((Total - subTotal), 2)) + "\nTotal " + TotalStr
-                SUBJECT = "Your Order from " + estNameStr
-                message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
-                receivers = rsp['email']
-                smtpObj.sendmail(sender, receivers, message)
-                smtpObj.close()
             session.clear()
             return redirect(link)
     else:

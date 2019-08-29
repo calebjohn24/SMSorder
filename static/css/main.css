@@ -1,4 +1,4 @@
-body,h1,h2,h3,h4,h5,h6,button,li{font-family: "Lato", sans-serif;}
+body,h1,h2,h3,h4,h5,h6,button,li{font-family: "Raleway";}
 body, html {
   height: 100%;
   color: white;
@@ -18,7 +18,7 @@ button{
   font-size: 20px;
   margin: 2px 2px;
   cursor: pointer;
-  border-radius: 20px;
+
 }
 dropbtn {
   background-color: #4CAF50;
@@ -85,5 +85,4 @@ dropdown:hover .dropbtn {background-color: #3e8e41;}
 
 .centered img {
   width: 150px;
-  border-radius: 50%;
 }
