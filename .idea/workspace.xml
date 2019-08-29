@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix whitespace">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="UI update">
       <change afterPath="$PROJECT_DIR$/bin/cygdb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cython" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cythonize" afterDir="false" />
@@ -4987,32 +4987,6 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Name.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Name.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/coupon.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coupon.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/getTable.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTable.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/getTime.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTime.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/indexV.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/indexV.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainOrderBtn.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/outStockv.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/outStockv.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickToppings.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickToppings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickcat.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickcat.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/picksize.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/picksize.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/remItems.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/remItems.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/robotDeploy.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/robotDeploy.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/thankMsg.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/thankMsg.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode3.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5258,20 +5232,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00039" summary="generates pdf">
-      <created>1566198541036</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1566198541037</updated>
-    </task>
-    <task id="LOCAL-00040" summary="minor bug fix">
-      <created>1566200322988</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1566200322988</updated>
     </task>
     <task id="LOCAL-00041" summary="minor bug fix auto updates pdf">
       <created>1566201707967</created>
@@ -5602,7 +5562,21 @@
       <option name="project" value="LOCAL" />
       <updated>1567044459699</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="UI update">
+      <created>1567054191201</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1567054191201</updated>
+    </task>
+    <task id="LOCAL-00089" summary="UI update">
+      <created>1567054273377</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1567054273377</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5623,7 +5597,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="basic ordering GUI" />
     <MESSAGE value="finished front end part 1" />
     <MESSAGE value="added Fb accounting" />
     <MESSAGE value="almost done just need to fix currency rounding" />
@@ -5648,6 +5621,7 @@
     <MESSAGE value="email recepits after checkout" />
     <MESSAGE value="minor bug" />
     <MESSAGE value="minor bug fix whitespace" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix whitespace" />
+    <MESSAGE value="UI update" />
+    <option name="LAST_COMMIT_MESSAGE" value="UI update" />
   </component>
 </project>

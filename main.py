@@ -360,7 +360,7 @@ def ipn():
                          "duration",
                          duration)
             # print("sending")
-            if (DBdata[dbItems]["togo"] == "TO_GO"):
+            if (DBdata[dbItems]["togo"] == "to-go"):
                 reply = "-Thank you for your order, you can pick it up and skip the line when you arrive\n-To order again just text " + '"order"'
             else:
                 reply = "-Thank you for your order, your food will be delivered to your table shortly \n-To order again just text " + '"order"'
@@ -2151,7 +2151,7 @@ def nextPayment():
         else:
             newCust += 1
             database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
-        if(DBdata[dbItems]["togo"] == "TO_GO"):
+        if(DBdata[dbItems]["togo"] == "to-go"):
             reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
         else:
             reply = "-Thank you for your order, please pay at the counter, after you pay your food will be delivered to your table \n-To order again just text " + '"order"'
