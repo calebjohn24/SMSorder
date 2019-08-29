@@ -196,7 +196,7 @@ def getReply(msg, number):
         indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")
         UserData = database.get("/", "users")
-        if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr" or msg == "ordee"):
+        if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr" or msg == "ordee" or ("ord" in msg)):
             UUID = random.randint(9999999, 100000000)
             for dbxv in range(len(DBdata)):
                 try:
