@@ -22,29 +22,27 @@
 <meta name="msapplication-TileImage" content="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <meta name="theme-color" content="#000000">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/main.css?alt=media&token=f3c3890b-b353-408f-85f0-98e1bdef4983">
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
 <br>
-<p><img src="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305" alt="logo" width="42" height="42" align="left"></p>
 <h1>Edit {{restName}} Menu</h1>
 <br>
 <h2>Add Item</h2>
 <br>
 <form method="POST" action="{{btn}}">
     <h3>Enter Name</h3>
-    <input name="name">
+    <input name="name" required>
     <h3>Enter description for this item (optional)</h3>
     <input name="desc">
     <h3>Enter item category EX. Drinks</h3>
-    <input name="category">
+    <input name="category" required>
     <h3>Enter Number Of Sizes</h3>
-    <input type="number" name="numSizes">
+    <input type="number" name="numSizes" required>
      <h3>Enter Menu for This Item Ex. Breakfast if this item is available all day enter 'all'</h3>
-    <input name="time">
+    <input name="time" required>
     <br>
     <br>
     <button type="submit" value="{{btn}}">Done</button>
