@@ -159,14 +159,14 @@ def genUsr(name, number, dbIndx):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    UserData = database.get("/", "users")
+    UserData = database.get("/"+uid+"/", "users")
     timeStamp = datetime.datetime.today()
-    database.put("/users/", "/" + str(len(UserData)) + "/name", name)
-    database.put("/users/", "/" + str(len(UserData)) + "/number", number)
-    database.put("/users/", "/" + str(len(UserData)) + "/restaurants/" + estNameStr + "/" + str(0) + "/StartTime",
+    database.put("/" + uid+"/users/", "/"+str(len(UserData)) + "/name", name)
+    database.put("/" + uid+"/users/", "/" + str(len(UserData)) + "/number", number)
+    database.put("/" + uid+"/users/", "/" + str(len(UserData)) + "/restaurants/" + estNameStr + "/" + str(0) + "/StartTime",
                  str(timeStamp))
-    database.put("/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/name/", estNameStr)
-    database.put("/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/points/", 0)
+    database.put("/" + uid+"/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/name/", estNameStr)
+    database.put("/" + uid+"/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/points/", 0)
     database.put("/restaurants/" + estName + "/orders/" + str(dbIndx) + "/", "/usrIndx/", len(UserData))
 
 
@@ -230,13 +230,13 @@ def getReply(msg, number):
 
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 2)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/", usr)
-                    numOrders = database.get("/users/" + str(usr) + "/restaurants/", estNameStr)
+                    numOrders = database.get("/" + uid+"/users/" + str(usr) + "/restaurants/", estNameStr)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                                  (len(numOrders)))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/",
                                  time.time())
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 0)
-                    database.put("/users/",
+                    database.put("/" + uid+"/users/",
                                  "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders))) + "/startTime",
                                  str(timeStamp))
@@ -315,13 +315,13 @@ def ipn():
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/year/",
                          (datetime.datetime.now(tz).strftime("%Y")))
 
-            numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
-            database.put("/users/", "/" + str(usrIndx) + "/email", rsp["payer_email"])
-            database.put("/users/", "/" + str(usrIndx) + "/country", rsp["address_country_code"])
-            database.put("/users/", "/" + str(usrIndx) + "/state", rsp["address_state"])
-            database.put("/users/", "/" + str(usrIndx) + "/zipCode", rsp["address_zip"])
-            database.put("/users/", "/" + str(usrIndx) + "/city", rsp["address_city"])
-            database.put("/users/", "/" + str(usrIndx) + "/streetAdr", rsp["address_street"])
+            numOrders = database.get("/" + uid+"/users/" + str(usrIndx) + "/restaurants/", estNameStr)
+            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/email", rsp["payer_email"])
+            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/country", rsp["address_country_code"])
+            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/state", rsp["address_state"])
+            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/zipCode", rsp["address_zip"])
+            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/city", rsp["address_city"])
+            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/streetAdr", rsp["address_street"])
             logData = database.get("/log/" + uid + "/", logYM)
             numCard = int(logData['cardPay'])
             numCard += 1
@@ -349,14 +349,14 @@ def ipn():
                 newCust += 1
                 database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
 
-            database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
+            database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
                          ((DBdata[dbItems]["linkTotal"] + 0.1) * 1.1))
-            database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
+            database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
                          "tickSize",
                          numItms)
-            database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
+            database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
                          DBdata[dbItems]["item"])
-            database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
+            database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
                          "duration",
                          duration)
             # print("sending")
@@ -464,7 +464,7 @@ def panel():
             links.append(str(hours[keys[menuNames]]["link"]))
             # print(links)
         return render_template("panel.html", len=len(links), menuLinks=links, menuNames=names, restName=estNameStr,
-                               viewOrders=(uid + "view"), addItm=(addPass), remItms=remPass, addCpn=promoPass,
+                               viewOrders=(uid + "view"), addItm=(addPass), remItms=remPass, addCpn=promoPass, promoSMS=promoPass + "smsPromo"+uid,
                                signOut=estNameStr, outStck=str(uid + "outstock"), robotDeploy=str(uid + "rbt4813083403983494103934093480943109834093091341"))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
@@ -982,6 +982,57 @@ def addCpn():
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
+@app.route('/' + promoPass + "smsPromo"+uid, methods=['GET'])
+def smsPromo():
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    # print()
+    if ((currentTime - lastLogin) < sessionTime):
+        return render_template('sendPromo.html', btn=str(promoPass + "smsPromo"+uid))
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
+@app.route('/' + promoPass + "smsPromo"+uid, methods=['POST'])
+def checksmsPromo():
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    if ((currentTime - lastLogin) < sessionTime):
+        request.parameter_storage_class = ImmutableOrderedMultiDict
+        rsp = ((request.form))
+        # print(rsp)
+        name = rsp['promoText']
+        promoTime = rsp['time']
+        numPromos = len(database.get("/restaurants/" + estName, "/promos/"))
+        lim = int(database.get("/restaurants/" + estName, "/promoLim/"))
+        if(numPromos < lim):
+            database.put("/restaurants/" + estName + "/promos/" + str(len(numPromos)-1), "/name/", name)
+            numUsr = int(database.get("/restaurants/" + estName, "/users/"))-1
+            database.put("/restaurants/" + estName + "/promos/" + str(len(numPromos) - 1), "/numTxts/", numUsr)
+            return render_template('checkPromoMsg.html', numUsr=numUsr,lim=lim,btn=str(promoPass + "smsPromo"+uid+"send"))
+        else:
+            return render_template('noPromoMsg.html', btn=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
+@app.route('/' + promoPass + "smsPromo"+uid+"send", methods=['POST'])
+def sendsmsPromo():
+    currentTime = time.time()
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
+    # print()
+    if ((currentTime - lastLogin) < sessionTime):
+
+        return render_template('checkPromo.html', restName=estNameStr)
+    else:
+        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + promoPass, methods=['POST'])
 def addCpnResp():
@@ -2111,13 +2162,13 @@ def nextPayment():
         numItms = len(DBdata[dbItems]["item"])
         orderIndx = DBdata[dbItems]["orderIndx"]
         usrIndx = DBdata[dbItems]["userIndx"]
-        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
+        database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
                      Total)
-        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "tickSize",
+        database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "tickSize",
                      numItms)
-        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
+        database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
                      DBdata[dbItems]["item"])
-        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "duration",
+        database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "duration",
                      duration)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "tickSize/", numItms)
