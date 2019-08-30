@@ -4986,31 +4986,7 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Name.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Name.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/coupon.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coupon.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/getTable.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTable.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/getTime.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTime.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/indexV.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/indexV.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/outStockv.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/outStockv.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickToppings.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickToppings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickcat.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickcat.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/picksize.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/picksize.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/remItems.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/remItems.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/robotDeploy.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/robotDeploy.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/thankMsg.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/thankMsg.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode3.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5256,13 +5232,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00042" summary="minor bug fix">
-      <created>1566249527404</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1566249527404</updated>
     </task>
     <task id="LOCAL-00043" summary="basic ordering GUI">
       <created>1566350106195</created>
@@ -5600,7 +5569,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567056024663</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="UI update">
+      <created>1567138852669</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1567138852670</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="UnknownFeatures">
