@@ -222,7 +222,7 @@ def getReply(msg, number):
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/linkTotal/", 0.0)
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "finalOrder/", "")
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/", time.time())
-            UserData = database.get("/", "users")
+            UserData = database.get("/"+uid+"/", "users")
             for usr in range(len(UserData)):
                 if (number == UserData[usr]["number"]):
                     timeStamp = datetime.datetime.today()

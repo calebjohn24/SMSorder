@@ -4986,7 +4986,6 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -5233,13 +5232,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00046" summary="minor bug fix">
-      <created>1566511881474</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1566511881474</updated>
     </task>
     <task id="LOCAL-00047" summary="added Fb accounting">
       <created>1566526462592</created>
@@ -5577,7 +5569,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567215377755</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="change payapal email to env">
+      <created>1567217099857</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1567217099857</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5598,7 +5597,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="almost done just need to fix currency rounding" />
     <MESSAGE value="fixed currency formatting need to add accounting in gsheets next" />
     <MESSAGE value="added logging to gsheets" />
     <MESSAGE value="minor bug fix in itm display" />
@@ -5623,6 +5621,7 @@
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="adding promo support" />
     <MESSAGE value="added sms promo support" />
-    <option name="LAST_COMMIT_MESSAGE" value="added sms promo support" />
+    <MESSAGE value="change payapal email to env" />
+    <option name="LAST_COMMIT_MESSAGE" value="change payapal email to env" />
   </component>
 </project>
