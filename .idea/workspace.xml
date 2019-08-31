@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added sms promo support">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
       <change afterPath="$PROJECT_DIR$/bin/cygdb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cython" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cythonize" afterDir="false" />
@@ -4955,6 +4955,8 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/base.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/core.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/lang_EN_US.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/kioskOpen.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.fish" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.fish" afterDir="false" />
@@ -5001,8 +5003,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Jupyter Notebook" />
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -5232,13 +5234,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00049" summary="minor bug fix">
-      <created>1566535358513</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1566535358513</updated>
     </task>
     <task id="LOCAL-00050" summary="almost done just need to fix currency rounding">
       <created>1566535682297</created>
@@ -5576,7 +5571,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567220305356</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="minor bug fix">
+      <created>1567224197945</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1567224197945</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="UnknownFeatures">
