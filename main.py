@@ -380,7 +380,7 @@ def ipn():
                 subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
             except KeyError:
                 subTotal = (DBdata[dbItems]["linkTotal"])
-            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/email/", rsp["payer_email"])
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/email/", rsp["payer_email"])
             Tax = float(subTotal * 0.1)
             Total = float(subTotal + float(Tax) + 0.1)
             subTotalStr = ('$' + format(subTotal, ',.2f'))

@@ -4955,7 +4955,6 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/base.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/core.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/words2num/lang_EN_US.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/paymentScreen.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.fish" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.fish" afterDir="false" />
@@ -4987,12 +4986,6 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/getTable.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTable.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/thankMsg.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/thankMsg.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5238,13 +5231,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00051" summary="fixed currency formatting need to add accounting in gsheets next">
-      <created>1566536544268</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1566536544268</updated>
     </task>
     <task id="LOCAL-00052" summary="added logging to gsheets">
       <created>1566602612327</created>
@@ -5582,7 +5568,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567231353117</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="still working minor update">
+      <created>1567238461053</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1567238461053</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5603,7 +5596,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="added logging to gsheets" />
     <MESSAGE value="minor bug fix in itm display" />
     <MESSAGE value="added coupon support" />
     <MESSAGE value="reformatted for aws" />
@@ -5628,6 +5620,7 @@
     <MESSAGE value="change payapal email to env" />
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="added kiosk mode still in dev" />
-    <option name="LAST_COMMIT_MESSAGE" value="added kiosk mode still in dev" />
+    <MESSAGE value="still working minor update" />
+    <option name="LAST_COMMIT_MESSAGE" value="still working minor update" />
   </component>
 </project>
