@@ -40,6 +40,9 @@ estNameStr = info['name']
 botNumber = info["number"]
 payaplEmail = info['paypalEmail']
 timez = info["timezone"]
+mainLink = info['mainLink']
+print(mainLink)
+print(mainLink)
 tz = pytz.timezone(timez)
 print(datetime.datetime.now(tz))
 client = plivo.RestClient(auth_id='MAYTVHN2E1ZDY4ZDA2YZ', auth_token='ODgzZDA1OTFiMjE2ZTRjY2U4ZTVhYzNiODNjNDll')
@@ -174,7 +177,7 @@ def genPayment(total, UUIDcode):
     # print(UUIDcode)
     # print(name)
     paymentLink = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business='+str(payaplEmail)+'&currency_code=USD&amount=' \
-                  '' + str(total) + '&item_name=' + str(UUIDcode)
+                  '' + str(total) + '&item_name=' + str(UUIDcode) +"&return="+"cedarchatbot.appspot.com"+"/" + uid + "kiosk"
     #paymentLink = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=' + str(payaplEmail) + '&currency_code=USD&amount=' + str(total) + '&item_name=' + str(UUIDcode)
     return paymentLink
 
@@ -1304,6 +1307,8 @@ def getTable2():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     table = rsp['table']
+    if(rsp['table'] == ""):
+        table += "-"
     putSTR = "Table #"+table
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", putSTR)
     return redirect(url_for('order'))
@@ -2122,17 +2127,9 @@ def nextPayment():
             Tax = subTotal * 0.1
             Total = float(subTotal) + float(Tax) + 0.15
             link = str(genPayment(str(Total), UUIDcode))
-            reply = "click this link to pay " + link
-            try:
-                client.messages.create(
-                    src=botNumber,
-                    dst=number,
-                    text=reply
-                )
-                session.clear()
-                return redirect(url_for('loginKiosk'))
-            except Exception:
-                return redirect(link)
+            session.clear()
+            return redirect(link)
+
     else:
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                          'cajohn0205@gmail.com', extra={'id': 123})
@@ -2570,10 +2567,6 @@ def nextPaymentx():
             Tax = subTotal * 0.1
             Total = float(subTotal) + float(Tax) + 0.15
             link = str(genPayment(str(Total), UUIDcode))
-            apiurl = "http://tinyurl.com/api-create.php?url="
-            tinyurl = urllib.request.urlopen(apiurl + link).read()
-            shortLink = tinyurl.decode("utf-8")
-            reply = "click this link to pay " + shortLink
             if (rsp['email'] != ""):
                 smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
                 smtpObj.login(sender, emailPass)
@@ -2604,18 +2597,12 @@ def nextPaymentx():
                 smtpObj.sendmail(sender, receivers, message)
                 smtpObj.close()
             session.clear()
-            nx = str(DBdata[dbItems]["number"])
-            client.messages.create(
-                src=botNumber,
-                dst=str(nx),
-                text=str(reply)
-            )
             print(number)
-            print(reply)
-            print("sent")
-            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
-            return redirect(url_for('loginKiosk'))
-
+            print(link)
+            print(mainLink)
+            print(link)
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number)))
+            return redirect(link)
     else:
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                          'cajohn0205@gmail.com', extra={'id': 123})
@@ -2822,11 +2809,6 @@ def nextPaymentx():
             reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
         else:
             reply = "-Thank you for your order, please pay at the counter, after you pay your food will be delivered to your table \n-To order again just text " + '"order"'
-        client.messages.create(
-            src=botNumber,
-            dst=number,
-            text=reply
-        )
         updateLog()
         if (rsp['email'] != ""):
             smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)

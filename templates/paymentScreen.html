@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Add Items</title>
 <meta charset="UTF-8">
-    <title>{{restName}} Control Panel</title>
     <link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" sizes="60x60" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="57x57" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="72x72" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="76x76" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
@@ -26,74 +26,24 @@
 <link rel="stylesheet" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/main.css?alt=media&token=f3c3890b-b353-408f-85f0-98e1bdef4983">
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<style>
+div {
+  width: 100%;
+}
+</style>
 </head>
 <body>
-<h1>{{restName}} Control Panel</h1>
+<div align="center" id=a>
 <br>
 <h2>
- <form action="{{viewOrders}}" method="GET">
-    <button type="submit" name="viewOrds" value="">View Orders</button>
- </form>
+<form method="GET" action="{{done}}">
+    <button type="submit" value="{{done}}">Done</button>
+</form>
     </h2>
 <br>
 <br>
-<h2>
-<form action="{{addItm}}" method="GET">
-    <button type="submit" name="addItm" value="">Add Items</button>
- </form>
-    </h2>
-<br>
-<br>
-<h2>
-<form action="{{remItms}}" method="GET">
-    <button type="submit" name="addItm" value="">Remove Items or Coupons</button>
- </form>
-    </h2>
-<br>
-<br>
-<h2>
-<form action="{{addCpn}}" method="GET">
-    <button type="submit" name="addItm" value="">Add Coupon</button>
- </form>
-    </h2>
-<br>
-<br>
-<h2>
-<form action="{{outStck}}" method="GET">
-    <button type="submit" name="addItm" value="">Set Items Out/In Stock</button>
- </form>
-    </h2>
-<br>
-<br>
-<h2>
-<form action="{{promoSMS}}" method="GET">
-    <button type="submit" name="addItm" value="">Send Promotion To Customers</button>
- </form>
-    </h2>
-<br>
-<br>
-<h2>View Menus</h2>
-{%for i in range(0, len)%}
-<h2>
-    <form action="{{menuLinks[i]}}">
-         <button type="submit">{{menuNames[i]}}</button>
-      </form>
-</h2>
-{%endfor%}
-<br>
-<br>
-<h2>
-<form action="https://docs.google.com/spreadsheets/d/14NtYvDzCWJcpclphJlxFRtJcz4VlY7syVXYcU3cm3vk/edit?usp=sharing" method="GET">
-    <button type="submit" name="addItm" value="">Go to Google Sheets</button>
- </form>
-    </h2>
-<br>
-<h2>
-<form action="{{signOut}}" method="GET">
-    <button type="submit" name="addItm" value="">Sign Out</button>
- </form>
-    </h2>
-<br>
-<br>
+<iframe src="https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-ninhv43009@business.example.com&currency_code=USD&amount=2.9&item_name=70677114&return=http://google.com"></iframe>
+</div>
 </body>
 </html>
