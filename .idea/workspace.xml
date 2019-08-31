@@ -4986,6 +4986,7 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -5232,13 +5233,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00047" summary="added Fb accounting">
-      <created>1566526462592</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1566526462592</updated>
     </task>
     <task id="LOCAL-00048" summary="minor bug fix">
       <created>1566528464528</created>
@@ -5576,7 +5570,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567217099857</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="minor bug fix">
+      <created>1567218844625</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1567218844625</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5618,10 +5619,10 @@
     <MESSAGE value="minor bug" />
     <MESSAGE value="minor bug fix whitespace" />
     <MESSAGE value="UI update" />
-    <MESSAGE value="minor bug fix" />
     <MESSAGE value="adding promo support" />
     <MESSAGE value="added sms promo support" />
     <MESSAGE value="change payapal email to env" />
-    <option name="LAST_COMMIT_MESSAGE" value="change payapal email to env" />
+    <MESSAGE value="minor bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
   </component>
 </project>

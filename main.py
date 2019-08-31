@@ -37,7 +37,6 @@ gc = pygsheets.authorize(service_file='static/CedarChatbot-70ec2d781527.json')
 email = "cedarchatbot@appspot.gserviceaccount.com"
 estName = info['uid']
 estNameStr = info['name']
-shortUID = info['shortUID']
 botNumber = info["number"]
 payaplEmail = info['paypalEmail']
 timez = info["timezone"]
@@ -160,14 +159,14 @@ def genUsr(name, number, dbIndx):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    UserData = database.get("/"+uid+"/", "users")
+    UserData = database.get("/restaurants/" + uid+"/users/")
     timeStamp = datetime.datetime.today()
-    database.put("/" + uid+"/users/", "/"+str(len(UserData)) + "/name", name)
-    database.put("/" + uid+"/users/", "/" + str(len(UserData)) + "/number", number)
-    database.put("/" + uid+"/users/", "/" + str(len(UserData)) + "/restaurants/" + estNameStr + "/" + str(0) + "/StartTime",
+    database.put("/restaurants/" + uid+"/users/", "/"+str(len(UserData)) + "/name", name)
+    database.put("/restaurants/" + uid+"/users/", "/" + str(len(UserData)) + "/number", number)
+    database.put("/restaurants/" + uid+"/users/", "/" + str(len(UserData)) + "/restaurants/" + estNameStr + "/" + str(0) + "/StartTime",
                  str(timeStamp))
-    database.put("/" + uid+"/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/name/", estNameStr)
-    database.put("/" + uid+"/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/points/", 0)
+    database.put("/restaurants/" + uid+"/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/name/", estNameStr)
+    database.put("/restaurants/" + uid+"/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/points/", 0)
     database.put("/restaurants/" + estName + "/orders/" + str(dbIndx) + "/", "/usrIndx/", len(UserData))
 
 
@@ -197,7 +196,7 @@ def getReply(msg, number):
         print(msg)
         indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")
-        UserData = database.get("/", "users")
+        UserData = database.get("/restaurants/", uid+"/users")
         if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr" or msg == "ordee" or ("ord" in msg)):
             UUID = random.randint(9999999, 100000000)
             for dbxv in range(len(DBdata)):
@@ -222,7 +221,7 @@ def getReply(msg, number):
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/linkTotal/", 0.0)
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "finalOrder/", "")
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/", time.time())
-            UserData = database.get("/"+uid+"/", "users")
+            UserData = database.get("/restaurants/"+uid+"/", "users")
             for usr in range(len(UserData)):
                 if (number == UserData[usr]["number"]):
                     timeStamp = datetime.datetime.today()
@@ -232,13 +231,13 @@ def getReply(msg, number):
 
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 2)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/", usr)
-                    numOrders = database.get("/" + uid+"/users/" + str(usr) + "/restaurants/", estNameStr)
+                    numOrders = database.get("/restaurants/" + uid+"/users/" + str(usr) + "/restaurants/", estNameStr)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                                  (len(numOrders)))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/",
                                  time.time())
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 0)
-                    database.put("/" + uid+"/users/",
+                    database.put("/restaurants/" + uid+"/users/",
                                  "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders))) + "/startTime",
                                  str(timeStamp))
@@ -317,13 +316,13 @@ def ipn():
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/year/",
                          (datetime.datetime.now(tz).strftime("%Y")))
 
-            numOrders = database.get("/" + uid+"/users/" + str(usrIndx) + "/restaurants/", estNameStr)
-            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/email", rsp["payer_email"])
-            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/country", rsp["address_country_code"])
-            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/state", rsp["address_state"])
-            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/zipCode", rsp["address_zip"])
-            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/city", rsp["address_city"])
-            database.put("/" + uid+"/users/", "/" + str(usrIndx) + "/streetAdr", rsp["address_street"])
+            numOrders = database.get("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/", estNameStr)
+            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/email", rsp["payer_email"])
+            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/country", rsp["address_country_code"])
+            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/state", rsp["address_state"])
+            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/zipCode", rsp["address_zip"])
+            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/city", rsp["address_city"])
+            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/streetAdr", rsp["address_street"])
             logData = database.get("/log/" + uid + "/", logYM)
             numCard = int(logData['cardPay'])
             numCard += 1
@@ -351,14 +350,14 @@ def ipn():
                 newCust += 1
                 database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
 
-            database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
+            database.put("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
                          ((DBdata[dbItems]["linkTotal"] + 0.1) * 1.1))
-            database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
+            database.put("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
                          "tickSize",
                          numItms)
-            database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
+            database.put("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
                          DBdata[dbItems]["item"])
-            database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
+            database.put("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/",
                          "duration",
                          duration)
             # print("sending")
@@ -1110,11 +1109,11 @@ def addCpnResp():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route("/" + uid + "check", methods=['GET'])
+@app.route("/restaurants/" + uid + "check", methods=['GET'])
 def loginUUID():
     return render_template("verifyCode.html", btn=str(uid + "check"))
 
-@app.route("/" + uid + "chec2", methods=['GET'])
+@app.route("/restaurants/" + uid + "chec2", methods=['GET'])
 def loginRedo():
     return render_template("verifyCode3.html", btn=str(uid + "check"))
 
@@ -2195,13 +2194,13 @@ def nextPayment():
         numItms = len(DBdata[dbItems]["item"])
         orderIndx = DBdata[dbItems]["orderIndx"]
         usrIndx = DBdata[dbItems]["userIndx"]
-        database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
+        database.put("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "total",
                      Total)
-        database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "tickSize",
+        database.put("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "tickSize",
                      numItms)
-        database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
+        database.put("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "items",
                      DBdata[dbItems]["item"])
-        database.put("/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "duration",
+        database.put("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(orderIndx) + "/", "duration",
                      duration)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "tickSize/", numItms)
@@ -2281,7 +2280,7 @@ def mainPage():
     return redirect(url_for('loginPage'))
 
 
-@app.route("/" + uid + "rbt4813083403983494103934093480943109834093091341")
+@app.route("/restaurants/" + uid + "rbt4813083403983494103934093480943109834093091341")
 def robotInit():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -2294,7 +2293,7 @@ def robotInit():
     else:
         return redirect(url_for('loginPage'))
 
-@app.route("/" + uid + "rbt1", methods=['POST'])
+@app.route("/restaurants/" + uid + "rbt1", methods=['POST'])
 def robotDeployX():
     rsp = ((request.form))
     table = int(rsp["table"]) -1
@@ -2305,7 +2304,7 @@ def robotDeployX():
     database.put("/restaurants/" + uid + "/robots/" + str(robot) + "/",str(table), 1)
     return redirect(url_for('robotDeploy'))
 
-@app.route("/" + uid + "rbt1", methods=['GET'])
+@app.route("/restaurants/" + uid + "rbt1", methods=['GET'])
 def robotDeploy():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
