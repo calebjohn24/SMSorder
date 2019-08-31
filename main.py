@@ -39,6 +39,7 @@ estName = info['uid']
 estNameStr = info['name']
 shortUID = info['shortUID']
 botNumber = info["number"]
+payaplEmail = info['paypalEmail']
 timez = info["timezone"]
 tz = pytz.timezone(timez)
 print(datetime.datetime.now(tz))
@@ -173,8 +174,9 @@ def genUsr(name, number, dbIndx):
 def genPayment(total, UUIDcode):
     # print(UUIDcode)
     # print(name)
-    paymentLink = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-ninhv43009@business.example.com&currency_code=USD&amount=' \
+    paymentLink = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business='+str(payaplEmail)+'&currency_code=USD&amount=' \
                   '' + str(total) + '&item_name=' + str(UUIDcode)
+    #paymentLink = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=' + str(payaplEmail) + '&currency_code=USD&amount=' + str(total) + '&item_name=' + str(UUIDcode)
     return paymentLink
 
 

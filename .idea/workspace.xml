@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="UI update">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added sms promo support">
       <change afterPath="$PROJECT_DIR$/bin/cygdb" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cython" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/bin/cythonize" afterDir="false" />
@@ -4986,12 +4986,8 @@
       <change beforePath="$PROJECT_DIR$/flask_session/edf6f65f0aef7b21978f5114a3f8728c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/checkPromo.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/checkPromo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/getTime.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTime.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sendPromo.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sendPromo.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5237,13 +5233,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00045" summary="minor bug fix">
-      <created>1566428058974</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1566428058974</updated>
     </task>
     <task id="LOCAL-00046" summary="minor bug fix">
       <created>1566511881474</created>
@@ -5581,7 +5570,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567146888351</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="added sms promo support">
+      <created>1567215377754</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1567215377755</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5602,7 +5598,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="added Fb accounting" />
     <MESSAGE value="almost done just need to fix currency rounding" />
     <MESSAGE value="fixed currency formatting need to add accounting in gsheets next" />
     <MESSAGE value="added logging to gsheets" />
@@ -5627,6 +5622,7 @@
     <MESSAGE value="UI update" />
     <MESSAGE value="minor bug fix" />
     <MESSAGE value="adding promo support" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding promo support" />
+    <MESSAGE value="added sms promo support" />
+    <option name="LAST_COMMIT_MESSAGE" value="added sms promo support" />
   </component>
 </project>
