@@ -1109,11 +1109,11 @@ def addCpnResp():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 
-@app.route("/restaurants/" + uid + "check", methods=['GET'])
+@app.route("/" + uid + "check", methods=['GET'])
 def loginUUID():
     return render_template("verifyCode.html", btn=str(uid + "check"))
 
-@app.route("/restaurants/" + uid + "chec2", methods=['GET'])
+@app.route("/" + uid + "chec2", methods=['GET'])
 def loginRedo():
     return render_template("verifyCode3.html", btn=str(uid + "check"))
 
@@ -2340,5 +2340,6 @@ if __name__ == '__main__':
     app.config['SESSION_FILE_THRESHOLD'] = 500
     sess = Session()
     sess.init_app(app)
+    sess.permanent = True
     # app.debug = True
     app.run(host="0.0.0.0", port=8080)
