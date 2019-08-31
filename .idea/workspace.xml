@@ -4987,29 +4987,11 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Name.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Name.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/checkPromo.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/checkPromo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/coupon.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coupon.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/getTable.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTable.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/getTime.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTime.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/indexV.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/indexV.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/outStockv.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/outStockv.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickcat.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickcat.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/robotDeploy.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/robotDeploy.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/sendPromo.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sendPromo.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/thankMsg.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/thankMsg.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verifyCode3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verifyCode3.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -5255,13 +5237,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00044" summary="finished front end part 1">
-      <created>1566366243941</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1566366243941</updated>
     </task>
     <task id="LOCAL-00045" summary="minor bug fix">
       <created>1566428058974</created>
@@ -5599,7 +5574,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567140961972</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="adding promo support">
+      <created>1567146888350</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1567146888351</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -5620,7 +5602,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="finished front end part 1" />
     <MESSAGE value="added Fb accounting" />
     <MESSAGE value="almost done just need to fix currency rounding" />
     <MESSAGE value="fixed currency formatting need to add accounting in gsheets next" />
@@ -5645,6 +5626,7 @@
     <MESSAGE value="minor bug fix whitespace" />
     <MESSAGE value="UI update" />
     <MESSAGE value="minor bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
+    <MESSAGE value="adding promo support" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding promo support" />
   </component>
 </project>

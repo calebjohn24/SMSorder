@@ -29,10 +29,11 @@
 </head>
 <body>
 <h1>Create Promotion</h1>
+<h2>You have {{lim}} promotions left this billing cycle</h2>
 <form method="POST" action="{{btn}}">
     <h3>Enter Text for Promotion</h3>
     <input type="text" name="promoText" maxlength="152" required>
-    <input type="time" name="time" required>
+    <br><br>
     <button type="submit" value="{{btn}}">Next</button>
 </form>
 </body>

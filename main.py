@@ -989,9 +989,15 @@ def smsPromo():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    # print()
     if ((currentTime - lastLogin) < sessionTime):
-        return render_template('sendPromo.html', btn=str(promoPass + "smsPromo"+uid))
+        numPromos = len(database.get("/restaurants/" + estName, "/promos/"))
+        lim = int(database.get("/restaurants/" + estName, "/promoLim/"))
+        print(lim)
+        if (numPromos < lim):
+            lim = lim - numPromos
+            return render_template('sendPromo.html', btn=str(promoPass + "smsPromo"+uid),lim=lim)
+        else:
+            return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -1007,32 +1013,57 @@ def checksmsPromo():
         rsp = ((request.form))
         # print(rsp)
         name = rsp['promoText']
-        promoTime = rsp['time']
         numPromos = len(database.get("/restaurants/" + estName, "/promos/"))
         lim = int(database.get("/restaurants/" + estName, "/promoLim/"))
-        if(numPromos < lim):
-            database.put("/restaurants/" + estName + "/promos/" + str(len(numPromos)-1), "/name/", name)
-            numUsr = int(database.get("/restaurants/" + estName, "/users/"))-1
-            database.put("/restaurants/" + estName + "/promos/" + str(len(numPromos) - 1), "/numTxts/", numUsr)
-            return render_template('checkPromoMsg.html', numUsr=numUsr,lim=lim,btn=str(promoPass + "smsPromo"+uid+"send"))
+        print(lim)
+        if (numPromos <= lim):
+            database.put("/restaurants/" + estName + "/promos/" + str((numPromos)), "/name/", name)
+            numUsr = len(database.get("/restaurants/" + estName, "/users/"))-1
+            lim = lim - numPromos
+            database.put("/restaurants/" + estName + "/promos/" + str((numPromos)), "/numTxts/", numUsr)
+            return render_template('checkPromo.html',send=str(promoPass + "smsPromo"+uid+"send2") ,numUsr=numUsr,lim=lim,btn=str(promoPass + "smsPromo"+uid+"send"),back=str(promoPass + "smsPromo"+uid),name=name)
         else:
-            return render_template('noPromoMsg.html', btn=estNameStr)
+            return redirect(url_for('panel'))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
-@app.route('/' + promoPass + "smsPromo"+uid+"send", methods=['POST'])
+@app.route('/' + promoPass + "smsPromo"+uid+"send2", methods=['POST'])
 def sendsmsPromo():
-    currentTime = time.time()
+    smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
+    smtpObj.login(sender, emailPass)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
-    # print()
-    if ((currentTime - lastLogin) < sessionTime):
-
-        return render_template('checkPromo.html', restName=estNameStr)
+    numPromos = len(database.get("/restaurants/" + estName, "/promos/"))
+    lim = int(database.get("/restaurants/" + estName, "/promoLim/"))
+    print(lim)
+    if (numPromos <= lim):
+        promoIndx = int(len(database.get("/restaurants/" + estName, "/promos/")))-1
+        reply = database.get("/restaurants/" + estName, "/promos/" + str(promoIndx)+"/"+"name")
+        numbers = []
+        for nn in range((len(database.get("/restaurants/" + estName, "/users/")))):
+            if(database.get("/restaurants/" + estName, "/users/"+str(nn)+"/number/") != "555555555"):
+                numbers.append(database.get("/restaurants/" + estName, "/users/"+str(nn)+"/number/"))
+        print(numbers)
+        for nums in range(len(numbers)):
+            try:
+                print(numbers[nums])
+                client.messages.create(
+                    src=botNumber,
+                    dst=str(numbers[nums]),
+                    text=reply
+                )
+            except Exception:
+                pass
+        receivers = database.get("/restaurants/" + estName, "/email/")
+        writeStr = "Your Promotion '"+reply+"' has been sent to your customers"
+        SUBJECT = "Promotion Sent for " + estNameStr
+        message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
+        smtpObj.sendmail(sender, receivers, message)
+        smtpObj.close()
+        return redirect(url_for('panel'))
     else:
-        return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+        return redirect(url_for('panel'))
 
 @app.route('/' + promoPass, methods=['POST'])
 def addCpnResp():
