@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,38 +23,33 @@
 <meta name="msapplication-TileImage" content="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <meta name="theme-color" content="#000000">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/main.css?alt=media&token=f3c3890b-b353-408f-85f0-98e1bdef4983">
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
 <br>
 <br>
-<h3>
+
 <form method="POST" action="{{btn}}">
     <h2>Enter Your Name</h2>
+    <h2>
     <input name="name" required>
+        </h2>
     <br>
     <hr>
+    <h2>Is This Order For Here or To Go?</h2>
     <br>
-    <h2>Is the order for here or to go? </h2>
     <br>
-<section id="first" class="section">
-    <div class="container">
-      <input type="radio" name="togo" id="radio-1" value="to-go">
-      <label for="radio-1"><span class="radio">To Go</span></label>
-    </div>
-    <div class="container">
-      <input type="radio" name="togo" id="radio-2" value="here">
-      <label for="radio-2"><span class="radio">For Here</span></label>
-    </div>
-</section>
-    <button type="submit" value="{{btn}}">Done</button>
+    <button type="submit" name="togo" value="to-go">To Go</button>
+    <br>
+    <br>
+    <br>
+     <button type="submit" name="togo" value="here">For Here</button>
+    <br>
+    <br>
 </form>
-    <br>
-    <br>
-</h3>
 </body>
 </html>

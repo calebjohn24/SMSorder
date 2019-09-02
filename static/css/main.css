@@ -8,6 +8,7 @@ body, html {
 
 }
 button {
+font-family: Raleway;
 background-color: #FFFFFF;
   border: none;
   color: black;
@@ -18,7 +19,6 @@ background-color: #FFFFFF;
   font-size: 20px;
   margin: 2px 2px;
   cursor: pointer;
-  font-family: Raleway;
   outline: none;
   text-decoration: none;
   color: #000000;
@@ -33,9 +33,9 @@ background-color: #FFFFFF;
 
 button:hover {
  text-align: center;
-  transform: translateY(-10px);
+  transform: translateY(-5px);
   box-shadow: 0 7px 14px rgba(50, 50, 93, .10), 0 3px 6px rgba(0, 0, 0, .08);
-  background-color: #90a395;
+  background-color: #d9d9d9;
 }
 dropbtn {
   background-color: #4CAF50;

@@ -295,8 +295,6 @@ def ipn():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = request.json
-    print(rsp)
-    print(rsp['data']['object'])
     DBdata = database.get("/restaurants/" + estName, "orders")
     for dbItems in range(len(DBdata)):
         if (str(DBdata[dbItems]["UUID"]) == rsp['data']['object']['description']):
@@ -322,19 +320,15 @@ def ipn():
                          (datetime.datetime.now(tz).strftime("%Y")))
             numOrders = database.get("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/", estNameStr)
             logData = database.get("/log/" + uid + "/", logYM)
-            numCard = int(logData['cardPay'])
-            numCard += 1
-            payPalFees = float(logData['paypalFees'])
-            payPalFees += float(rsp["mc_fee"])
+            #payPalFees = float(logData['paypalFees'])
+            #payPalFees += float(rsp["mc_fee"])
             cdrFees = logData['CedarFees']
             cdrFees += 1
             database.put("/log/" + uid + "/" + logYM, "/CedarFees/", cdrFees)
             totalRev = float(logData["totalRev"])
             totalRev += float((DBdata[dbItems]["linkTotal"] + 0.1) * 1.1)
             database.put("/log/" + uid + "/" + logYM, "/totalRev/", totalRev)
-            database.put("/log/" + uid + "/" + logYM, "/cardPay/", numCard)
-            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/zipCode/", rsp["address"]['postal_code'])
-            database.put("/log/" + uid + "/" + logYM, "/paypalFees/", payPalFees)
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/zipCode/", rsp['data']['object']['billing_details']["address"]['postal_code'])
             numItms = len(DBdata[dbItems]["item"])
             orderIndx = DBdata[dbItems]["orderIndx"]
             usrIndx = DBdata[dbItems]["userIndx"]
@@ -359,7 +353,7 @@ def ipn():
                          duration)
             # print("sending")
             if (DBdata[dbItems]["togo"] == "to-go"):
-                reply = "-Thank you for your order, you can pick it up and skip the line when you arrive\n-To order again just text " + '"order"'
+                reply = "-Thank you for your order, you can pick it up and skip the line when it's ready\n-To order again just text " + '"order"'
             else:
                 reply = "-Thank you for your order, your food will be delivered to your table shortly \n-To order again just text " + '"order"'
             client.messages.create(
@@ -367,13 +361,13 @@ def ipn():
                 dst=number,
                 text=reply
             )
+            rec = DBdata[dbItems]['email']
             smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
             smtpObj.login(sender, emailPass)
             try:
                 subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
             except KeyError:
                 subTotal = (DBdata[dbItems]["linkTotal"])
-            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/email/", rsp["payer_email"])
             Tax = float(subTotal * 0.1)
             Total = float(subTotal + float(Tax) + 0.1)
             subTotalStr = ('$' + format(subTotal, ',.2f'))
@@ -391,11 +385,10 @@ def ipn():
                 round((Total - subTotal), 2)) + "\nTotal " + TotalStr
             SUBJECT = "Your Order from " + estNameStr
             message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
-            receivers = rsp["payer_email"]
-            smtpObj.sendmail(sender, receivers, message)
+            smtpObj.sendmail(sender, rec, message)
             smtpObj.close()
-            updateLog()
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
+            #updateLog()
     return (" ", 200)
 
 
@@ -1215,7 +1208,7 @@ def getUUID():
 def getName():
     key = session.get('key', None)
     UUID = session.get('UUID', None)
-    return (render_template("Name.html",btn=uid + 'order0'))
+    return (render_template("Name.html",btn=uid + 'order0',btn2=uid+"order20",btn3=uid+'order30'))
 
 @app.route('/' + uid + 'order0', methods=['POST'])
 def getNameTime2():
@@ -1223,8 +1216,9 @@ def getNameTime2():
     UUID = session.get('UUID', None)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
-    name = rsp['name']
-    togo = rsp['togo']
+    print(rsp)
+    name = rsp["name"]
+    togo = rsp["togo"]
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/name/", name)
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/togo/", togo)
     if(togo == "to-go"):
@@ -1279,9 +1273,6 @@ def getTimeY():
 def getTimeX():
     key = session.get('key', None)
     UUID = session.get('UUID', None)
-    request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
-    print(rsp)
     pickTime = "PICKUP @"+str(rsp["time"])
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", pickTime)
     return redirect(url_for('order'))
@@ -1795,32 +1786,7 @@ def payX():
         description=str(UUID),
         source=token,
     )
-    smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
-    smtpObj.login(sender, emailPass)
-    try:
-        subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
-    except KeyError:
-        subTotal = (DBdata[dbItems]["linkTotal"])
-    receivers = DBdata[dbItems]["email"]
-    Tax = float(subTotal * 0.1)
-    Total = float(subTotal + float(Tax) + 0.5)
-    subTotalStr = ('$' + format(subTotal, ',.2f'))
-    TotalStr = ('$' + format(Total, ',.2f'))
-    TaxStr = ('$' + format(Tax, ',.2f'))
-    # print(TotalStr)
-    itms = str(DBdata[dbItems]["finalOrder"])
-    itms = itms.replace("::", "\n-")
-    now = datetime.datetime.now(tz)
-    writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
-        DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
-        DBdata[dbItems]["discStr"]) \
-               + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(
-        DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(
-        round((Total - subTotal), 2)) + "\nTotal " + TotalStr
-    SUBJECT = "Your Order from " + estNameStr
-    message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
-    smtpObj.sendmail(sender, receivers, message)
-    smtpObj.close()
+    session.clear()
     if(DBdata[dbItems]["kiosk"] == 0):
         return render_template("thankMsg.html")
     else:
@@ -1841,79 +1807,15 @@ def CheckPaymentMethod():
         for itmX in range(len(dispKeys)):
             if (itms[dispKeys[itmX]] != None):
                 # print(itms[dispKeys[itmX]])
-                skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
-                wrtStr = ""
-                if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
-                    wrtStr += str(itms[dispKeys[itmX]]["size"])
-                    wrtStr += " "
-                    # print(wrtStr)
-                    # print(str(itms[dispKeys[itmX]]["size"]))
-                    wrtStr += str(itms[dispKeys[itmX]]["name"])
-                    wrtStr += " "
-                    wrtStr += str(itms[dispKeys[itmX]]["toppings"])
-                    wrtStr += " "
-                    wrtStr += str(itms[dispKeys[itmX]]["notes"])
-                    wrtStr += " x "
-                    wrtStr += str(itms[dispKeys[itmX]]["qty"])
-                    wrtStr += " $"
-                    wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
-                    # print(wrtStr)
-                    finalOrd += wrtStr + " :: "
-                    skuKeyItm = list(itms[dispKeys[itmX]]["skus"].keys())
-                    for skk in range(len(skuKeyItm)):
-                        currentSkuItm = itms[dispKeys[itmX]]["skus"][skuKeyItm[skk]]
-                        for mmn in range(len(menuItems)):
-                            if (menuItems[mmn] != None):
-                                if (menuItems[mmn]["sizes"][0][1] == -1 and menuItems[mmn]["descrip"] != "REMOVEDITM!"):
-                                    if (str(menuItems[mmn]["extras"][0][0]) == str(currentSkuItm)):
-                                        # print("ggbrgebrgebr")
-                                        discAmt = menuItems[mmn]["extras"][0][1]
-                                        limit = int(menuItems[mmn]["extras"][1][1])
-                                        cpnUsed = int(
-                                            database.get("/restaurants/" + estName + "/orders/" + str(key),
-                                                         "/discUsed/"))
-                                        discTotal = float(
-                                            database.get("/restaurants/" + estName + "/orders/" + str(key),
-                                                         "/discTotal/"))
-                                        # print(cpnUsed, limit, discTotal)
-                                        if (cpnUsed <= limit):
-                                            try:
-                                                float(discAmt)
-                                                discAmtflt = float(discAmt)
-                                                # print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
-                                                while cpnUsed <= limit and cpnUsed <= int(itms[dispKeys[itmX]]["qty"]):
-                                                    # print("iid")
-                                                    discTotal -= discAmtflt
-                                                    cpnUsed += 1
-                                            except ValueError:
-                                                discAmt = discAmt[:-1]
-                                                discAmtflt = float(discAmt)
-                                                # print(discAmtflt)
-                                                # print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
-                                                while cpnUsed <= limit and cpnUsed <= int(itms[dispKeys[itmX]]["qty"]):
-                                                    discTotal -= (float(discAmtflt) * (
-                                                            (float(itms[dispKeys[itmX]]["price"])) / float(
-                                                        itms[dispKeys[itmX]]["qty"])))
-                                                    # print(discTotal)
-                                                    cpnUsed += 1
-                                                    # print(cpnUsed)
-                                                # print(discTotal)
-                                            # print(cpnUsed)
-                                            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
-                                                         "/discUsed/", cpnUsed)
-                                            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
-                                                         "/discTotal/", discTotal)
-                                            database.put(
-                                                "/restaurants/" + estName + "/orders/" + str(key) + "/",
-                                                "/discStr/", str(
-                                                    str(menuItems[mmn]["name"]) + " x " + str(
-                                                        cpnUsed) + " -$" + str(float(discTotal * -1))))
-                                            finalOrd += menuItems[mmn]["name"] + " x " + str(cpnUsed) + " -$" + str(
-                                                float(
-                                                    discTotal * -1)) + " :: "
-                                            break
-                    else:
-                        wrtStr = str(itms[dispKeys[itmX]]["name"])
+                try:
+                    skuKeys = list(itms[dispKeys[itmX]]["skus"].keys())
+                    wrtStr = ""
+                    if (str(itms[dispKeys[itmX]]["size"]).lower() != "u"):
+                        wrtStr += str(itms[dispKeys[itmX]]["size"])
+                        wrtStr += " "
+                        # print(wrtStr)
+                        # print(str(itms[dispKeys[itmX]]["size"]))
+                        wrtStr += str(itms[dispKeys[itmX]]["name"])
                         wrtStr += " "
                         wrtStr += str(itms[dispKeys[itmX]]["toppings"])
                         wrtStr += " "
@@ -1929,9 +1831,9 @@ def CheckPaymentMethod():
                             currentSkuItm = itms[dispKeys[itmX]]["skus"][skuKeyItm[skk]]
                             for mmn in range(len(menuItems)):
                                 if (menuItems[mmn] != None):
-                                    if (menuItems[mmn]["sizes"][0][1] == -1 and menuItems[mmn][
-                                        "descrip"] != "REMOVEDITM!"):
+                                    if (menuItems[mmn]["sizes"][0][1] == -1 and menuItems[mmn]["descrip"] != "REMOVEDITM!"):
                                         if (str(menuItems[mmn]["extras"][0][0]) == str(currentSkuItm)):
+                                            # print("ggbrgebrgebr")
                                             discAmt = menuItems[mmn]["extras"][0][1]
                                             limit = int(menuItems[mmn]["extras"][1][1])
                                             cpnUsed = int(
@@ -1940,27 +1842,30 @@ def CheckPaymentMethod():
                                             discTotal = float(
                                                 database.get("/restaurants/" + estName + "/orders/" + str(key),
                                                              "/discTotal/"))
+                                            # print(cpnUsed, limit, discTotal)
                                             if (cpnUsed <= limit):
                                                 try:
                                                     float(discAmt)
                                                     discAmtflt = float(discAmt)
-                                                    while cpnUsed < limit and cpnUsed < int(
-                                                            itms[dispKeys[itmX]]["qty"]):
+                                                    # print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
+                                                    while cpnUsed <= limit and cpnUsed <= int(itms[dispKeys[itmX]]["qty"]):
+                                                        # print("iid")
                                                         discTotal -= discAmtflt
                                                         cpnUsed += 1
                                                 except ValueError:
                                                     discAmt = discAmt[:-1]
                                                     discAmtflt = float(discAmt)
+                                                    # print(discAmtflt)
                                                     # print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
-                                                    while cpnUsed < limit and cpnUsed < int(
-                                                            itms[dispKeys[itmX]]["qty"]):
-                                                        # print(cpnUsed)
-                                                        # print("fsfwrrw")
-                                                        discTotal -= float(
-                                                            float(discAmtflt) * float(itms[dispKeys[itmX]]["price"]))
+                                                    while cpnUsed <= limit and cpnUsed <= int(itms[dispKeys[itmX]]["qty"]):
+                                                        discTotal -= (float(discAmtflt) * (
+                                                                (float(itms[dispKeys[itmX]]["price"])) / float(
+                                                            itms[dispKeys[itmX]]["qty"])))
                                                         # print(discTotal)
                                                         cpnUsed += 1
-                                                # print(discTotal)
+                                                        # print(cpnUsed)
+                                                    # print(discTotal)
+                                                # print(cpnUsed)
                                                 database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
                                                              "/discUsed/", cpnUsed)
                                                 database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
@@ -1969,11 +1874,74 @@ def CheckPaymentMethod():
                                                     "/restaurants/" + estName + "/orders/" + str(key) + "/",
                                                     "/discStr/", str(
                                                         str(menuItems[mmn]["name"]) + " x " + str(
-                                                            cpnUsed) + ":: -$" + str(round(float(discTotal * -1), 2))))
-                                                finalOrd += menuItems[mmn]["name"] + " x " + str(
-                                                    cpnUsed) + ":: -$" + str(round(float(discTotal * -1), 2)) + " :: "
+                                                            cpnUsed) + " -$" + str(float(discTotal * -1))))
+                                                finalOrd += menuItems[mmn]["name"] + " x " + str(cpnUsed) + " -$" + str(
+                                                    float(
+                                                        discTotal * -1)) + " :: "
                                                 break
-
+                        else:
+                            wrtStr = str(itms[dispKeys[itmX]]["name"])
+                            wrtStr += " "
+                            wrtStr += str(itms[dispKeys[itmX]]["toppings"])
+                            wrtStr += " "
+                            wrtStr += str(itms[dispKeys[itmX]]["notes"])
+                            wrtStr += " x "
+                            wrtStr += str(itms[dispKeys[itmX]]["qty"])
+                            wrtStr += " $"
+                            wrtStr += str(round(itms[dispKeys[itmX]]["price"], 2))
+                            # print(wrtStr)
+                            finalOrd += wrtStr + " :: "
+                            skuKeyItm = list(itms[dispKeys[itmX]]["skus"].keys())
+                            for skk in range(len(skuKeyItm)):
+                                currentSkuItm = itms[dispKeys[itmX]]["skus"][skuKeyItm[skk]]
+                                for mmn in range(len(menuItems)):
+                                    if (menuItems[mmn] != None):
+                                        if (menuItems[mmn]["sizes"][0][1] == -1 and menuItems[mmn][
+                                            "descrip"] != "REMOVEDITM!"):
+                                            if (str(menuItems[mmn]["extras"][0][0]) == str(currentSkuItm)):
+                                                discAmt = menuItems[mmn]["extras"][0][1]
+                                                limit = int(menuItems[mmn]["extras"][1][1])
+                                                cpnUsed = int(
+                                                    database.get("/restaurants/" + estName + "/orders/" + str(key),
+                                                                 "/discUsed/"))
+                                                discTotal = float(
+                                                    database.get("/restaurants/" + estName + "/orders/" + str(key),
+                                                                 "/discTotal/"))
+                                                if (cpnUsed <= limit):
+                                                    try:
+                                                        float(discAmt)
+                                                        discAmtflt = float(discAmt)
+                                                        while cpnUsed < limit and cpnUsed < int(
+                                                                itms[dispKeys[itmX]]["qty"]):
+                                                            discTotal -= discAmtflt
+                                                            cpnUsed += 1
+                                                    except ValueError:
+                                                        discAmt = discAmt[:-1]
+                                                        discAmtflt = float(discAmt)
+                                                        # print(cpnUsed, limit, int(itms[dispKeys[itmX]]["qty"]))
+                                                        while cpnUsed < limit and cpnUsed < int(
+                                                                itms[dispKeys[itmX]]["qty"]):
+                                                            # print(cpnUsed)
+                                                            # print("fsfwrrw")
+                                                            discTotal -= float(
+                                                                float(discAmtflt) * float(itms[dispKeys[itmX]]["price"]))
+                                                            # print(discTotal)
+                                                            cpnUsed += 1
+                                                    # print(discTotal)
+                                                    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
+                                                                 "/discUsed/", cpnUsed)
+                                                    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/",
+                                                                 "/discTotal/", discTotal)
+                                                    database.put(
+                                                        "/restaurants/" + estName + "/orders/" + str(key) + "/",
+                                                        "/discStr/", str(
+                                                            str(menuItems[mmn]["name"]) + " x " + str(
+                                                                cpnUsed) + ":: -$" + str(round(float(discTotal * -1), 2))))
+                                                    finalOrd += menuItems[mmn]["name"] + " x " + str(
+                                                        cpnUsed) + ":: -$" + str(round(float(discTotal * -1), 2)) + " :: "
+                                                    break
+                except Exception:
+                    pass
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = (DBdata[key]["linkTotal"])
     subTotal += DBdata[key]["discTotal"]
@@ -2189,6 +2157,7 @@ def nextPayment():
             UUIDcode = DBdata[dbItems]["UUID"]
             Tax = subTotal * 0.1
             Total = float(subTotal) + float(Tax) + 0.5
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "email/", str(rsp['email']))
             return redirect(url_for('pay'))
 
     else:
