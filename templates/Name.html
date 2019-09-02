@@ -32,20 +32,24 @@
 <br>
 <br>
 <h3>
-<form method="POST" action="{{btn}}" >
+<form method="POST" action="{{btn}}">
     <h2>Enter Your Name</h2>
     <input name="name" required>
     <br>
+    <hr>
     <br>
     <h2>Is the order for here or to go? </h2>
-    <h3>To go
-    <input type="radio" name="togo" value="to-go" required>
-        </h3>
     <br>
-    <h3>For Here
-    <input type="radio" name="togo" value="here" required>
-        </h3>
-    <br>
+<section id="first" class="section">
+    <div class="container">
+      <input type="radio" name="togo" id="radio-1" value="to-go">
+      <label for="radio-1"><span class="radio">To Go</span></label>
+    </div>
+    <div class="container">
+      <input type="radio" name="togo" id="radio-2" value="here">
+      <label for="radio-2"><span class="radio">For Here</span></label>
+    </div>
+</section>
     <button type="submit" value="{{btn}}">Done</button>
 </form>
     <br>

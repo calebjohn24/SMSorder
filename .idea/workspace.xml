@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix">
-      <change afterPath="$PROJECT_DIR$/.gcloudignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/emacs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase/asyncx.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase/decorators.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase/firebase.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase/firebase_token_generator.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase/jsonutil.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase/lazy.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/distutils/__init__.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/distutils/distutils.cfg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/pip/__init__.py" afterDir="false" />
@@ -456,15 +463,16 @@
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/wheel/pkginfo.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/wheel/util.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/lib/python3.6/site-packages/wheel/wheelfile.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/paymentFinal.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/thankMsg2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/SMSorder.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SMSorder.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.fish" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.fish" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate.ps1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/activate_this.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/activate_this.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/chardetect" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/flask" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/pyjwt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/python3.6" beforeDir="false" afterPath="$PROJECT_DIR$/bin/python3.6" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/08745025510d6009ede4dca60d0017ff" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" />
@@ -492,6 +500,16 @@
       <change beforePath="$PROJECT_DIR$/flask_session/f1856e5eb4d5fca44181d55ca9ae210f" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flask_session/f5de8d3a9a940980becfb19b659f531d" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/include/python3.6m" beforeDir="false" afterPath="$PROJECT_DIR$/include/python3.6m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Name.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Name.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/getTime.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/getTime.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/kioskOpen.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/kioskOpen.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/pickcat.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickcat.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/thankMsg.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/thankMsg.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -528,14 +546,14 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/caleb/Documents/GitHub/SMSorder/menu.json" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$/static/img" />
       <recent name="$PROJECT_DIR$/static" />
       <recent name="$PROJECT_DIR$/static/menus" />
@@ -737,13 +755,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00053" summary="minor bug fix in itm display">
-      <created>1566604822682</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1566604822682</updated>
     </task>
     <task id="LOCAL-00054" summary="minor bug fix in itm display">
       <created>1566604924664</created>
@@ -1081,7 +1092,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567273735781</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="using standard env still testing">
+      <created>1567304264347</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1567304264348</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -1102,7 +1120,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="minor bug fix in itm display" />
     <MESSAGE value="added coupon support" />
     <MESSAGE value="reformatted for aws" />
     <MESSAGE value="updated ui" />
@@ -1127,6 +1144,7 @@
     <MESSAGE value="added kiosk mode still in dev" />
     <MESSAGE value="still working minor update" />
     <MESSAGE value="minor bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix" />
+    <MESSAGE value="using standard env still testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="using standard env still testing" />
   </component>
 </project>

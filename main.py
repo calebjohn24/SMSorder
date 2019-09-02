@@ -1,4 +1,5 @@
 import plivo
+import stripe
 from plivo import plivoxml
 from flask import Response
 import logging
@@ -293,11 +294,12 @@ def ipn():
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
+    rsp = request.json
+    print(rsp)
+    print(rsp['data']['object'])
     DBdata = database.get("/restaurants/" + estName, "orders")
     for dbItems in range(len(DBdata)):
-        # print(rsp["item_name"])
-        if (DBdata[dbItems]["UUID"] == rsp["item_name"]):
+        if (str(DBdata[dbItems]["UUID"]) == rsp['data']['object']['description']):
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/paid/", 1)
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/filled/", "1")
             usrIndx = DBdata[dbItems]["userIndx"]
@@ -318,28 +320,20 @@ def ipn():
                          (datetime.datetime.now(tz).strftime("%d")))
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/year/",
                          (datetime.datetime.now(tz).strftime("%Y")))
-
             numOrders = database.get("/restaurants/" + uid+"/users/" + str(usrIndx) + "/restaurants/", estNameStr)
-            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/email", rsp["payer_email"])
-            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/country", rsp["address_country_code"])
-            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/state", rsp["address_state"])
-            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/zipCode", rsp["address_zip"])
-            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/city", rsp["address_city"])
-            database.put("/restaurants/" + uid+"/users/", "/" + str(usrIndx) + "/streetAdr", rsp["address_street"])
             logData = database.get("/log/" + uid + "/", logYM)
             numCard = int(logData['cardPay'])
             numCard += 1
             payPalFees = float(logData['paypalFees'])
             payPalFees += float(rsp["mc_fee"])
             cdrFees = logData['CedarFees']
-            cdrFees += 0.1
+            cdrFees += 1
             database.put("/log/" + uid + "/" + logYM, "/CedarFees/", cdrFees)
             totalRev = float(logData["totalRev"])
             totalRev += float((DBdata[dbItems]["linkTotal"] + 0.1) * 1.1)
             database.put("/log/" + uid + "/" + logYM, "/totalRev/", totalRev)
             database.put("/log/" + uid + "/" + logYM, "/cardPay/", numCard)
-            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/zipCode/", rsp["address_zip"])
-            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/city/", rsp["address_city"])
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/zipCode/", rsp["address"]['postal_code'])
             database.put("/log/" + uid + "/" + logYM, "/paypalFees/", payPalFees)
             numItms = len(DBdata[dbItems]["item"])
             orderIndx = DBdata[dbItems]["orderIndx"]
@@ -373,7 +367,6 @@ def ipn():
                 dst=number,
                 text=reply
             )
-
             smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
             smtpObj.login(sender, emailPass)
             try:
@@ -403,7 +396,6 @@ def ipn():
             smtpObj.close()
             updateLog()
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
-
     return (" ", 200)
 
 
@@ -496,7 +488,7 @@ def view():
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
                 # print(TotalStr)
-                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) + " " + str(
+                writeStr = str(orders[ords]["name"]) +"-"+str(orders[ords]["number"]) +" || " + str(orders[ords]["finalOrder"]) + " " + str(
                     orders[ords]["discStr"]) \
                            + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
                                                                                                        "" + TotalStr + " || " + str(
@@ -539,7 +531,7 @@ def button():
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
                 # print(TotalStr)
-                writeStr = str(orders[ords]["name"]) + " || " + str(orders[ords]["finalOrder"]) + " " + str(
+                writeStr = str(orders[ords]["name"]) +"-"+str(orders[ords]["number"]) +" || " + str(orders[ords]["finalOrder"]) + " " + str(
                     orders[ords]["discStr"]) \
                            + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
                                                                                                        "" + TotalStr + " || " + str(
@@ -1331,7 +1323,7 @@ def order():
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = (DBdata[key]["linkTotal"])
     Tax = float(subTotal * 0.1)
-    Total = float(subTotal + float(Tax) + 0.15)
+    Total = float(subTotal + float(Tax) + 0.5)
     subTotalStr = ('$' + format(subTotal, ',.2f'))
     TotalStr = ('$' + format(Total, ',.2f'))
     TaxStr = ('$' + format(Tax, ',.2f'))
@@ -1436,7 +1428,7 @@ def orderX():
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = (currentTotal)
     Tax = float(subTotal * 0.1)
-    Total = float(subTotal + float(Tax) + 0.15)
+    Total = float(subTotal + float(Tax) + 0.5)
     subTotalStr = ('$' + format(subTotal, ',.2f'))
     TotalStr = ('$' + format(Total, ',.2f'))
     TaxStr = ('$' + format(Tax, ',.2f'))
@@ -1762,6 +1754,77 @@ def ConfirmItm():
             database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/item/" + str(itmKey) + "/price/",currentPrice)
     return redirect(url_for('order'))
 
+@app.route("/charge", methods=['GET'])
+def pay():
+    key = session.get('key', None)
+    dbItems = key
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    DBdata = database.get("/restaurants/" + estName, "orders")
+    subTotal = float(DBdata[dbItems]["linkTotal"])
+    subTotal += DBdata[dbItems]["discTotal"]
+    Tax = subTotal * 0.1
+    Total = float(subTotal) + float(Tax) + 0.50
+    Total = round(Total, 2)
+    print(Total)
+    return render_template("paymentFinal.html",Total=str(Total), btn=str(uid+"charge"))
+
+@app.route("/charge", methods=['POST'])
+def payX():
+    key = session.get('key', None)
+    dbItems = key
+    print(dbItems)
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    DBdata = database.get("/restaurants/" + estName, "orders")
+    subTotal = float(DBdata[dbItems]["linkTotal"])
+    subTotal += DBdata[dbItems]["discTotal"]
+    UUID = DBdata[dbItems]["UUID"]
+    Tax = subTotal * 0.1
+    Total = float(subTotal) + float(Tax) + 0.50
+    stripe.api_key = 'sk_test_keZX68UllhXmBEe604tg9qDJ00lkjKMDSE'
+    token = request.form['stripeToken']  # Using Flask
+    print(token)
+    Total = round(Total,2)
+    Total = int(Total * 100)
+    stripe.Charge.create(
+        amount=Total,
+        currency='usd',
+        description=str(UUID),
+        source=token,
+    )
+    smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
+    smtpObj.login(sender, emailPass)
+    try:
+        subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
+    except KeyError:
+        subTotal = (DBdata[dbItems]["linkTotal"])
+    receivers = DBdata[dbItems]["email"]
+    Tax = float(subTotal * 0.1)
+    Total = float(subTotal + float(Tax) + 0.5)
+    subTotalStr = ('$' + format(subTotal, ',.2f'))
+    TotalStr = ('$' + format(Total, ',.2f'))
+    TaxStr = ('$' + format(Tax, ',.2f'))
+    # print(TotalStr)
+    itms = str(DBdata[dbItems]["finalOrder"])
+    itms = itms.replace("::", "\n-")
+    now = datetime.datetime.now(tz)
+    writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
+        DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
+        DBdata[dbItems]["discStr"]) \
+               + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(
+        DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(
+        round((Total - subTotal), 2)) + "\nTotal " + TotalStr
+    SUBJECT = "Your Order from " + estNameStr
+    message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
+    smtpObj.sendmail(sender, receivers, message)
+    smtpObj.close()
+    if(DBdata[dbItems]["kiosk"] == 0):
+        return render_template("thankMsg.html")
+    else:
+        return render_template("thankMsg2.html",btn=str(uid + "kiosk"))
 
 @app.route('/' + uid + 'checkpayment', methods=['POST'])
 def CheckPaymentMethod():
@@ -1917,7 +1980,7 @@ def CheckPaymentMethod():
     # print(subTotal)
     disc = (DBdata[key]["discStr"])
     Tax = float(subTotal * 0.1)
-    Total = float(subTotal + float(Tax) + 0.15)
+    Total = float(subTotal + float(Tax) + 0.5)
     subTotalStr = ('$' + format(subTotal, ',.2f'))
     TotalStr = ('$' + format(Total, ',.2f'))
     TaxStr = ('$' + format(Tax, ',.2f'))
@@ -2121,14 +2184,12 @@ def nextPayment():
             database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
             # print("final put")
             DBdata = database.get("/restaurants/" + estName, "orders")
-            subTotal = float(DBdata[key]["linkTotal"])
+            subTotal = float(DBdata[dbItems]["linkTotal"])
             subTotal += DBdata[dbItems]["discTotal"]
             UUIDcode = DBdata[dbItems]["UUID"]
             Tax = subTotal * 0.1
-            Total = float(subTotal) + float(Tax) + 0.15
-            link = str(genPayment(str(Total), UUIDcode))
-            session.clear()
-            return redirect(link)
+            Total = float(subTotal) + float(Tax) + 0.5
+            return redirect(url_for('pay'))
 
     else:
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -2288,7 +2349,7 @@ def nextPayment():
         duration = time.time() - float(DBdata[dbItems]["startTime"])
         subTotal = float(DBdata[key]["linkTotal"])
         subTotal += DBdata[dbItems]["discTotal"]
-        Total = round(((subTotal + 0.15) * 1.1), 2)
+        Total = round(((subTotal + 0.5) * 1.1), 2)
         numItms = len(DBdata[dbItems]["item"])
         orderIndx = DBdata[dbItems]["orderIndx"]
         usrIndx = DBdata[dbItems]["userIndx"]
@@ -2322,7 +2383,7 @@ def nextPayment():
         cdrFees += 0.1
         database.put("/log/" + uid + "/" + logYM, "/CedarFees/", cdrFees)
         totalRev = float(logData["totalRev"])
-        totalRev += float((DBdata[dbItems]["linkTotal"] + 0.15) * 1.1)
+        totalRev += float((DBdata[dbItems]["linkTotal"] + 0.5) * 1.1)
         database.put("/log/" + uid + "/" + logYM, "/totalRev/", totalRev)
         ret = int(logData["retCustomers"])
         newCust = int(logData["newCustomers"])
@@ -2565,44 +2626,10 @@ def nextPaymentx():
             subTotal += DBdata[dbItems]["discTotal"]
             UUIDcode = DBdata[dbItems]["UUID"]
             Tax = subTotal * 0.1
-            Total = float(subTotal) + float(Tax) + 0.15
+            Total = float(subTotal) + float(Tax) + 0.5
             link = str(genPayment(str(Total), UUIDcode))
-            if (rsp['email'] != ""):
-                smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
-                smtpObj.login(sender, emailPass)
-                try:
-                    subTotal = (DBdata[dbItems]["linkTotal"]) + DBdata[dbItems]["discTotal"]
-                except KeyError:
-                    subTotal = (DBdata[dbItems]["linkTotal"])
-                print(rsp['email'])
-                database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/email/", rsp['email'])
-                Tax = float(subTotal * 0.1)
-                Total = float(subTotal + float(Tax) + 0.1)
-                subTotalStr = ('$' + format(subTotal, ',.2f'))
-                TotalStr = ('$' + format(Total, ',.2f'))
-                TaxStr = ('$' + format(Tax, ',.2f'))
-                # print(TotalStr)
-                itms = str(DBdata[dbItems]["finalOrder"])
-                itms = itms.replace("::", "\n-")
-                now = datetime.datetime.now(tz)
-                writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
-                    DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
-                    DBdata[dbItems]["discStr"]) \
-                           + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(
-                    DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(
-                    round((Total - subTotal), 2)) + "\nTotal " + TotalStr
-                SUBJECT = "Your Order from " + estNameStr
-                message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
-                receivers = rsp['email']
-                smtpObj.sendmail(sender, receivers, message)
-                smtpObj.close()
-            session.clear()
-            print(number)
-            print(link)
-            print(mainLink)
-            print(link)
-            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number)))
-            return redirect(link)
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "email/", str(rsp['email']))
+            return redirect(url_for('pay'))
     else:
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                          'cajohn0205@gmail.com', extra={'id': 123})
@@ -2761,7 +2788,7 @@ def nextPaymentx():
         duration = time.time() - float(DBdata[dbItems]["startTime"])
         subTotal = float(DBdata[key]["linkTotal"])
         subTotal += DBdata[dbItems]["discTotal"]
-        Total = round(((subTotal + 0.15) * 1.1), 2)
+        Total = round(((subTotal + 0.5) * 1.1), 2)
         numItms = len(DBdata[dbItems]["item"])
         orderIndx = DBdata[dbItems]["orderIndx"]
         usrIndx = DBdata[dbItems]["userIndx"]
@@ -2795,7 +2822,7 @@ def nextPaymentx():
         cdrFees += 0.1
         database.put("/log/" + uid + "/" + logYM, "/CedarFees/", cdrFees)
         totalRev = float(logData["totalRev"])
-        totalRev += float((DBdata[dbItems]["linkTotal"] + 0.15) * 1.1)
+        totalRev += float((DBdata[dbItems]["linkTotal"] + 0.5) * 1.1)
         database.put("/log/" + uid + "/" + logYM, "/totalRev/", totalRev)
         ret = int(logData["retCustomers"])
         newCust = int(logData["newCustomers"])
@@ -2878,7 +2905,7 @@ def robotDeployX():
     database.put("/restaurants/" + uid + "/robots/" + str(robot) + "/",str(table), 1)
     return redirect(url_for('robotDeploy'))
 
-@app.route("/restaurants/" + uid + "rbt1", methods=['GET'])
+@app.route("/" + uid + "rbt1", methods=['GET'])
 def robotDeploy():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
@@ -2891,7 +2918,7 @@ def robotDeploy():
 @app.errorhandler(500)
 def not_found_error500(error):
     return redirect(url_for("loginRedo"))
-'''
+
 @app.errorhandler(502)
 def not_found_error502(error):
     return redirect(url_for("loginRedo"))
@@ -2907,7 +2934,7 @@ def not_found_error405(error):
 @app.errorhandler(404)
 def not_found_error404(error):
     return redirect(url_for("loginRedo"))
-
+'''
 if __name__ == '__main__':
     app.secret_key = 'CedarKey02'
     app.config['SESSION_TYPE'] = 'filesystem'
@@ -2918,4 +2945,4 @@ if __name__ == '__main__':
     sess.init_app(app)
     sess.permanent = True
     # app.debug = True
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8081)
