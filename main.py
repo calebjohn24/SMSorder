@@ -4,7 +4,6 @@ import json
 import random
 import smtplib
 import time
-from datetime import timedelta
 import pandas as pd
 import plivo
 import pygsheets
@@ -379,15 +378,6 @@ def ipn():
                              "duration",
                              duration)
                 # print("sending")
-                if (DBdata[dbItems]["togo"] == "to-go"):
-                    reply = "-Thank you for your order, you can pick it up and skip the line when it's ready\n-To order again just text " + '"order"'
-                else:
-                    reply = "-Thank you for your order, your food will be delivered to your table shortly \n-To order again just text " + '"order"'
-                client.messages.create(
-                    src=botNumber,
-                    dst=number,
-                    text=reply
-                )
                 rec = DBdata[dbItems]['email']
                 if(rec != ""):
                     smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
@@ -586,7 +576,7 @@ def addgiftcard2():
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
 @app.route('/' + uid + "view", methods=['POST'])
-def button():
+def view2():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     item = (rsp['item'])
@@ -599,6 +589,20 @@ def button():
         UUID = orders[ords]["UUID"]
         if (item == UUID):
             database.put("/restaurants/" + estName + "/orders/" + str(ords) + "/", "/filled/", "2")
+            if(orders[ords]["number"][-1] == "."):
+                number = orders[ords]["number"][:-1]
+            else:
+                number = orders[ords]["number"]
+            print(number)
+            if (orders[ords]["togo"] == "to-go"):
+                reply = "-Your Order is ready you can pick it up at the counter\n-To order again just text " + '"order"'
+            else:
+                reply = "-Your order is ready and will be delivered to your table shortly\n-To order again just text " + '"order"'
+            client.messages.create(
+                src=botNumber,
+                dst=number,
+                text=reply
+            )
         else:
             filled = orders[ords]["filled"]
             if (filled == "1"):
@@ -3042,15 +3046,6 @@ def nextPayment():
         else:
             newCust += 1
             database.put("/log/" + uid + "/" + logYM, "/newCustomers/", newCust)
-        if (DBdata[dbItems]["togo"] == "to-go"):
-            reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
-        else:
-            reply = "-Thank you for your order, please pay at the counter, after you pay your food will be delivered to your table \n-To order again just text " + '"order"'
-        client.messages.create(
-            src=botNumber,
-            dst=number,
-            text=reply
-        )
         updateLog()
         if (rsp['email'] != ""):
             smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)

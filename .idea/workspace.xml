@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="reinforced payment verification added error screens">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="reinforced payment verification added error screens for giftcard">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentDeclined.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentDeclined.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickToppings.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickToppings.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/indexV.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/indexV.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/thankMsg.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/thankMsg.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/thankMsg2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/thankMsg2.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -251,20 +255,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00058" summary="minor bug fix">
-      <created>1566629764371</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1566629764371</updated>
-    </task>
-    <task id="LOCAL-00059" summary="minor bug fix">
-      <created>1566629833163</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1566629833163</updated>
     </task>
     <task id="LOCAL-00060" summary="reformatted for aws">
       <created>1566709680036</created>
@@ -595,7 +585,21 @@
       <option name="project" value="LOCAL" />
       <updated>1567474991426</updated>
     </task>
-    <option name="localTasksCounter" value="107" />
+    <task id="LOCAL-00107" summary="reinforced payment verification added error screens">
+      <created>1567488086728</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1567488086728</updated>
+    </task>
+    <task id="LOCAL-00108" summary="reinforced payment verification added error screens for giftcard">
+      <created>1567488185479</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1567488185479</updated>
+    </task>
+    <option name="localTasksCounter" value="109" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -616,7 +620,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="added categories" />
     <MESSAGE value="set items to in and out of stock" />
     <MESSAGE value="migrated to pilvo fixed minor bugs still testing" />
     <MESSAGE value="minor bug fix deployed to gcloud" />
@@ -641,6 +644,7 @@
     <MESSAGE value="added stripe support minor bug fixes" />
     <MESSAGE value="added giftcards and minor updates" />
     <MESSAGE value="reinforced payment verification added error screens" />
-    <option name="LAST_COMMIT_MESSAGE" value="reinforced payment verification added error screens" />
+    <MESSAGE value="reinforced payment verification added error screens for giftcard" />
+    <option name="LAST_COMMIT_MESSAGE" value="reinforced payment verification added error screens for giftcard" />
   </component>
 </project>
