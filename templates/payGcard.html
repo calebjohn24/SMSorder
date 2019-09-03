@@ -116,7 +116,7 @@ label {
   <div class="wrapper" align="center">
   <script src="https://js.stripe.com/v3/"></script>
 
-  <form action="charge" method="post" id="payment-form">
+  <form action="{{btn}}" method="post" id="payment-form">
       <h3 align="center">Checkout</h3>
 <hr>
 
@@ -130,7 +130,7 @@ label {
       <div id="card-errors" role="alert">Your card number is incomplete.</div>
     </div>
 <br><br>
-    <button type="submit">Pay ${{Total}}</button>
+    <button type="submit" name="name" value="{{name}}">Pay ${{Total}}</button>
 
   </form>
       <br><br><br>

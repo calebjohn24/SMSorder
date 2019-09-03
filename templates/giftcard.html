@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
     <title>Order Food</title>
+<meta charset="UTF-8">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="60x60" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="apple-touch-icon" sizes="57x57" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
@@ -19,113 +19,40 @@
 <link rel="icon" type="image/png" sizes="16x16" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <link rel="manifest" href="/manifest.json">
 <meta name="msapplication-TileColor" content="#000000">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <meta name="msapplication-TileImage" content="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
 <meta name="theme-color" content="#000000">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/main.css?alt=media&token=f3c3890b-b353-408f-85f0-98e1bdef4983">
 <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <style>
-    <style>
-body {
-  font-family: Arial;
-  color: white;
-}
-.split {
-  height: 100%;
-  width: 48%;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  overflow-x: hidden;
-  padding-top: 20px;
-  text-align: center;
-}
-.left {
-  left: 0;
-  background-color: black;
-  text-align: center;
-  justify-content: center;
-}
-.left li {
-    display: inline-block;
-    justify-content: center;
-    text-align: center;
-}
-.right {
-  right: 0;
-  background-color: black;
-  text-align: center;
-  justify-content: center;
-}
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-.centered img {
-  width: 150px;
-  border-radius: 50%;
-}
-ul {
-list-style-type: none;
-text-align:center;
- padding: 0;
- margin:0 auto;
-}
-#myInput {
-    border: 2px solid #000000;
-    text-align:center;
- padding: 0;
- margin:0 auto;
-     width: 170px;
-    height: 50px;
+    input[type="text"] {
+    width: 75%;
 }
 </style>
 </head>
 <body>
+<br>
+<h3>Enter Gift Card code</h3>
+<br>
+<br>
+<form method="POST" action="{{btn}}">
+    <input type="text" name="gcard" required>
+    <br>
+    <br>
+    <button type="submit" value="{{btn}}">Next</button>
+</form>
 <hr>
-<h2>
-     <h1>Tap Item to Add</h1>
-      <h6 align="center"><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search Items" title="Type in a name" align="center"></h6>
-      <br>
-        <ul id="myUL">
-            <h4 align="center">
-                {%for i in range(0, len)%}
-                <form action="{{btn}}" method="post">
-                    <li><button onclick="{{btn}}" name="item" value={{keys[i]}} type="submit">{{names[i]}}</button><br>{{descrips[i]}}<br><h5>{{warns[i]}}</h5></li>
-                        <br>
-                </form>
-                {%endfor%}
-            </h4>
-        </ul>
-        <hr>
-             <form action="{{btn2}}" method="get">
-        <button type="submit" name="item" value="done">Back</button>
-        </form>
-        <script>
-        function myFunction() {
-            var input, filter, ul, li, a, i, txtValue;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("myUL");
-            li = ul.getElementsByTagName("li");
-            for (i = 0; i < li.length; i++) {
-                a = li[i].getElementsByTagName("button")[0];
-                txtValue = a.textContent || a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "";
-                } else {
-                    li[i].style.display = "none";
-                }
-            }
-        }
-        </script>
+<br>
+<h3>
+<form method="POST" action="{{back}}">
+    <button type="submit">Back</button>
+</form>
+    </h3>
+<br>
+<br>
 
-</h2>
+
 </body>
 </html>

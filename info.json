@@ -4,5 +4,6 @@
   "number": "14255992978",
   "paypalEmail": "sb-ninhv43009@business.example.com",
   "timezone": "America/Los_Angeles",
-  "mainLink": "cedarchatbot.appspot.com"
+  "mainLink": "cedarchatbot.appspot.com",
+  "stripe": "sk_test_keZX68UllhXmBEe604tg9qDJ00lkjKMDSE"
 }

@@ -36,6 +36,8 @@
     {%for i in range(0, len)%}
         {{names[i]}}
     <input type="checkbox" name="{{i}}" value="{{keys[i]}}"><br>
+        <h6>{{warns[i]}}</h6>
+        <br>
         <br>
     {%endfor%}
         <br>
