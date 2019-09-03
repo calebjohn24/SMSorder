@@ -273,6 +273,23 @@ def inbound_sms():
         )
     return '200'
 
+@app.route('/failed', methods=['POST'])
+def transactionFailed():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = request.json
+    if(rsp['data']['object']['description'][0] == "G"):
+        code = rsp['data']['object']['description'][2:]
+        database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", -2)
+        return "200"
+    DBdata = database.get("/restaurants/" + estName, "orders")
+    for dbItems in range(len(DBdata)):
+        if (str(DBdata[dbItems]["UUID"]) == rsp['data']['object']['description']):
+            database.put("/restaurants/" + estName + "/orders/" + str(dbItems), "/" + str("filled") + "/", "100")
+            return "200"
+
 
 @app.route('/ipn', methods=['POST'])
 def ipn():
@@ -284,7 +301,8 @@ def ipn():
     rsp = request.json
     if(rsp['data']['object']['description'][0] == "G"):
         code = rsp['data']['object']['description'][2:]
-        database.put("/restaurants/" + estName + "/giftcards/" + str(name), "/" + str("usedVal") + "/", 0.0)
+        database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", 0.0)
+        return "200"
     DBdata = database.get("/restaurants/" + estName, "orders")
     for dbItems in range(len(DBdata)):
         if (str(DBdata[dbItems]["UUID"]) == rsp['data']['object']['description']):
@@ -547,6 +565,8 @@ def addgiftcard2():
             card = database.get("/restaurants/" + estName, "/giftcards/" + name + "/")
             if(card["usedVal"] == 0.0):
                 return render_template("addgcard2.html", btn=str(uid))
+            if(card["usedVal"] == -2):
+                return render_template("addgcardFailed.html", btn=str(uid+"giftcard"))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -2238,11 +2258,16 @@ def payX():
             currency='usd',
             description=str(UUID),
             source=token,)
-    session.clear()
-    if (DBdata[dbItems]["kiosk"] == 0):
-        return render_template("thankMsg.html")
-    else:
-        return render_template("thankMsg2.html", btn=str(uid + "kiosk"))
+    while(DBdata[dbItems]["filled"] != "1"):
+        DBdata = database.get("/restaurants/" + estName, "orders")
+        if(DBdata[dbItems]["filled"] == "1"):
+            session.clear()
+            if (DBdata[dbItems]["kiosk"] == 0):
+                return render_template("thankMsg.html")
+            else:
+                return render_template("thankMsg2.html", btn=str(uid + "kiosk"))
+        if(DBdata[dbItems]["filled"] == "100"):
+            return render_template("paymentDeclined.html",btn="charge")
 
 @app.route('/' + uid + 'checkpayment', methods=['POST'])
 def CheckPaymentMethod():

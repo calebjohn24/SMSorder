@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added stripe support minor bug fixes">
-      <change afterPath="$PROJECT_DIR$/templates/addgcard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/addgcard2.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/giftcard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/giftcard2.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/giftcard3.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/payGcard.html" afterDir="false" />
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="added giftcards and minor updates">
+      <change afterPath="$PROJECT_DIR$/templates/addgcardFailed.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/paymentDeclined.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/info.json" beforeDir="false" afterPath="$PROJECT_DIR$/info.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Name.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Name.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addform3.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addform3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/mainOrder.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/mainOrder.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentFinal.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentFinal.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethod.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethod.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickToppings.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickToppings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pickcat.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pickcat.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -266,13 +251,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00056" summary="added coupon support">
-      <created>1566626503033</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1566626503033</updated>
     </task>
     <task id="LOCAL-00057" summary="minor bug fix">
       <created>1566628077997</created>
@@ -610,7 +588,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567406640132</updated>
     </task>
-    <option name="localTasksCounter" value="105" />
+    <task id="LOCAL-00105" summary="added giftcards and minor updates">
+      <created>1567474163579</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1567474163580</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -631,7 +616,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="updated ui" />
     <MESSAGE value="updated ui 3" />
     <MESSAGE value="added categories" />
     <MESSAGE value="set items to in and out of stock" />
@@ -656,6 +640,7 @@
     <MESSAGE value="using standard env still testing" />
     <MESSAGE value="added stripe support" />
     <MESSAGE value="added stripe support minor bug fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="added stripe support minor bug fixes" />
+    <MESSAGE value="added giftcards and minor updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="added giftcards and minor updates" />
   </component>
 </project>
