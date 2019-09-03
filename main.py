@@ -303,9 +303,12 @@ def ipn():
     print(rsp)
     print(rsp['data']['object']['description'])
     if(rsp['data']['object']['description'][0] == "G"):
-        code = rsp['data']['object']['description'][2:]
-        print(rsp)
-        database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", 0.0)
+        if (rsp['data']['object']['outcome']["risk_score"] > 65 or rsp['data']['object']["source"]["address_zip_check"] != "pass"):
+            database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", -2)
+        else:
+            code = rsp['data']['object']['description'][2:]
+            print(rsp)
+            database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", 0.0)
         return "200"
     DBdata = database.get("/restaurants/" + estName, "orders")
     for dbItems in range(len(DBdata)):
