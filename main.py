@@ -705,6 +705,8 @@ def addgiftcard2():
                 source=token, )
         except Exception:
             return render_template("addgcardFailed.html", btn=str(uid + "giftcardadd"))
+        if(card["usedVal"] == -2):
+            database.put("/restaurants/" + estName + "/giftcards/" + name, "/" + str("usedVal") + "/", -1)
         while(card["usedVal"] == -1):
             card = database.get("/restaurants/" + estName, "/giftcards/" + name)
             print

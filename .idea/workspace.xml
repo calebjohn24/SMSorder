@@ -4,13 +4,9 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fixes added autogen of gsheets">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix in paying for gift cards">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addgcard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addgcard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addgcard2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addgcard2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/addgcardFailed.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addgcardFailed.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payGcard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payGcard.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -256,13 +252,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00062" summary="updated ui">
-      <created>1566719199079</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1566719199079</updated>
     </task>
     <task id="LOCAL-00063" summary="updated ui">
       <created>1566719243401</created>
@@ -600,7 +589,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567562481310</updated>
     </task>
-    <option name="localTasksCounter" value="111" />
+    <task id="LOCAL-00111" summary="minor bug fix in paying for gift cards">
+      <created>1567575861403</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1567575861403</updated>
+    </task>
+    <option name="localTasksCounter" value="112" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -621,7 +617,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="minor bug fix deployed to gcloud" />
     <MESSAGE value="minor bug fix added back btn" />
     <MESSAGE value="added error handling fixed a few bugs" />
     <MESSAGE value="revoked sms duties except for initialization" />
@@ -646,6 +641,7 @@
     <MESSAGE value="reinforced payment verification added error screens for giftcard" />
     <MESSAGE value="minor bug fix added sms verification for order completetion" />
     <MESSAGE value="minor bug fixes added autogen of gsheets" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fixes added autogen of gsheets" />
+    <MESSAGE value="minor bug fix in paying for gift cards" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix in paying for gift cards" />
   </component>
 </project>
