@@ -4,7 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix in paying for gift cards">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bugfix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -45,7 +45,7 @@
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.customizations" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -252,13 +252,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00063" summary="updated ui">
-      <created>1566719243401</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1566719243401</updated>
     </task>
     <task id="LOCAL-00064" summary="updated ui">
       <created>1566720042120</created>
@@ -596,7 +589,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567575861403</updated>
     </task>
-    <option name="localTasksCounter" value="112" />
+    <task id="LOCAL-00112" summary="minor bugfix">
+      <created>1567576773738</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1567576773738</updated>
+    </task>
+    <option name="localTasksCounter" value="113" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -617,7 +617,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="minor bug fix added back btn" />
     <MESSAGE value="added error handling fixed a few bugs" />
     <MESSAGE value="revoked sms duties except for initialization" />
     <MESSAGE value="minor big fix" />
@@ -642,6 +641,7 @@
     <MESSAGE value="minor bug fix added sms verification for order completetion" />
     <MESSAGE value="minor bug fixes added autogen of gsheets" />
     <MESSAGE value="minor bug fix in paying for gift cards" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix in paying for gift cards" />
+    <MESSAGE value="minor bugfix" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bugfix" />
   </component>
 </project>
