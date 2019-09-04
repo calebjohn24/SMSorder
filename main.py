@@ -412,7 +412,7 @@ def transactionFailed():
     rsp = request.json
     print(rsp)
     if(rsp['data']['object']['description'][0] == "G"):
-        code = rsp['data']['object']['description'][2:]
+        code = rsp['data']['object']['description'][3:]
         database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", -2)
         return "200"
     DBdata = database.get("/restaurants/" + estName, "orders")
@@ -432,9 +432,12 @@ def ipn():
     rsp = request.json
     if(rsp['data']['object']['description'][0] == "G"):
         if (rsp['data']['object']['outcome']["risk_score"] > 65 or rsp['data']['object']["source"]["address_zip_check"] != "pass"):
+            code = rsp['data']['object']['description'][3:]
+            print(code)
             database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", -2)
         else:
-            code = rsp['data']['object']['description'][2:]
+            code = rsp['data']['object']['description'][3:]
+            print(code)
             database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", 0.0)
         return "200"
     DBdata = database.get("/restaurants/" + estName, "orders")
@@ -665,11 +668,15 @@ def addgiftcard1():
         name = rsp["name"]
         amt = rsp["amt"]
         database.put("/restaurants/" + estName + "/giftcards/" + str(name) , "/"+str("actDate")+"/", (datetime.datetime.now(tz).strftime("%Y-%m-%d")))
-        database.put("/restaurants/" + estName + "/giftcards/" + str(name) , "/" + str("startVal") + "/", amt)
+        database.put("/restaurants/" + estName + "/giftcards/" + str(name) , "/" + str("startVal") + "/", float(amt))
         database.put("/restaurants/" + estName + "/giftcards/" + str(name) , "/" + str("usedVal") + "/", -1)
-        return render_template("payGcard.html",Total=amt, btn=str(uid+"giftcard2add"),name=name)
+        session['name'] = name
+        Total = float(amt) * 1.1
+        Total = round(Total,2)
+        return render_template("payGcard.html",Total=str(Total), btn=str(uid+"giftcard2add"),name=name)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
+
 @app.route('/'+uid+"giftcard2add",methods=['POST'])
 def addgiftcard2():
     currentTime = time.time()
@@ -681,22 +688,31 @@ def addgiftcard2():
         stripe.api_key = stripeToken
         token = request.form['stripeToken']  # Using Flask
         rsp = ((request.form))
-        name = rsp["name"]
+        print(rsp)
+        name = session.get('name', None)
+        print(name)
         card = database.get("/restaurants/" + estName,"/giftcards/" + name+ "/")
-        Total = card["startVal"]
+        Total = float(card["startVal"])
+        Total = Total * 1.1
         Total = round(Total, 2)
         Total = int(Total * 100)
-        stripe.Charge.create(
-            amount=Total,
-            currency='usd',
-            description="GC"+"-"+name,
-            source=token, )
+        print(Total)
+        try:
+            stripe.Charge.create(
+                amount=Total,
+                currency='usd',
+                description="GC"+"-"+name,
+                source=token, )
+        except Exception:
+            return render_template("addgcardFailed.html", btn=str(uid + "giftcardadd"))
         while(card["usedVal"] == -1):
-            card = database.get("/restaurants/" + estName, "/giftcards/" + name + "/")
+            card = database.get("/restaurants/" + estName, "/giftcards/" + name)
+            print
             if(card["usedVal"] == 0.0):
+                session.clear()
                 return render_template("addgcard2.html", btn=str(uid))
             if(card["usedVal"] == -2):
-                return render_template("addgcardFailed.html", btn=str(uid+"giftcard"))
+                return render_template("addgcardFailed.html", btn=str(uid+"giftcardadd"))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
@@ -2052,7 +2068,6 @@ def giftcardx():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     DBdata = database.get("/restaurants/" + estName, "orders")
-
     subTotal = float(DBdata[dbItems]["linkTotal"])
     subTotal += DBdata[dbItems]["discTotal"]
     Tax = subTotal * 0.1

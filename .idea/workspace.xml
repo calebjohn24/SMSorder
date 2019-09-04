@@ -4,11 +4,13 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fix added sms verification for order completetion">
+    <list default="true" id="733d426c-d8c4-48de-a26d-14471dd1dd72" name="Default" comment="minor bug fixes added autogen of gsheets">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/paymentMethodKiosk.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addgcard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addgcard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addgcard2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addgcard2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/addgcardFailed.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/addgcardFailed.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payGcard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payGcard.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -254,13 +256,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1560227203470</updated>
-    </task>
-    <task id="LOCAL-00061" summary="reformatted for aws">
-      <created>1566709751610</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1566709751610</updated>
     </task>
     <task id="LOCAL-00062" summary="updated ui">
       <created>1566719199079</created>
@@ -598,7 +593,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567554543405</updated>
     </task>
-    <option name="localTasksCounter" value="110" />
+    <task id="LOCAL-00110" summary="minor bug fixes added autogen of gsheets">
+      <created>1567562481310</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1567562481310</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -619,7 +621,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="migrated to pilvo fixed minor bugs still testing" />
     <MESSAGE value="minor bug fix deployed to gcloud" />
     <MESSAGE value="minor bug fix added back btn" />
     <MESSAGE value="added error handling fixed a few bugs" />
@@ -644,6 +645,7 @@
     <MESSAGE value="reinforced payment verification added error screens" />
     <MESSAGE value="reinforced payment verification added error screens for giftcard" />
     <MESSAGE value="minor bug fix added sms verification for order completetion" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor bug fix added sms verification for order completetion" />
+    <MESSAGE value="minor bug fixes added autogen of gsheets" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor bug fixes added autogen of gsheets" />
   </component>
 </project>
