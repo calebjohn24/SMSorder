@@ -32,8 +32,6 @@ payaplEmail = info['paypalEmail']
 timez = info["timezone"]
 mainLink = info['mainLink']
 stripeToken = info['stripe']
-print(mainLink)
-print(mainLink)
 tz = pytz.timezone(timez)
 print(datetime.datetime.now(tz))
 client = plivo.RestClient(auth_id='MAYTVHN2E1ZDY4ZDA2YZ', auth_token='ODgzZDA1OTFiMjE2ZTRjY2U4ZTVhYzNiODNjNDll')
@@ -72,83 +70,196 @@ app.secret_key = 'CedarKey02'
 def updateLog():
     logYM = (datetime.datetime.now(tz).strftime("%Y-%m"))
     sh = gc.open('TestRaunt')
-    wks = sh.worksheet_by_title(logYM + "-sales")
-    logData = database.get("/log/" + uid + "/", logYM)
-    menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
-    numOrders = (len(database.get("/restaurants/" + estName, "/orders/")) - 1)
-    totalDF = pd.DataFrame()
-    totalArr = []
-    cdrFees = logData['CedarFees']
-    totalArr.append(cdrFees)
-    paypalFees = logData['paypalFees']
-    totalArr.append(paypalFees)
-    totalFees = cdrFees + paypalFees
-    totalArr.append(totalFees)
-    totalRev = logData['totalRev']
-    totalArr.append(totalRev)
-    numOrders = (len(database.get("/restaurants/" + estName, "/orders/")) - 1)
-    totalArr.append(numOrders)
-    numCard = logData['cardPay']
-    totalArr.append(numCard)
-    Totals = pd.DataFrame()
-    totalDF['Totals'] = totalArr
-    wks.set_dataframe(totalDF, (1, 6))
-    skuDict = logData['skus']
-    skuKeys = list(skuDict.keys())
-    SKUkeyArr = []
-    SKUrev = []
-    SKUnumSold = []
-    SKUnames = []
-    for sk in range(len(skuKeys)):
-        numSold = skuDict[skuKeys[sk]]["numSold"]
-        SKUnumSold.append(numSold)
-        SKUkeyArr.append(skuKeys[sk])
-        for men in range(len(menuItems)):
-            if (menuItems[men] != None):
-                if ((menuItems[men]["sizes"][0][1] != -1)):
-                    for sz in range(len(menuItems[men]["sizes"])):
-                        if (skuKeys[sk] == str(menuItems[men]["sizes"][sz][2])):
-                            # print("found size")
-                            if (str(menuItems[men]["sizes"][sz][0]).lower() != "u"):
-                                name = str(menuItems[men]["name"]).lower()
-                                name += "-"
-                                name += str(menuItems[men]["sizes"][sz][0]).lower()
-                                SKUnames.append(name)
-                                rev = menuItems[men]["sizes"][sz][1] * numSold
-                                SKUrev.append(rev)
-
-                            else:
-                                name = str(menuItems[men]["name"]).lower()
-                                SKUnames.append(name)
-                                rev = menuItems[men]["sizes"][sz][1] * numSold
-                                SKUrev.append(rev)
-                            break
-                        if (len(menuItems[men]["sizes"]) - sz == 1):
-                            for ex in range(len(menuItems[men]["extras"])):
-                                if (skuKeys[sk] == str(menuItems[men]["extras"][ex][2])):
-                                    # print("found ex")
+    try:
+        wks = sh.worksheet_by_title(logYM + "-sales")
+        logData = database.get("/log/" + uid + "/", logYM)
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        numOrders = (len(database.get("/restaurants/" + estName, "/orders/")) - 1)
+        totalDF = pd.DataFrame()
+        totalArr = []
+        cdrFees = logData['CedarFees']
+        totalArr.append(cdrFees)
+        totalRev = logData['totalRev']
+        totalArr.append(totalRev)
+        numOrders = (len(database.get("/restaurants/" + estName, "/orders/")) - 1)
+        totalArr.append(numOrders)
+        newCust = logData['newCustomers']
+        totalArr.append(newCust)
+        retCust = logData['retCustomers']
+        totalArr.append(retCust)
+        totalDF = pd.DataFrame()
+        totalDF['Totals'] = totalArr
+        wks.set_dataframe(totalDF, (1, 6))
+        skuDict = logData['skus']
+        skuKeys = list(skuDict.keys())
+        SKUkeyArr = []
+        SKUrev = []
+        SKUnumSold = []
+        SKUnames = []
+        for sk in range(len(skuKeys)):
+            numSold = skuDict[skuKeys[sk]]["numSold"]
+            SKUnumSold.append(numSold)
+            SKUkeyArr.append(skuKeys[sk])
+            for men in range(len(menuItems)):
+                if (menuItems[men] != None):
+                    if ((menuItems[men]["sizes"][0][1] != -1)):
+                        for sz in range(len(menuItems[men]["sizes"])):
+                            if (skuKeys[sk] == str(menuItems[men]["sizes"][sz][2])):
+                                if (str(menuItems[men]["sizes"][sz][0]).lower() != "u"):
                                     name = str(menuItems[men]["name"]).lower()
-                                    name += "||"
-                                    name += str(menuItems[men]["extras"][ex][0]).lower()
-                                    name += "* TOPPING "
+                                    name += "-"
+                                    name += str(menuItems[men]["sizes"][sz][0]).lower()
                                     SKUnames.append(name)
-                                    rev = float(menuItems[men]["extras"][ex][1]) * float(numSold)
+                                    rev = menuItems[men]["sizes"][sz][1] * numSold
                                     SKUrev.append(rev)
-                                    break
 
-    SKUkeysDF = pd.DataFrame()
-    SKUnameDF = pd.DataFrame()
-    SKUrevDF = pd.DataFrame()
-    SKUnumSoldDF = pd.DataFrame()
-    SKUkeysDF['SKU'] = SKUkeyArr
-    wks.set_dataframe(SKUkeysDF, (1, 1))
-    SKUnameDF['Name'] = SKUnames
-    wks.set_dataframe(SKUnameDF, (1, 2))
-    SKUrevDF["Revenue"] = SKUrev
-    wks.set_dataframe(SKUrevDF, (1, 3))
-    SKUnumSoldDF["Number Sold"] = SKUnumSold
-    wks.set_dataframe(SKUnumSoldDF, (1, 4))
+                                else:
+                                    name = str(menuItems[men]["name"]).lower()
+                                    SKUnames.append(name)
+                                    rev = menuItems[men]["sizes"][sz][1] * numSold
+                                    SKUrev.append(rev)
+                                break
+                            if (len(menuItems[men]["sizes"]) - sz == 1):
+                                for ex in range(len(menuItems[men]["extras"])):
+                                    if (skuKeys[sk] == str(menuItems[men]["extras"][ex][2])):
+                                        # print("found ex")
+                                        name = str(menuItems[men]["name"]).lower()
+                                        name += "||"
+                                        name += str(menuItems[men]["extras"][ex][0]).lower()
+                                        name += "* TOPPING "
+                                        SKUnames.append(name)
+                                        rev = float(menuItems[men]["extras"][ex][1]) * float(numSold)
+                                        SKUrev.append(rev)
+                                        break
 
+        SKUkeysDF = pd.DataFrame()
+        SKUnameDF = pd.DataFrame()
+        SKUrevDF = pd.DataFrame()
+        SKUnumSoldDF = pd.DataFrame()
+        SKUkeysDF['SKU'] = SKUkeyArr
+        wks.set_dataframe(SKUkeysDF, (1, 1))
+        SKUnameDF['Name'] = SKUnames
+        wks.set_dataframe(SKUnameDF, (1, 2))
+        SKUrevDF["Revenue"] = SKUrev
+        wks.set_dataframe(SKUrevDF, (1, 3))
+        SKUnumSoldDF["Number Sold"] = SKUnumSold
+        wks.set_dataframe(SKUnumSoldDF, (1, 4))
+    except Exception:
+        wks = sh.add_worksheet(str(logYM)+"-sales", rows=50, cols=60)
+        header = wks.cell('A1')
+        header.value = 'SKU'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('B1')
+        header.value = 'NAME'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('C1')
+        header.value = 'REVENUE'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('D1')
+        header.value = 'NUMBER SOLD'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('E2')
+        header.value = 'Cedar Fees'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('E3')
+        header.value = 'Revenue'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('E4')
+        header.value = 'Number of Orders'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('E5')
+        header.value = 'New Customer'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('E5')
+        header.value = 'Returning Customers'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        header = wks.cell('F1')
+        header.value = 'Totals'
+        header.text_format['bold'] = True  # make the header bold
+        header.update()
+        logData = database.get("/log/" + uid + "/", logYM)
+        menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
+        numOrders = (len(database.get("/restaurants/" + estName, "/orders/")) - 1)
+        totalDF = pd.DataFrame()
+        totalArr = []
+        cdrFees = logData['CedarFees']
+        totalArr.append(cdrFees)
+        totalRev = logData['totalRev']
+        totalArr.append(totalRev)
+        numOrders = (len(database.get("/restaurants/" + estName, "/orders/")) - 1)
+        totalArr.append(numOrders)
+        newCust = logData['newCustomers']
+        totalArr.append(newCust)
+        retCust = logData['retCustomers']
+        totalArr.append(retCust)
+        totalDF = pd.DataFrame()
+        totalDF['Totals'] = totalArr
+        wks.set_dataframe(totalDF, (1, 6))
+        skuDict = logData['skus']
+        skuKeys = list(skuDict.keys())
+        SKUkeyArr = []
+        SKUrev = []
+        SKUnumSold = []
+        SKUnames = []
+        for sk in range(len(skuKeys)):
+            numSold = skuDict[skuKeys[sk]]["numSold"]
+            SKUnumSold.append(numSold)
+            SKUkeyArr.append(skuKeys[sk])
+            for men in range(len(menuItems)):
+                if (menuItems[men] != None):
+                    if ((menuItems[men]["sizes"][0][1] != -1)):
+                        for sz in range(len(menuItems[men]["sizes"])):
+                            if (skuKeys[sk] == str(menuItems[men]["sizes"][sz][2])):
+                                # print("found size")
+                                if (str(menuItems[men]["sizes"][sz][0]).lower() != "u"):
+                                    name = str(menuItems[men]["name"]).lower()
+                                    name += "-"
+                                    name += str(menuItems[men]["sizes"][sz][0]).lower()
+                                    SKUnames.append(name)
+                                    rev = menuItems[men]["sizes"][sz][1] * numSold
+                                    SKUrev.append(rev)
+
+                                else:
+                                    name = str(menuItems[men]["name"]).lower()
+                                    SKUnames.append(name)
+                                    rev = menuItems[men]["sizes"][sz][1] * numSold
+                                    SKUrev.append(rev)
+                                break
+                            if (len(menuItems[men]["sizes"]) - sz == 1):
+                                for ex in range(len(menuItems[men]["extras"])):
+                                    if (skuKeys[sk] == str(menuItems[men]["extras"][ex][2])):
+                                        # print("found ex")
+                                        name = str(menuItems[men]["name"]).lower()
+                                        name += "||"
+                                        name += str(menuItems[men]["extras"][ex][0]).lower()
+                                        name += "* TOPPING "
+                                        SKUnames.append(name)
+                                        rev = float(menuItems[men]["extras"][ex][1]) * float(numSold)
+                                        SKUrev.append(rev)
+                                        break
+
+        SKUkeysDF = pd.DataFrame()
+        SKUnameDF = pd.DataFrame()
+        SKUrevDF = pd.DataFrame()
+        SKUnumSoldDF = pd.DataFrame()
+        SKUkeysDF['SKU'] = SKUkeyArr
+        wks.set_dataframe(SKUkeysDF, (1, 1))
+        SKUnameDF['Name'] = SKUnames
+        wks.set_dataframe(SKUnameDF, (1, 2))
+        SKUrevDF["Revenue"] = SKUrev
+        wks.set_dataframe(SKUrevDF, (1, 3))
+        SKUnumSoldDF["Number Sold"] = SKUnumSold
+        wks.set_dataframe(SKUnumSoldDF, (1, 4))
+        
 
 def genUsr(name, number, dbIndx):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -181,7 +292,6 @@ def getReply(msg, number):
         msg.replace(".", "")
         msg.replace(" ", "")
         msg = ''.join(msg.split())
-        print(msg)
         indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")
         UserData = database.get("/restaurants/", uid + "/users")
@@ -195,7 +305,27 @@ def getReply(msg, number):
                                      str(number) + ".")
                 except KeyError:
                     pass
-            reply = "Hi, welcome to " + estNameStr + " please enter your name to continue"
+            tickData = {
+                "UUID":str(UUID),
+                "name":"",
+                "stage":1,
+                "paid":0,
+                "kiosk":0,
+                "giftcard":0,
+                "cash":"",
+                "togo":"",
+                "tickSize":0,
+                "discUsed":0,
+                "discTotal":0.0,
+                "discStr":"",
+                "filled":0,
+                "linkTotal":0,
+                "finalOrder":"",
+                "startTime": float(time.time()),
+                "number":str(number)
+            }
+            database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)), "/", tickData)
+            '''
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", "")
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/number/", str(number))
@@ -213,6 +343,7 @@ def getReply(msg, number):
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/linkTotal/", 0.0)
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "finalOrder/", "")
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/", time.time())
+            '''
             UserData = database.get("/restaurants/" + uid + "/", "users")
             for usr in range(len(UserData)):
                 if (number == UserData[usr]["number"]):
@@ -299,26 +430,20 @@ def ipn():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = request.json
-    print(rsp)
-    print(rsp['data']['object']['description'])
     if(rsp['data']['object']['description'][0] == "G"):
         if (rsp['data']['object']['outcome']["risk_score"] > 65 or rsp['data']['object']["source"]["address_zip_check"] != "pass"):
             database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", -2)
         else:
             code = rsp['data']['object']['description'][2:]
-            print(rsp)
             database.put("/restaurants/" + estName + "/giftcards/" + str(code), "/" + str("usedVal") + "/", 0.0)
         return "200"
     DBdata = database.get("/restaurants/" + estName, "orders")
     for dbItems in range(len(DBdata)):
-        print(str(DBdata[dbItems]["UUID"]),str(rsp['data']['object']['description']))
         if (str(DBdata[dbItems]["UUID"]) == str(rsp['data']['object']['description'])):
-            print(rsp)
             if(rsp['data']['object']['outcome']["risk_score"] > 65 or rsp['data']['object']["source"]["address_zip_check"] != "pass"):
                 database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/filled/", "100")
                 return "200"
             else:
-                print("confirmed")
                 database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/paid/", 1)
                 database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/filled/", "1")
                 usrIndx = DBdata[dbItems]["userIndx"]
@@ -341,8 +466,8 @@ def ipn():
                              (datetime.datetime.now(tz).strftime("%Y")))
                 numOrders = database.get("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/", estNameStr)
                 logData = database.get("/log/" + uid + "/", logYM)
-                # payPalFees = float(logData['paypalFees'])
-                # payPalFees += float(rsp["mc_fee"])
+                # stripeFees = float(logData['stripeFees'])
+                # stripeFees += float(rsp["mc_fee"])
                 cdrFees = logData['CedarFees']
                 cdrFees += 1
                 database.put("/log/" + uid + "/" + logYM, "/CedarFees/", cdrFees)
@@ -406,7 +531,7 @@ def ipn():
                     smtpObj.sendmail(sender, rec, message)
                     smtpObj.close()
                     database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
-                # updateLog()
+            updateLog()
     return (" ", 200)
 
 
@@ -470,7 +595,7 @@ def panel():
             names.append(str([keys[menuNames]][0]))
             links.append(str(hours[keys[menuNames]]["link"]))
             # print(links)
-        return render_template("panel.html", len=len(links),gcard=(str(uid) + "giftcard"), menuLinks=links, menuNames=names, restName=estNameStr,
+        return render_template("panel.html", len=len(links),gcard=(str(uid) + "giftcardadd"), menuLinks=links, menuNames=names, restName=estNameStr,
                                viewOrders=(uid + "view"), addItm=(addPass), remItms=remPass, addCpn=promoPass,
                                promoSMS=promoPass + "smsPromo" + uid,
                                signOut=estNameStr, outStck=str(uid + "outstock"),
@@ -516,7 +641,7 @@ def view():
     return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys,
                            btn=str(uid + "view"), restName=estNameStr)
 
-@app.route('/'+uid+"giftcard",methods=['GET'])
+@app.route('/'+uid+"giftcardadd",methods=['GET'])
 def addgiftcard():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -524,11 +649,11 @@ def addgiftcard():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
-        return render_template("addgcard.html", btn=(str(uid) + "giftcard"))
+        return render_template("addgcard.html", btn=(str(uid) + "giftcardadd"))
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
 
-@app.route('/'+uid+"giftcard",methods=['POST'])
+@app.route('/'+uid+"giftcardadd",methods=['POST'])
 def addgiftcard1():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -542,10 +667,10 @@ def addgiftcard1():
         database.put("/restaurants/" + estName + "/giftcards/" + str(name) , "/"+str("actDate")+"/", (datetime.datetime.now(tz).strftime("%Y-%m-%d")))
         database.put("/restaurants/" + estName + "/giftcards/" + str(name) , "/" + str("startVal") + "/", amt)
         database.put("/restaurants/" + estName + "/giftcards/" + str(name) , "/" + str("usedVal") + "/", -1)
-        return render_template("payGcard.html",Total=amt, btn=str(uid+"giftcard2"),name=name)
+        return render_template("payGcard.html",Total=amt, btn=str(uid+"giftcard2add"),name=name)
     else:
         return render_template("login.html", btn=str(estNameStr), restName=estNameStr)
-@app.route('/'+uid+"giftcard2",methods=['POST'])
+@app.route('/'+uid+"giftcard2add",methods=['POST'])
 def addgiftcard2():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -1228,13 +1353,33 @@ def loginKioskx():
     UserData = database.get("/restaurants/", uid + "/users")
     UUID = random.randint(9999999, 100000000)
     for dbxv in range(len(DBdata)):
-        database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/number/", str(number))
         try:
             if (DBdata[dbxv]["number"] == number):
                 database.put("/restaurants/" + estName + "/orders/" + str(dbxv) + "/", "/number/",
                              str(number) + ".")
         except KeyError:
             pass
+    tickData = {
+        "UUID": str(UUID),
+        "name": "",
+        "stage": 1,
+        "paid": 0,
+        "kiosk": 1,
+        "giftcard": 0,
+        "cash": "",
+        "togo": "",
+        "tickSize": 0,
+        "discUsed": 0,
+        "discTotal": 0.0,
+        "discStr": "",
+        "filled": 0,
+        "linkTotal": 0,
+        "finalOrder": "",
+        "startTime": float(time.time()),
+        "number": str(number)
+    }
+    database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)), "/", tickData)
+    '''
     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/UUID/", str(UUID))
     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/name/", "")
     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 1)
@@ -1251,6 +1396,7 @@ def loginKioskx():
     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/linkTotal/", 0.0)
     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "finalOrder/", "")
     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/", time.time())
+    '''
     session['UUID'] = UUID
     session['key'] = len(DBdata)
     UserData = database.get("/restaurants/" + uid + "/", "users")
@@ -1304,14 +1450,17 @@ def getUUID():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     tickets = database.get("restaurants/" + uid, "/orders/")
     for tx in range(len(tickets)):
-        if (code == tickets[tx]["number"][-4:]):
-            key = tx
-            UUID = tickets[tx]["UUID"]
-            session['UUID'] = UUID
-            session['key'] = key
-            return redirect(url_for('getName'))
-        elif ((len(tickets) - tx) == 1):
-            return render_template("verifyCode2.html", btn=str(uid + "check"), number=botNumber)
+        try:
+            if (code == tickets[tx]["number"][-4:]):
+                key = tx
+                UUID = tickets[tx]["UUID"]
+                session['UUID'] = UUID
+                session['key'] = key
+                return redirect(url_for('getName'))
+            elif ((len(tickets) - tx) == 1):
+                return render_template("verifyCode2.html", btn=str(uid + "check"), number=botNumber)
+        except Exception:
+            pass
 
 
 @app.route('/' + uid + 'order0', methods=['GET'])
@@ -1916,7 +2065,7 @@ def giftcardx():
     if (logData == None):
         database.put("/log/" + uid + "/" + logYM, "/newCustomers/", 0)
         database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
-        database.put("/log/" + uid + "/" + logYM, "/paypalFees/", 0.0)
+        database.put("/log/" + uid + "/" + logYM, "/stripeFees/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/skus/9Null/numSold", 0)
@@ -2167,7 +2316,7 @@ def giftcardx():
                         reply = "-Thank you for your order, you can pick it up and pay at the counter when you arrive \n-To order again just text " + '"order"'
                     else:
                         reply = "-Thank you for your order, please pay at the counter, after you pay your food will be delivered to your table \n-To order again just text " + '"order"'
-                    #updateLog()
+                    updateLog()
                     if (DBdata[dbItems]['email'] != ""):
                         smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
                         smtpObj.login(sender, emailPass)
@@ -2194,7 +2343,7 @@ def giftcardx():
                         message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
                         smtpObj.sendmail(sender,DBdata[dbItems]['email'] , message)
                         smtpObj.close()
-                    #updateLog()
+                    updateLog()
                     database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
                     print(Total)
                     session.clear()
@@ -2494,7 +2643,7 @@ def nextPayment():
     if (logData == None):
         database.put("/log/" + uid + "/" + logYM, "/newCustomers/", 0)
         database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
-        database.put("/log/" + uid + "/" + logYM, "/paypalFees/", 0.0)
+        database.put("/log/" + uid + "/" + logYM, "/stripeFees/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/skus/9Null/numSold", 0)
@@ -3099,7 +3248,7 @@ def nextPaymentx():
     if (logData == None):
         database.put("/log/" + uid + "/" + logYM, "/newCustomers/", 0)
         database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
-        database.put("/log/" + uid + "/" + logYM, "/paypalFees/", 0.0)
+        database.put("/log/" + uid + "/" + logYM, "/stripeFees/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
         database.put("/log/" + uid + "/" + logYM, "/skus/9Null/numSold", 0)
