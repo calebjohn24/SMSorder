@@ -4,12 +4,14 @@ import json
 import random
 import smtplib
 import time
+import requests
 import pandas as pd
 import plivo
 import pygsheets
 import pyrebase as fbAuth
 import pytz
 import stripe
+import dateparser
 from flask import Flask, request, session
 from flask import redirect, url_for
 from flask import render_template
@@ -18,7 +20,7 @@ from flask_sslify import SSLify
 from fpdf import FPDF
 from werkzeug.datastructures import ImmutableOrderedMultiDict
 from firebase import firebase
-
+import sys
 sessionTime = 1000
 infoFile = open("info.json")
 info = json.load(infoFile)
@@ -485,7 +487,6 @@ def getReply(msg, number):
         msg.replace(".", "")
         msg.replace(" ", "")
         msg = ''.join(msg.split())
-        indx = 0
         DBdata = database.get("/restaurants/" + estName, "/orders")
         UserData = database.get("/restaurants/", uid + "/users")
         if (msg == "order" or msg == "ordew" or msg == "ord" or msg == "ordet" or msg == "oderr" or msg == "ordee" or (
@@ -1740,7 +1741,14 @@ def getUUID():
 def getName():
     key = session.get('key', None)
     UUID = session.get('UUID', None)
-    return (render_template("Name.html", btn=uid + 'order0', btn2=uid + "order20", btn3=uid + 'order30'))
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    tickets = database.get("restaurants/" + uid, "/orders/")
+    if(tickets[key]["kiosk"] == 0):
+        return (render_template("Name.html", btn=uid + 'order0', btn2=uid + "order20", btn3=uid + 'order30'))
+    else:
+        return (render_template("NameKiosk.html", btn=uid + 'order0', btn2=uid + "order20", btn3=uid + 'order30'))
 
 
 @app.route('/' + uid + 'order0', methods=['POST'])
@@ -1750,18 +1758,26 @@ def getNameTime2():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     print(rsp)
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     name = rsp["name"]
     togo = rsp["togo"]
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/name/", name)
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/togo/", togo)
     if (togo == "to-go"):
         return redirect(url_for('getTime'))
+    elif(togo == "delivery"):
+        return redirect(url_for('getDelivery'))
     else:
         return redirect(url_for('getTable'))
 
 
 @app.route('/' + uid + 'order20', methods=['GET'])
 def getTime():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
     startMin = int(datetime.datetime.now(tz).minute) + 20
@@ -1800,6 +1816,9 @@ def getTime():
 
 @app.route('/' + uid + 'order20', methods=['POST'])
 def getTimeY():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", "PICKUP ASAP")
@@ -1808,6 +1827,9 @@ def getTimeY():
 
 @app.route('/' + uid + 'order30', methods=['POST'])
 def getTimeX():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
     request.parameter_storage_class = ImmutableOrderedMultiDict
@@ -1816,6 +1838,130 @@ def getTimeX():
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", pickTime)
     return redirect(url_for('order'))
 
+@app.route('/' + uid + 'order40', methods=['GET'])
+def getDelivery():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    startMin = int(datetime.datetime.now(tz).minute) + 30
+    startHr = int(datetime.datetime.now(tz).hour)
+    print(startHr)
+    day = datetime.datetime.today().weekday()
+    if (startMin > 59):
+        if (startHr == 23):
+            startHr = 0
+            startMin -= 60
+        else:
+            startHr += 1
+            startMin -= 60
+    if (startHr > 9):
+        startStr = str(startHr) + ":" + str(startMin)
+    else:
+        startStr = "0" + str(startHr) + ":" + str(startMin)
+    if (startMin < 10):
+        startStr = str(startHr) + ":" + "0" + str(startMin)
+    print(startStr)
+    print(day)
+    endHr = str(float(database.get("restaurants/" + uid, "/OChrs/" + str(day) + "/close/")))
+    endSplt = endHr.split(".")
+    endTimeHr = int(endSplt[0])
+    endTimeMin = int(100 * (float(endSplt[1]) / 100))
+    endTimeMin -= 45
+    if (endTimeMin < 0):
+        endTimeHr -= 1
+        endTimeMin += 60
+    endStr = str(endTimeHr) + ":" + str(endTimeMin)
+    print(endStr)
+    return (render_template("getTime.html", btn=uid + 'order40', btn2=uid + 'order60', back=uid + 'order0', min=startStr,max=endStr))
+
+
+@app.route('/' + uid + 'order40', methods=['POST'])
+def getTimeZ():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", "DELIVERY ASAP")
+    return redirect(url_for('getAddr'))
+
+
+@app.route('/' + uid + 'order60', methods=['POST'])
+def getTimeV():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
+    pickTime = "DELIVERY @" + str(rsp["time"])
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", pickTime)
+    return redirect(url_for('getAddr'))
+
+@app.route('/'+uid+"address", methods=['GET'])
+def getAddr():
+    return(render_template("getAddr.html", btn=uid+"address"))
+
+@app.route('/'+uid+"address", methods=['POST'])
+def getAddrX():
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
+    print(rsp)
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    delMethod = database.get("restaurants/" + uid, "/delivery/type")
+    if(delMethod == "postmates"):
+        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
+        addrP = database.get("restaurants/" + uid, "/address/")
+        if(rsp["aptNos"] == ""):
+            addrD = rsp["addr"]+","+rsp["city"]+","+rsp["state"]+","+str(rsp["zip"])
+        else:
+            addrD = rsp["aptNos"]+","+rsp["addr"]+","+rsp["city"]+","+rsp["state"]+","+str(rsp["zip"])
+        payload = {"dropoff_address":addrP,
+                   "pickup_address":addrD}
+        headers = {
+            'Content-Type': "application/x-www-form-urlencoded",
+            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+            'User-Agent': "PostmanRuntime/7.16.3",
+            'Accept': "*/*",
+            'Cache-Control': "no-cache",
+            'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
+            'Host': "api.postmates.com",
+            'Accept-Encoding': "gzip, deflate",
+            'Content-Length': "145",
+            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+            'Connection': "keep-alive",
+            'cache-control': "no-cache"
+            }
+        response = requests.request("POST", url, data=payload, headers=headers)
+        resp = (response.json())
+        print(database.get("restaurants/" + uid, "/delivery/split"))
+        print(resp)
+        print(resp['fee'])
+        print(resp['duration'])
+        fee = resp['fee']
+        fee = float(fee)
+        fee  = float(fee/100.0)
+        fee = fee * float(database.get("restaurants/" + uid, "/delivery/split"))
+        fee = round(fee,2)
+        delivDuration = resp['duration']
+        return(render_template("dispQuote.html", btn=uid+"postmatesQuote",fee=str(fee), duration=str(delivDuration)))
+    else:
+        return redirect(url_for('inHouseDelivery'))
+
+@app.route('/'+uid+"postmatesQuote", methods=['POST'])
+def getDelQuote():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
+    if(rsp["deliv"] == "yes"):
+        return redirect(url_for('order'))
+    else:
+        return redirect(url_for('getNameTime2'))
 
 @app.route('/' + uid + 'order1', methods=['GET'])
 def getTable():
@@ -1826,6 +1972,9 @@ def getTable():
 
 @app.route('/' + uid + 'order1', methods=['POST'])
 def getTable2():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
     request.parameter_storage_class = ImmutableOrderedMultiDict
@@ -2317,13 +2466,13 @@ def giftcardcheck():
 
 @app.route("/" + uid + "giftcard", methods=['POST'])
 def giftcardx():
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
     key = session.get('key', None)
     dbItems = key
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': 123})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    request.parameter_storage_class = ImmutableOrderedMultiDict
-    rsp = ((request.form))
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = float(DBdata[dbItems]["linkTotal"])
     subTotal += DBdata[dbItems]["discTotal"]
@@ -3604,13 +3753,137 @@ def nextPayment():
         except Exception:
             return render_template("thankMsg2.html")
 
+
+@app.route('/'+"deliPostmates",methods=['POST'])
+def genPostmatesTick():
+    key = session.get('key', None)
+    delivID = session.get('delId', None)
+    dbItems = key
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': 123})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    DBdata = database.get("/restaurants/" + estName, "orders")
+    addrD =  database.get("/restaurants/" + estName, "address")
+    addrP = "2421, Sahalee Dr W, Sammamish, WA, 98074"
+    ordTime = float(DBdata[dbItems]["time"])
+    if(ordTime == "PICKUP ASAP"):
+        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
+        payload = {"dropoff_address": addrP,
+                   "pickup_address": addrD}
+        headers = {
+            'Content-Type': "application/x-www-form-urlencoded",
+            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+            'User-Agent': "PostmanRuntime/7.16.3",
+            'Accept': "*/*",
+            'Cache-Control': "no-cache",
+            'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
+            'Host': "api.postmates.com",
+            'Accept-Encoding': "gzip, deflate",
+            'Content-Length': "145",
+            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+            'Connection': "keep-alive",
+            'cache-control': "no-cache"
+        }
+
+        response = requests.request("POST", url, data=payload, headers=headers)
+        rsp = (response.json())
+        print(rsp["fee"])
+        print(rsp["duration"])
+        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/deliveries"
+        ordStr= DBdata[dbItems]["finalOrd"]
+        ordStr = ordStr.replace("::","\n")
+        payload = {
+            "dropoff_address": addrP,
+            "pickup_address": addrD,
+            "quote_id": str(rsp["id"]),
+            "manifest": "Order From " + estNameStr+ " " + ordStr,
+            "dropoff_phone_number": DBdata[dbItems]["number"] ,
+            "pickup_phone_number": database.get("/restaurants/" + estName, "number2"),
+            "dropoff_name": "Caleb John",
+            'pickup_name': "TestRaunt",
+        }
+        headers = {
+            'Content-Type': "application/x-www-form-urlencoded",
+            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+            'User-Agent': "PostmanRuntime/7.16.3",
+            'Accept': "*/*",
+            'Cache-Control': "no-cache",
+            'Postman-Token': "a8e2692f-f65e-4cfb-8658-25324016b7ca,b7421a2d-8b36-4c6e-acd2-ceb641458a58",
+            'Host': "api.postmates.com",
+            'Accept-Encoding': "gzip, deflate",
+            'Content-Length': "517",
+            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+            'Connection': "keep-alive",
+            'cache-control': "no-cache",
+        }
+
+        response = requests.request("POST", url, data=payload, headers=headers)
+        rsp = (response.json())
+        trackingLink = rsp["tracking_url"]
+    else:
+        d = datetime.datetime.utcnow()  # <-- get time in UTC
+        dt = d.isoformat("T") + "Z"
+        print(dt)
+        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
+        payload = {"dropoff_address": addrP,
+                   "pickup_address": addrD}
+        headers = {
+            'Content-Type': "application/x-www-form-urlencoded",
+            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+            'User-Agent': "PostmanRuntime/7.16.3",
+            'Accept': "*/*",
+            'Cache-Control': "no-cache",
+            'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
+            'Host': "api.postmates.com",
+            'Accept-Encoding': "gzip, deflate",
+            'Content-Length': "145",
+            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+            'Connection': "keep-alive",
+            'cache-control': "no-cache"
+        }
+
+        response = requests.request("POST", url, data=payload, headers=headers)
+        rsp = (response.json())
+        print(rsp["fee"])
+        print(rsp["duration"])
+        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/deliveries"
+        payload = {
+            "dropoff_address": addrP,
+            "pickup_address": addrD,
+            "quote_id": str(rsp["id"]),
+            "manifest": "Cedar Order",
+            "dropoff_phone_number": "17203269719",
+            "pickup_phone_number": "14257890099",
+            "dropoff_name": "Caleb John",
+            'pickup_name': "TestRaunt",
+            "dropoff_ready_dt": dt
+        }
+        headers = {
+            'Content-Type': "application/x-www-form-urlencoded",
+            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+            'User-Agent': "PostmanRuntime/7.16.3",
+            'Accept': "*/*",
+            'Cache-Control': "no-cache",
+            'Postman-Token': "a8e2692f-f65e-4cfb-8658-25324016b7ca,b7421a2d-8b36-4c6e-acd2-ceb641458a58",
+            'Host': "api.postmates.com",
+            'Accept-Encoding': "gzip, deflate",
+            'Content-Length': "517",
+            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+            'Connection': "keep-alive",
+            'cache-control': "no-cache",
+        }
+
+    response = requests.request("POST", url, data=payload, headers=headers)
+    rsp = (response.json())
+    print(rsp)
+
 @app.route('/')
 @app.route('/index')
 def mainPage():
     return redirect(url_for('loginPage'))
 
 
-@app.route("/restaurants/" + uid + "rbt4813083403983494103934093480943109834093091341")
+@app.route("/restaurants/" + uid + "rbt1")
 def robotInit():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -3622,29 +3895,6 @@ def robotInit():
         return redirect(url_for('robotDeploy'))
     else:
         return redirect(url_for('loginPage'))
-
-
-@app.route("/restaurants/" + uid + "rbt1", methods=['POST'])
-def robotDeployX():
-    rsp = ((request.form))
-    table = int(rsp["table"]) - 1
-    robot = int(rsp['robot']) - 1
-    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
-    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    database.put("/restaurants/" + uid + "/robots/" + str(robot) + "/", str(table), 1)
-    return redirect(url_for('robotDeploy'))
-
-
-@app.route("/" + uid + "rbt1", methods=['GET'])
-def robotDeploy():
-    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
-    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    maxTables = len((database.get("/restaurants/" + uid, "/robots/0/")))
-    rbX = len((database.get("/restaurants/" + uid, "/robots/")))
-    return render_template("robotDeploy.html", max=maxTables, rbtNum=rbX)
-
 
 '''
 @app.errorhandler(500)
@@ -3667,11 +3917,15 @@ def not_found_error405(error):
 def not_found_error404(error):
     return redirect(url_for("loginRedo"))
 '''
+
 if __name__ == '__main__':
-    app.secret_key = 'CedarKey02'
-    app.config['SESSION_TYPE'] = 'filesystem'
-    sess = Session()
-    sess.init_app(app)
-    sess.permanent = True
-    # app.debug = True
-    app.run(host="0.0.0.0", port=5000)
+    try:
+        app.secret_key = 'CedarKey02'
+        app.config['SESSION_TYPE'] = 'filesystem'
+        sess = Session()
+        sess.init_app(app)
+        sess.permanent = True
+        # app.debug = True
+        app.run(host="0.0.0.0", port=5000)
+    except KeyboardInterrupt:
+        sys.exit()

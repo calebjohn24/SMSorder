@@ -1,5 +1,3 @@
-
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Order Food</title>
@@ -32,31 +30,24 @@
 <body>
 <br>
 <br>
-
-<form method="POST" action="{{btn}}">
-    <h2>Enter Your Name</h2>
-    <h2>
-    <input name="name" required>
-        </h2>
-    <br>
-    <hr>
-    <h2>Is This Order For Here or To Go?</h2>
-    <br>
-    <br>
-    <button type="submit" name="togo" value="to-go">To Go</button>
-    <br>
-    <br>
-    <br>
-     <button type="submit" name="togo" value="here">For Here</button>
-     <br>
-     <br>
-     <br>
-      <button type="submit" name="togo" value="delivery">Delivery</button>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-</form>
+<h2>Delivery Fee ${{fee}}</h2>
+<br><br>
+<h2>Estimate Delivery Time {{duration}} minutes</h2>
+<hr>
+<br>
+<h2>
+  <form method="POST" action="{{btn}}">
+<button type="submit" name="deliv" value="yes">Continue</button>
+<br>
+<br>
+<br>
+ <button type="submit" name="deliv" value="no">Change To Pick Up Or Dine In</button>
+ <br>
+ <br>
+ <br>
+  </form>
+<p><h6>Quote valid for next 5 minutes, subject to change after</h6></p>
+ <br>
+ <br>
+ <br>
 </body>
-</html>
