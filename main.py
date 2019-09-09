@@ -39,9 +39,11 @@ print(datetime.datetime.now(tz))
 client = plivo.RestClient(auth_id='MAYTVHN2E1ZDY4ZDA2YZ', auth_token='ODgzZDA1OTFiMjE2ZTRjY2U4ZTVhYzNiODNjNDll')
 mainLink = ""
 authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W', 'cajohn0205@gmail.com',
-                                                 extra={'id': 123})
+                                                 extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
+
 database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
 data = (database.get("restaurants/" + uid, "/menu/items/"))
+
 items = []
 config = {
     "apiKey": "AIzaSyB2it4zPzPdn_bW9OAglTHUtclidAw307o",
@@ -458,7 +460,7 @@ def updateLog():
 
 def genUsr(name, number, dbIndx):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     UserData = database.get("/restaurants/" + uid, "/users/")
     timeStamp = datetime.datetime.today()
@@ -475,7 +477,7 @@ def genUsr(name, number, dbIndx):
 
 def getReply(msg, number):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     currentTime = str((float(datetime.datetime.now(tz).hour)) + ((float(datetime.datetime.now(tz).minute)) / 100.0))
     day = datetime.datetime.today().weekday()
@@ -581,7 +583,7 @@ def inbound_sms():
 @app.route('/failed', methods=['POST'])
 def transactionFailed():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = request.json
@@ -601,7 +603,7 @@ def transactionFailed():
 def ipn():
     logYM = (datetime.datetime.now(tz).strftime("%Y-%m"))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = request.json
@@ -826,7 +828,7 @@ def loginPageCheck():
         user = auth.sign_in_with_email_and_password(str(rsp["email"]), pw)
         # print(user['localId'])
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                         'cajohn0205@gmail.com', extra={'id': 123})
+                                                         'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
         fireapp = firebase.FirebaseApplication('https://cedarchatbot.firebaseio.com/', authentication=authentication)
         testDB = (fireapp.get("/restaurants/", user["localId"]))
         if (str(user["localId"]) == str(uid) and testDB != None):
@@ -837,7 +839,7 @@ def loginPageCheck():
             return redirect(url_for('panel'))
         else:
             authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                             'cajohn0205@gmail.com', extra={'id': 123})
+                                                             'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
             # print("incorrect password")
             database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                     authentication=authentication)
@@ -845,7 +847,7 @@ def loginPageCheck():
             return render_template("login2.html", btn=str(estNameStr), restName=estNameStr)
     except Exception:
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                         'cajohn0205@gmail.com', extra={'id': 123})
+                                                         'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                 authentication=authentication)
         database.put("/restaurants/" + uid + "/", "loginTime", 0)
@@ -857,7 +859,7 @@ def loginPageCheck():
 def panel():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -919,7 +921,7 @@ def view():
 def addgiftcard():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -931,7 +933,7 @@ def addgiftcard():
 def addgiftcard1():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -952,7 +954,7 @@ def addgiftcard1():
 def addgiftcard2():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -1051,7 +1053,7 @@ def view2():
 def outStockg():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     ##print()
@@ -1083,7 +1085,7 @@ def outStockg():
 def outStockp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -1111,7 +1113,7 @@ def outStockp():
 def removeItemsDisp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     # print()
@@ -1133,7 +1135,7 @@ def removeItemsDisp():
 def removeItems():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -1153,7 +1155,7 @@ def removeItems():
         pdf.add_page()
         yStart = 20
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                         'cajohn0205@gmail.com', extra={'id': 123})
+                                                         'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
         menu = (database.get("restaurants/" + uid, "/menu/items/"))
         hours = (database.get("restaurants/" + uid, "/Hours/"))
@@ -1242,7 +1244,7 @@ def removeItems():
 def addItmDisp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     # print()
@@ -1256,7 +1258,7 @@ def addItmDisp():
 def addItmForm():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     # print()
@@ -1300,7 +1302,7 @@ def addItmForm():
 def addItmResp2():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -1344,7 +1346,7 @@ def addItmResp2():
 def addItmForm3():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -1362,7 +1364,7 @@ def addItmForm3():
 def addItmResp3():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     # print()
@@ -1394,7 +1396,7 @@ def addItmResp3():
         startHr = 0
         endHr = 0
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                         'cajohn0205@gmail.com', extra={'id': 123})
+                                                         'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
         menu = (database.get("restaurants/" + uid, "/menu/items/"))
         hours = (database.get("restaurants/" + uid, "/Hours/"))
@@ -1478,7 +1480,7 @@ def addItmResp3():
 def addCpn():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     # print()
@@ -1492,7 +1494,7 @@ def addCpn():
 def smsPromo():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -1512,7 +1514,7 @@ def smsPromo():
 def checksmsPromo():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     if ((currentTime - lastLogin) < sessionTime):
@@ -1542,7 +1544,7 @@ def sendsmsPromo():
     smtpObj = smtplib.SMTP_SSL("smtp.zoho.com", 465)
     smtpObj.login(sender, emailPass)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     numPromos = len(database.get("/restaurants/" + estName, "/promos/"))
     lim = int(database.get("/restaurants/" + estName, "/promoLim/"))
@@ -1583,7 +1585,7 @@ def sendsmsPromo():
 def addCpnResp():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     # print()
@@ -1634,7 +1636,7 @@ def loginKioskx():
     number = rsp['phone']
     print(number)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     currentTime = str((float(datetime.datetime.now(tz).hour)) + ((float(datetime.datetime.now(tz).minute)) / 100.0))
     day = datetime.datetime.today().weekday()
@@ -1720,7 +1722,7 @@ def getUUID():
     rsp = ((request.form))
     code = rsp["tickID"]
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     tickets = database.get("restaurants/" + uid, "/orders/")
     for tx in range(len(tickets)):
@@ -1742,7 +1744,7 @@ def getName():
     key = session.get('key', None)
     UUID = session.get('UUID', None)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     tickets = database.get("restaurants/" + uid, "/orders/")
     if(tickets[key]["kiosk"] == 0):
@@ -1759,7 +1761,7 @@ def getNameTime2():
     rsp = ((request.form))
     print(rsp)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     name = rsp["name"]
     togo = rsp["togo"]
@@ -1776,7 +1778,7 @@ def getNameTime2():
 @app.route('/' + uid + 'order20', methods=['GET'])
 def getTime():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
@@ -1817,7 +1819,7 @@ def getTime():
 @app.route('/' + uid + 'order20', methods=['POST'])
 def getTimeY():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
@@ -1828,7 +1830,7 @@ def getTimeY():
 @app.route('/' + uid + 'order30', methods=['POST'])
 def getTimeX():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
@@ -1841,7 +1843,7 @@ def getTimeX():
 @app.route('/' + uid + 'order40', methods=['GET'])
 def getDelivery():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
@@ -1880,7 +1882,7 @@ def getDelivery():
 @app.route('/' + uid + 'order40', methods=['POST'])
 def getTimeZ():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
@@ -1891,7 +1893,7 @@ def getTimeZ():
 @app.route('/' + uid + 'order60', methods=['POST'])
 def getTimeV():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
@@ -1910,7 +1912,7 @@ def getAddrX():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     print(rsp)
-    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': 123})
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     delMethod = database.get("restaurants/" + uid, "/delivery/type")
     if(delMethod == "postmates"):
@@ -1938,23 +1940,30 @@ def getAddrX():
             }
         response = requests.request("POST", url, data=payload, headers=headers)
         resp = (response.json())
-        print(database.get("restaurants/" + uid, "/delivery/split"))
-        print(resp)
-        print(resp['fee'])
-        print(resp['duration'])
-        fee = resp['fee']
-        fee = float(fee)
-        fee  = float(fee/100.0)
-        fee = fee * float(database.get("restaurants/" + uid, "/delivery/split"))
-        fee = round(fee,2)
-        delivDuration = resp['duration']
-        return(render_template("dispQuote.html", btn=uid+"postmatesQuote",fee=str(fee), duration=str(delivDuration)))
+        try:
+            print(database.get("restaurants/" + uid, "/delivery/split"))
+            print(resp)
+            print(resp['fee'])
+            print(resp['duration'])
+            fee = resp['fee']
+            fee = float(fee)
+            fee  = float(fee/100.0)
+            if((fee * float(database.get("restaurants/" + uid, "/delivery/split"))) > float(database.get("restaurants/" + uid, "/delivery/max"))):
+                fee = fee - float(database.get("restaurants/" + uid, "/delivery/max"))
+            else:
+                fee = fee * float(database.get("restaurants/" + uid, "/delivery/split"))
+            fee = round(fee,2)
+            delivDuration = resp['duration']
+            minAmt = float(database.get("restaurants/" + uid, "/delivery/minTick"))
+            return(render_template("dispQuote.html", btn=uid+"postmatesQuote",fee=str(fee), duration=str(delivDuration), minAmt=str(minAmt)))
+        except Exception:
+            return redirect(url_for('getAddr'))
     else:
         return redirect(url_for('inHouseDelivery'))
 
 @app.route('/'+uid+"postmatesQuote", methods=['POST'])
 def getDelQuote():
-    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': 123})
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
@@ -1973,7 +1982,7 @@ def getTable():
 @app.route('/' + uid + 'order1', methods=['POST'])
 def getTable2():
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
@@ -1996,7 +2005,7 @@ def order():
     # print(rsp)
     print(UUID)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     print(database.get("/restaurants/" + estName + "/orders/", str(key)))
     currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
@@ -2026,7 +2035,7 @@ def order():
             currentMenu = str(menKeys[mnx])
             break
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
@@ -2097,7 +2106,7 @@ def orderX():
     # print(UUID, key, itmKey)
     print(UUID)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     currentPrice = float(
         database.get("/restaurants/" + estName + "/orders/" + str(key) + "/item/" + str((rsp["rem"])), "price"))
@@ -2132,7 +2141,7 @@ def orderX():
             currentMenu = str(menKeys[mnx])
             break
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
@@ -2207,7 +2216,7 @@ def orderCat():
     prices = []
     currentTime = str((float(datetime.datetime.now(tz).hour)) + ((float(datetime.datetime.now(tz).minute)) / 100.0))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     UUID = session.get('UUID', None)
@@ -2227,7 +2236,7 @@ def orderCat():
             currentMenu = str(menKeys[mnx])
             break
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     names = []
@@ -2267,7 +2276,7 @@ def orderNm():
     keys = []
     prices = []
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     numItms = database.get("/restaurants/" + estName + "/orders/" + str(key), "item")
@@ -2302,7 +2311,7 @@ def ordertp():
     itmKey = session.get('itmKey', None)
     nameKey = session.get('nameKey', None)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     # print(menuItems[nameKey], "current item")
@@ -2318,7 +2327,7 @@ def ordertp():
     keys = []
     prices = []
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     toppings = menuItems[nameKey]["extras"]
@@ -2353,7 +2362,7 @@ def ConfirmItm():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     # print(menuItems[nameKey], "topping")
@@ -2450,7 +2459,7 @@ def ConfirmItm():
 def giftcard():
     key = session.get('key', None)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     return render_template("giftcard.html", back=uid + 'checkpayment', btn=uid + "giftcard")
 
@@ -2459,7 +2468,7 @@ def giftcard():
 def giftcardcheck():
     key = session.get('key', None)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     return render_template("giftcard3.html", back=uid + 'checkpayment', btn=uid + "giftcard")
 
@@ -2471,7 +2480,7 @@ def giftcardx():
     key = session.get('key', None)
     dbItems = key
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = float(DBdata[dbItems]["linkTotal"])
@@ -2861,7 +2870,7 @@ def pay():
     key = session.get('key', None)
     dbItems = key
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     DBdata = database.get("/restaurants/" + estName, "orders")
     if(DBdata[dbItems]["giftcard"] == 0):
@@ -2882,7 +2891,7 @@ def payX():
     key = session.get('key', None)
     dbItems = key
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = float(DBdata[dbItems]["linkTotal"])
@@ -2938,7 +2947,7 @@ def CheckPaymentMethod():
     UUID = session.get('UUID', None)
     key = session.get('key', None)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
@@ -3123,7 +3132,7 @@ def nextPayment():
     key = session.get('key', None)
     dbItems = key
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
     currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
@@ -3424,7 +3433,7 @@ def nextPayment():
 
     else:
         authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                         'cajohn0205@gmail.com', extra={'id': 123})
+                                                         'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
         database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/",
                                                 authentication=authentication)
         itms = database.get("/restaurants/" + estName + "/orders/" + str(key), "/item/")
@@ -3760,7 +3769,7 @@ def genPostmatesTick():
     delivID = session.get('delId', None)
     dbItems = key
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     DBdata = database.get("/restaurants/" + estName, "orders")
     addrD =  database.get("/restaurants/" + estName, "address")
@@ -3887,7 +3896,7 @@ def mainPage():
 def robotInit():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': 123})
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     lastLogin = float(database.get("/restaurants/" + uid, "loginTime"))
     ##print()
