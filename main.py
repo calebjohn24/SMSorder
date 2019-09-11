@@ -1905,16 +1905,90 @@ def getTimeV():
 
 @app.route('/'+uid+"address", methods=['GET'])
 def getAddr():
-    return(render_template("getAddr.html", btn=uid+"address"))
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    usrIndx = database.get("restaurants/" + uid+"/orders/"+str(key)+"/","userIndx")
+    try:
+        addrs = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"addrs")
+        return(render_template("pickAddr.html", btn=uid+"address2x",addrs=addrs,len=len(addrs)))
+    except Exception:
+        return(render_template("getAddr.html", btn=uid+"address"))
+
+@app.route('/'+uid+"address2x", methods=['POST'])
+def getAddr2x():
+    request.parameter_storage_class = ImmutableOrderedMultiDict
+    rsp = ((request.form))
+    print(rsp)
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    if(rsp["addr"] == "new"):
+        return(render_template("getAddr.html", btn=uid+"address"))
+    else:
+        usrIndx = database.get("restaurants/" + uid+"/orders/"+str(key)+"/","userIndx")
+        addrs = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"/addrs/"+str(rsp["addrs"]))
+        delMethod = database.get("restaurants/" + uid, "/delivery/type")
+        usrIndx = database.get("restaurants/" + uid+"/orders/"+str(key)+"/","userIndx")
+        addrs = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"addrs")
+        if(delMethod == "postmates"):
+            url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
+            addrP = database.get("restaurants/" + uid, "/address/")
+            addrD = addrs
+            payload = {"dropoff_address":addrP,
+                       "pickup_address":addrD}
+            headers = {
+                'Content-Type': "application/x-www-form-urlencoded",
+                'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+                'User-Agent': "PostmanRuntime/7.16.3",
+                'Accept': "*/*",
+                'Cache-Control': "no-cache",
+                'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
+                'Host': "api.postmates.com",
+                'Accept-Encoding': "gzip, deflate",
+                'Content-Length': "145",
+                'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+                'Connection': "keep-alive",
+                'cache-control': "no-cache"
+                }
+            response = requests.request("POST", url, data=payload, headers=headers)
+            resp = (response.json())
+            try:
+                print(database.get("restaurants/" + uid, "/delivery/split"))
+                print(resp)
+                print(resp['fee'])
+                print(resp['duration'])
+                fee = resp['fee']
+                fee = float(fee)
+                fee  = float(fee/100.0)
+                if((fee * float(database.get("restaurants/" + uid, "/delivery/split"))) > float(database.get("restaurants/" + uid, "/delivery/max"))):
+                    fee = fee - float(database.get("restaurants/" + uid, "/delivery/max"))
+                else:
+                    fee = fee * float(database.get("restaurants/" + uid, "/delivery/split"))
+                fee = round(fee,2)
+                delivDuration = resp['duration']
+                minAmt = float(database.get("restaurants/" + uid, "/delivery/minTick"))
+                return(render_template("dispQuote.html", btn=uid+"postmatesQuote",fee=str(fee), duration=str(delivDuration), minAmt=str(minAmt)))
+            except Exception:
+                return redirect(url_for('getAddr'))
+        else:
+            return redirect(url_for('inHouseDelivery'))
 
 @app.route('/'+uid+"address", methods=['POST'])
 def getAddrX():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     print(rsp)
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     delMethod = database.get("restaurants/" + uid, "/delivery/type")
+    usrIndx = database.get("restaurants/" + uid+"/orders/"+str(key)+"/","userIndx")
+    try:
+        addrs = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"addrs")
     if(delMethod == "postmates"):
         url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
         addrP = database.get("restaurants/" + uid, "/address/")
@@ -1955,6 +2029,7 @@ def getAddrX():
             fee = round(fee,2)
             delivDuration = resp['duration']
             minAmt = float(database.get("restaurants/" + uid, "/delivery/minTick"))
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "//", )
             return(render_template("dispQuote.html", btn=uid+"postmatesQuote",fee=str(fee), duration=str(delivDuration), minAmt=str(minAmt)))
         except Exception:
             return redirect(url_for('getAddr'))
@@ -3103,19 +3178,29 @@ def CheckPaymentMethod():
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = (DBdata[key]["linkTotal"])
     subTotal += DBdata[key]["discTotal"]
-    # print(subTotal)
     disc = (DBdata[key]["discStr"])
     Tax = float(subTotal * 0.1)
     Total = float(subTotal + float(Tax) + 0.5)
     subTotalStr = ('$' + format(subTotal, ',.2f'))
     TotalStr = ('$' + format(Total, ',.2f'))
     TaxStr = ('$' + format(Tax, ',.2f'))
-    print(DBdata[key]["kiosk"])
+    delivFeeStr = ""
     try:
         if (DBdata[key]["kiosk"] == 0):
+            if(DBdata[key]["togo"] == "delivery"):
+                subTotal = (DBdata[key]["linkTotal"])
+                subTotal += DBdata[key]["discTotal"]
+                disc = (DBdata[key]["discStr"])
+                url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes" mnmk
+                Tax = float(subTotal * 0.1)
+                Total = float(subTotal + float(Tax) + 0.5)
+                subTotalStr = ('$' + format(subTotal, ',.2f'))
+                TotalStr = ('$' + format(Total, ',.2f'))
+                TaxStr = ('$' + format(Tax, ',.2f'))
+                delivFeeStr = ""
             return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
                                    total=TotalStr,
-                                   CPN=disc, btn2=uid + "order")
+                                   CPN=disc, btn2=uid + "order", deliv=delivFeeStr)
         else:
             return render_template("paymentMethodKiosk.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
                                    total=TotalStr,
@@ -3762,130 +3847,6 @@ def nextPayment():
         except Exception:
             return render_template("thankMsg2.html")
 
-
-@app.route('/'+"deliPostmates",methods=['POST'])
-def genPostmatesTick():
-    key = session.get('key', None)
-    delivID = session.get('delId', None)
-    dbItems = key
-    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
-                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
-    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    DBdata = database.get("/restaurants/" + estName, "orders")
-    addrD =  database.get("/restaurants/" + estName, "address")
-    addrP = "2421, Sahalee Dr W, Sammamish, WA, 98074"
-    ordTime = float(DBdata[dbItems]["time"])
-    if(ordTime == "PICKUP ASAP"):
-        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
-        payload = {"dropoff_address": addrP,
-                   "pickup_address": addrD}
-        headers = {
-            'Content-Type': "application/x-www-form-urlencoded",
-            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
-            'User-Agent': "PostmanRuntime/7.16.3",
-            'Accept': "*/*",
-            'Cache-Control': "no-cache",
-            'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
-            'Host': "api.postmates.com",
-            'Accept-Encoding': "gzip, deflate",
-            'Content-Length': "145",
-            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
-            'Connection': "keep-alive",
-            'cache-control': "no-cache"
-        }
-
-        response = requests.request("POST", url, data=payload, headers=headers)
-        rsp = (response.json())
-        print(rsp["fee"])
-        print(rsp["duration"])
-        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/deliveries"
-        ordStr= DBdata[dbItems]["finalOrd"]
-        ordStr = ordStr.replace("::","\n")
-        payload = {
-            "dropoff_address": addrP,
-            "pickup_address": addrD,
-            "quote_id": str(rsp["id"]),
-            "manifest": "Order From " + estNameStr+ " " + ordStr,
-            "dropoff_phone_number": DBdata[dbItems]["number"] ,
-            "pickup_phone_number": database.get("/restaurants/" + estName, "number2"),
-            "dropoff_name": "Caleb John",
-            'pickup_name': "TestRaunt",
-        }
-        headers = {
-            'Content-Type': "application/x-www-form-urlencoded",
-            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
-            'User-Agent': "PostmanRuntime/7.16.3",
-            'Accept': "*/*",
-            'Cache-Control': "no-cache",
-            'Postman-Token': "a8e2692f-f65e-4cfb-8658-25324016b7ca,b7421a2d-8b36-4c6e-acd2-ceb641458a58",
-            'Host': "api.postmates.com",
-            'Accept-Encoding': "gzip, deflate",
-            'Content-Length': "517",
-            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
-            'Connection': "keep-alive",
-            'cache-control': "no-cache",
-        }
-
-        response = requests.request("POST", url, data=payload, headers=headers)
-        rsp = (response.json())
-        trackingLink = rsp["tracking_url"]
-    else:
-        d = datetime.datetime.utcnow()  # <-- get time in UTC
-        dt = d.isoformat("T") + "Z"
-        print(dt)
-        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
-        payload = {"dropoff_address": addrP,
-                   "pickup_address": addrD}
-        headers = {
-            'Content-Type': "application/x-www-form-urlencoded",
-            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
-            'User-Agent': "PostmanRuntime/7.16.3",
-            'Accept': "*/*",
-            'Cache-Control': "no-cache",
-            'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
-            'Host': "api.postmates.com",
-            'Accept-Encoding': "gzip, deflate",
-            'Content-Length': "145",
-            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
-            'Connection': "keep-alive",
-            'cache-control': "no-cache"
-        }
-
-        response = requests.request("POST", url, data=payload, headers=headers)
-        rsp = (response.json())
-        print(rsp["fee"])
-        print(rsp["duration"])
-        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/deliveries"
-        payload = {
-            "dropoff_address": addrP,
-            "pickup_address": addrD,
-            "quote_id": str(rsp["id"]),
-            "manifest": "Cedar Order",
-            "dropoff_phone_number": "17203269719",
-            "pickup_phone_number": "14257890099",
-            "dropoff_name": "Caleb John",
-            'pickup_name': "TestRaunt",
-            "dropoff_ready_dt": dt
-        }
-        headers = {
-            'Content-Type': "application/x-www-form-urlencoded",
-            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
-            'User-Agent': "PostmanRuntime/7.16.3",
-            'Accept': "*/*",
-            'Cache-Control': "no-cache",
-            'Postman-Token': "a8e2692f-f65e-4cfb-8658-25324016b7ca,b7421a2d-8b36-4c6e-acd2-ceb641458a58",
-            'Host': "api.postmates.com",
-            'Accept-Encoding': "gzip, deflate",
-            'Content-Length': "517",
-            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
-            'Connection': "keep-alive",
-            'cache-control': "no-cache",
-        }
-
-    response = requests.request("POST", url, data=payload, headers=headers)
-    rsp = (response.json())
-    print(rsp)
-
 @app.route('/')
 @app.route('/index')
 def mainPage():
@@ -3909,7 +3870,6 @@ def robotInit():
 @app.errorhandler(500)
 def not_found_error500(error):
     return redirect(url_for("loginRedo"))
-
 @app.errorhandler(502)
 def not_found_error502(error):
     return redirect(url_for("loginRedo"))
