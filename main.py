@@ -1623,7 +1623,7 @@ def checksmsPromo():
         print(lim)
         if (numPromos <= lim):
             database.put("/restaurants/" + estName + "/promos/" + str((numPromos)), "/name/", name)
-            numUsr = len(database.get("/restaurants/" + estName, "/users/")) - 1
+            numUsr = len(database.get("/", "users")) - 1
             lim = lim - numPromos
             database.put("/restaurants/" + estName + "/promos/" + str((numPromos)), "/numTxts/", numUsr)
             return render_template('checkPromo.html', send=str(promoPass + "smsPromo" + uid + "send2"), numUsr=numUsr,
@@ -1644,20 +1644,28 @@ def sendsmsPromo():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     numPromos = len(database.get("/restaurants/" + estName, "/promos/"))
     lim = int(database.get("/restaurants/" + estName, "/promoLim/"))
-    print(lim)
     if (numPromos <= lim):
         promoIndx = int(len(database.get("/restaurants/" + estName, "/promos/"))) - 1
         reply = database.get("/restaurants/" + estName, "/promos/" + str(promoIndx) + "/" + "name")
         numbers = []
-        for nn in range((len(database.get("/restaurants/" + estName, "/users/")))):
-            if (database.get("/restaurants/" + estName, "/users/" + str(nn) + "/number/") != "555555555"):
-                numbers.append(database.get("/restaurants/" + estName, "/users/" + str(nn) + "/number/"))
+        for nn in range((len(database.get("/","users")))):
+            if (database.get("/users/", str(nn) + "/number/") != "555555555"):
+                restaurants = database.get("/users/", str(nn) + "/restaurants/")
+                try:
+                    print(restaurants[estNameStr])
+                    if(restaurants[estNameStr] != None):
+                        print("found")
+                        print(database.get("/users/", str(nn) + "/number/"))
+                        numbers.append(database.get("/users/", str(nn) + "/number/"))
+                except Exception:
+                    print("exec")
         print(numbers)
         numStr = ""
         for nums in range(len(numbers)):
             numStr += numbers[nums]
             numStr += "<"
         numStr = numStr[:-1]
+        print(numStr)
         try:
             client.messages.create(
                 src=botNumber,
