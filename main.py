@@ -1111,7 +1111,6 @@ def view2():
                     }
                 response = requests.request("POST", url, data=payload, headers=headers)
                 rsp = (response.json())
-                print(rsp["tracking_url"])
                 reply = "Your food is ready and your courier is on their way click here to track your order\n"+rsp["tracking_url"]
             else:
                 reply = "-Your order is ready and will be delivered to your table shortly\n-To order again just text " + '"order"'
