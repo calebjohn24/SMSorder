@@ -464,16 +464,15 @@ def genUsr(name, number, dbIndx):
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    UserData = database.get("/restaurants/" + uid, "/users/")
+    UserData = database.get("/", "/users/")
     timeStamp = datetime.datetime.today()
-    database.put("/restaurants/" + uid + "/users/", "/" + str(len(UserData)) + "/name", name)
-    database.put("/restaurants/" + uid + "/users/", "/" + str(len(UserData)) + "/number", number)
-    database.put("/restaurants/" + uid + "/users/",
-                 "/" + str(len(UserData)) + "/restaurants/" + estNameStr + "/" + str(0) + "/StartTime",
+    database.put("/users/", "/" + str(len(UserData)) + "/name", name)
+    database.put("/users/", "/" + str(len(UserData)) + "/number", number)
+    database.put("/users/","/" + str(len(UserData)) + "/restaurants/" + estNameStr + "/" + str(0) + "/StartTime",
                  str(timeStamp))
-    database.put("/restaurants/" + uid + "/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/name/",
+    database.put("/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/name/",
                  estNameStr)
-    database.put("/restaurants/" + uid + "/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/points/", 0)
+    database.put("/users/", "/" + str(len(UserData)) + "/loyalty/" + str(0) + "/points/", 0)
     database.put("/restaurants/" + estName + "/orders/" + str(dbIndx) + "/", "/usrIndx/", len(UserData))
 
 
@@ -523,7 +522,7 @@ def getReply(msg, number):
                 "number":str(number)
             }
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)), "/", tickData)
-            UserData = database.get("/restaurants/" + uid + "/", "users")
+            UserData = database.get("/", "users")
             for usr in range(len(UserData)):
                 if (number == UserData[usr]["number"]):
                     timeStamp = datetime.datetime.today()
@@ -533,13 +532,13 @@ def getReply(msg, number):
 
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 2)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/", usr)
-                    numOrders = database.get("/restaurants/" + uid + "/users/" + str(usr) + "/restaurants/", estNameStr)
+                    numOrders = database.get("/users/" + str(usr) + "/restaurants/", estNameStr)
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                                  (len(numOrders)))
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/",
                                  time.time())
                     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 0)
-                    database.put("/restaurants/" + uid + "/users/",
+                    database.put("/users/",
                                  "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str(
                                      (len(numOrders))) + "/startTime",
                                  str(timeStamp))
@@ -646,7 +645,7 @@ def ipn():
                              (datetime.datetime.now(tz).strftime("%d")))
                 database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "/year/",
                              (datetime.datetime.now(tz).strftime("%Y")))
-                numOrders = database.get("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/", estNameStr)
+                numOrders = database.get("/users/" + str(usrIndx) + "/restaurants/", estNameStr)
                 logData = database.get("/log/" + uid + "/", logYM)
                 if (logData == None):
                     database.put("/log/" + uid + "/" + logYM, "/newCustomers/", 0)
@@ -768,17 +767,18 @@ def ipn():
                 numItms = len(DBdata[dbItems]["item"])
                 orderIndx = DBdata[dbItems]["orderIndx"]
                 usrIndx = DBdata[dbItems]["userIndx"]
-                database.put("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+                database.put("/users/" + str(usrIndx) + "/", "/zipCode/", rsp['data']['object']['billing_details']["address"]['postal_code'])
+                database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                     orderIndx) + "/", "total",
                              ((DBdata[dbItems]["linkTotal"] + 0.1) * 1.1))
-                database.put("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+                database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                     orderIndx) + "/",
                              "tickSize",
                              numItms)
-                database.put("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+                database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                     orderIndx) + "/", "items",
                              DBdata[dbItems]["item"])
-                database.put("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+                database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                     orderIndx) + "/",
                              "duration",
                              duration)
@@ -800,11 +800,12 @@ def ipn():
                     itms = str(DBdata[dbItems]["finalOrder"])
                     itms = itms.replace("::", "\n-")
                     now = datetime.datetime.now(tz)
-                    if(DBdata[dbItems]["delivFee"] != None and DBdata[dbItems]["togo"] == "delivery"):
-                        writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
-                            DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
-                            DBdata[dbItems]["discStr"]) + "\n" + str(DBdata[dbItems]["togo"]) +"fee $"+str(DBdata[dbItems]["delivFee"])+"\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(round((Total - subTotal), 2)) + "\nTotal " + TotalStr
-                    else:
+                    try:
+                        if(DBdata[dbItems]["delivFee"] != None and DBdata[dbItems]["togo"] == "delivery"):
+                            writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
+                                DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
+                                DBdata[dbItems]["discStr"]) + "\n" + str(DBdata[dbItems]["togo"]) +"fee $"+str(DBdata[dbItems]["delivFee"])+"\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(round((Total - subTotal), 2)) + "\nTotal " + TotalStr
+                    except Exception as e:
                         writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
                             DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
                             DBdata[dbItems]["discStr"]) \
@@ -1770,7 +1771,7 @@ def loginKioskx():
     database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)), "/", tickData)
     session['UUID'] = UUID
     session['key'] = len(DBdata)
-    UserData = database.get("/restaurants/" + uid + "/", "users")
+    UserData = database.get("/", "users")
     for usr in range(len(UserData)):
         if (number == UserData[usr]["number"]):
             timeStamp = datetime.datetime.today()
@@ -1780,13 +1781,13 @@ def loginKioskx():
 
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/stage/", 2)
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/userIndx/", usr)
-            numOrders = database.get("/restaurants/" + uid + "/users/" + str(usr) + "/restaurants/", estNameStr)
+            numOrders = database.get("/users/" + str(usr) + "/restaurants/", estNameStr)
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/orderIndx/",
                          (len(numOrders)))
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "startTime/",
                          time.time())
             database.put("/restaurants/" + estName + "/orders/" + str(len(DBdata)) + "/", "/ret/", 0)
-            database.put("/restaurants/" + uid + "/users/",
+            database.put("/users/",
                          "/" + str(usr) + "/restaurants/" + estNameStr + "/" + str(
                              (len(numOrders))) + "/startTime",
                          str(timeStamp))
@@ -1861,6 +1862,8 @@ def getNameTime2():
     name = rsp["name"]
     togo = rsp["togo"]
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/name/", name)
+    usrIndx = database.get("restaurants/" + uid+"/orders/"+str(key)+"/","userIndx")
+    database.put("/users/" + str(usrIndx)+"/", "name", name)
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/togo/", togo)
     if (togo == "to-go"):
         return redirect(url_for('getTime'))
@@ -2992,19 +2995,19 @@ def giftcardx():
                     orderIndx = DBdata[dbItems]["orderIndx"]
                     usrIndx = DBdata[dbItems]["userIndx"]
                     database.put(
-                        "/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+                        "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                             orderIndx) + "/", "total",
                         Total)
                     database.put(
-                        "/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+                        "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                             orderIndx) + "/", "tickSize",
                         numItms)
                     database.put(
-                        "/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+                        "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                             orderIndx) + "/", "items",
                         DBdata[dbItems]["item"])
                     database.put(
-                        "/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+                        "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
                             orderIndx) + "/", "duration",
                         duration)
                     number = DBdata[dbItems]["number"]
@@ -3086,7 +3089,7 @@ def dispMSGend():
     return render_template("thankMsg.html")
 @app.route("/thankMsg2lnk")
 def dispMSGend2():
-    return render_template("thankMsg2.html")
+    return render_template("thankMsg2.html",btn=uid+"kiosk")
 @app.route("/charge", methods=['GET'])
 def pay():
     key = session.get('key', None)
@@ -3098,8 +3101,10 @@ def pay():
     if(DBdata[dbItems]["giftcard"] == 0):
         subTotal = float(DBdata[dbItems]["linkTotal"])
         subTotal += DBdata[dbItems]["discTotal"]
-        if(DBdata[dbItems]["delivFee"] != None and DBdata[dbItems]["togo"] == "delivery"):
+        try:
             subTotal += DBdata[dbItems]["delivFee"]
+        except KeyError:
+            pass
         Tax = subTotal * 0.1
         Total = float(subTotal) + float(Tax) + 0.50
         Total = round(Total, 2)
@@ -3107,8 +3112,11 @@ def pay():
     else:
         subTotal = float(DBdata[dbItems]["linkTotal"])
         subTotal += DBdata[dbItems]["discTotal"]
-        if(DBdata[dbItems]["delivFee"] != None and DBdata[dbItems]["togo"] == "delivery"):
-            subTotal += DBdata[dbItems]["delivFee"]
+        try:
+            if(DBdata[dbItems]["delivFee"] != None and DBdata[dbItems]["togo"] == "delivery"):
+                subTotal += DBdata[dbItems]["delivFee"]
+        except Exception:
+            pass
         Tax = subTotal * 0.1
         Total = float(subTotal) + float(Tax) + 0.50
         Total = round(Total, 2)
@@ -3853,16 +3861,16 @@ def nextPayment():
         numItms = len(DBdata[dbItems]["item"])
         orderIndx = DBdata[dbItems]["orderIndx"]
         usrIndx = DBdata[dbItems]["userIndx"]
-        database.put("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
             orderIndx) + "/", "total",
                      Total)
-        database.put("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
             orderIndx) + "/", "tickSize",
                      numItms)
-        database.put("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
             orderIndx) + "/", "items",
                      DBdata[dbItems]["item"])
-        database.put("/restaurants/" + uid + "/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
+        database.put("/users/" + str(usrIndx) + "/restaurants/" + estNameStr + "/" + str(
             orderIndx) + "/", "duration",
                      duration)
         database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "finalOrder/", finalOrd)
