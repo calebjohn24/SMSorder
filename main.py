@@ -90,6 +90,8 @@ def updatelogDay():
         totalArr.append(newCust)
         retCust = logData['retCustomers']
         totalArr.append(retCust)
+        pFees = logData['postmatesFees']
+        totalArr.append(pFees)
         totalDF = pd.DataFrame()
         totalDF['Totals'] = totalArr
         wks.set_dataframe(totalDF, (1, 6))
@@ -651,6 +653,7 @@ def ipn():
                     database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
                     database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
                     database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
+                    database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", 0.0)
                     database.put("/log/" + uid + "/" + logYM, "/skus/-/numSold", 0)
                     database.put("/log/" + uid + "/" + logYM, "/skus/-/rev", 0)
                 logData = database.get("/log/" + uid + "/", logYM)
@@ -706,6 +709,7 @@ def ipn():
                     database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
                     database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
                     database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
+                    database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", 0.0)
                     database.put("/log/" + uid + "/" + logYM, "/skus/-/numSold", 0)
                     database.put("/log/" + uid + "/" + logYM, "/skus/-/rev", 0)
                 logData = database.get("/log/" + uid + "/", logYM)
@@ -809,6 +813,12 @@ def ipn():
                     message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
                     smtpObj.sendmail(sender, rec, message)
                     smtpObj.close()
+                    if(DBdata[dbItems]["togo"] == "delivery"):
+                        client.messages.create(
+                            src=botNumber,
+                            dst=DBdata[dbItems]["number"],
+                            text="Your order is being prepared, we'll send you a tracking link when your order is on the way"
+                        )
                     database.put("/restaurants/" + estName + "/orders/" + str(dbItems) + "/", "number/", str((number) + "."))
             updateLog()
     return (" ", 200)
@@ -1001,6 +1011,7 @@ def addgiftcard2():
 def view2():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
+    print(rsp)
     item = (rsp['item'])
     # print(item)
     orders = database.get("/restaurants/" + estName, "orders")
@@ -1018,6 +1029,90 @@ def view2():
             print(number)
             if (orders[ords]["togo"] == "to-go"):
                 reply = "-Your Order is ready you can pick it up at the counter\n-To order again just text " + '"order"'
+            elif(orders[ords]["togo"] == "delivery"):
+                url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
+                addrP = database.get("/restaurants/" + estName, "address")
+                addrD = orders[ords]["addrs"]
+                payload = {"dropoff_address":addrP,
+                           "pickup_address":addrD}
+                headers = {
+                    'Content-Type': "application/x-www-form-urlencoded",
+                    'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+                    'User-Agent': "PostmanRuntime/7.16.3",
+                    'Accept': "*/*",
+                    'Cache-Control': "no-cache",
+                    'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
+                    'Host': "api.postmates.com",
+                    'Accept-Encoding': "gzip, deflate",
+                    'Content-Length': "145",
+                    'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+                    'Connection': "keep-alive",
+                    'cache-control': "no-cache"
+                    }
+                response = requests.request("POST", url, data=payload, headers=headers)
+                resp = (response.json())
+                print(resp)
+                logYM = (datetime.datetime.now(tz).strftime("%Y-%m"))
+                logData = database.get("/log/" + uid + "/", logYM)
+                if (logData == None):
+                    database.put("/log/" + uid + "/" + logYM, "/newCustomers/", 0)
+                    database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
+                    database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
+                    database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", 0.0)
+                    database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
+                    database.put("/log/" + uid + "/" + logYM, "/skus/-/numSold", 0)
+                    database.put("/log/" + uid + "/" + logYM, "/skus/-/rev", 0)
+                logData = database.get("/log/" + uid + "/", logYM)
+                pFees = logData['postmatesFees']
+                fee = float(resp["fee"])
+                pFees += fee/100.0
+                database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", pFees)
+                logYM = (datetime.datetime.now(tz).strftime("%Y-%m-%d"))
+                logData = database.get("/log/" + uid + "/", logYM)
+                if (logData == None):
+                    database.put("/log/" + uid + "/" + logYM, "/newCustomers/", 0)
+                    database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
+                    database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
+                    database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", 0.0)
+                    database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
+                    database.put("/log/" + uid + "/" + logYM, "/skus/-/numSold", 0)
+                    database.put("/log/" + uid + "/" + logYM, "/skus/-/rev", 0)
+                logData = database.get("/log/" + uid + "/", logYM)
+                pFees = logData['postmatesFees']
+                fee = float(resp["fee"])
+                fee = fee/100.0
+                fee = fee - orders[ords]["delivFee"]
+                pFees += fee
+                database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", pFees)
+                url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/deliveries"
+                payload = {
+                "dropoff_address":addrP,
+                "pickup_address":addrD,
+                "quote_id":str(resp["id"]),
+                "manifest":orders[ords]["finalOrder"],
+                "dropoff_phone_number":orders[ords]["number"][:-1],
+                "pickup_phone_number":database.get("/restaurants/" + estName, "number2"),
+                    "dropoff_name":estNameStr,
+                'pickup_name':"TestRaunt",
+                }
+                headers = {
+                    'Content-Type': "application/x-www-form-urlencoded",
+                    'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+                    'User-Agent': "PostmanRuntime/7.16.3",
+                    'Accept': "*/*",
+                    'Cache-Control': "no-cache",
+                    'Postman-Token': "a8e2692f-f65e-4cfb-8658-25324016b7ca,b7421a2d-8b36-4c6e-acd2-ceb641458a58",
+                    'Host': "api.postmates.com",
+                    'Accept-Encoding': "gzip, deflate",
+                    'Content-Length': "517",
+                    'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+                    'Connection': "keep-alive",
+                    'cache-control': "no-cache",
+                    }
+                response = requests.request("POST", url, data=payload, headers=headers)
+                rsp = (response.json())
+                print(rsp["tracking_url"])
+                reply = "Your food is ready and your courier is on their way click here to track your order\n"+rsp["tracking_url"]
             else:
                 reply = "-Your order is ready and will be delivered to your table shortly\n-To order again just text " + '"order"'
             client.messages.create(
@@ -1039,15 +1134,13 @@ def view2():
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
                 # print(TotalStr)
-                writeStr = str(orders[ords]["name"]) + "-" + str(orders[ords]["number"]) + " || " + str(
-                    orders[ords]["finalOrder"]) + " " + str(
-                    orders[ords]["discStr"]) \
-                           + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " \
-                                                                                                       "" + TotalStr + " || " + str(
-                    orders[ords]["cash"])
-                keys.append(UUID)
-                # print(writeStr)
-                webDataDisp.append(writeStr)
+                try:
+                    writeStr = str(orders[ords]["name"]) + "-" + str(orders[ords]["number"]) + " || " + str(orders[ords]["finalOrder"]) + " " + str(orders[ords]["discStr"]) + " || " + str(orders[ords]["togo"]) + " || " + str(orders[ords]["time"]) + " || " + TotalStr + " || " + str(orders[ords]["cash"])
+                    keys.append(UUID)
+                    # print(writeStr)
+                    webDataDisp.append(writeStr)
+                except Exception:
+                    pass
     return render_template("indexV.html", len=len(webDataDisp), webDataDisp=webDataDisp, keys=keys,
                            btn=str(uid + "view"))
 
@@ -2568,10 +2661,47 @@ def giftcardx():
                                                      'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     DBdata = database.get("/restaurants/" + estName, "orders")
-    subTotal = float(DBdata[dbItems]["linkTotal"])
-    subTotal += DBdata[dbItems]["discTotal"]
-    Tax = subTotal * 0.1
-    Total = float(subTotal) + float(Tax) + 0.50
+    if(DBdata[dbItems]["togo"] == "delivery"):
+        subTotal = (DBdata[key]["linkTotal"])
+        subTotal += DBdata[key]["discTotal"]
+        disc = (DBdata[key]["discStr"])
+        url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
+        addrD = DBdata[key]["addrs"]
+        addrP = database.get("restaurants/" + uid, "/address/")
+        payload = {"dropoff_address":addrP,
+                   "pickup_address":addrD}
+        headers = {
+            'Content-Type': "application/x-www-form-urlencoded",
+            'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+            'User-Agent': "PostmanRuntime/7.16.3",
+            'Accept': "*/*",
+            'Cache-Control': "no-cache",
+            'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
+            'Host': "api.postmates.com",
+            'Accept-Encoding': "gzip, deflate",
+            'Content-Length': "145",
+            'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+            'Connection': "keep-alive",
+            'cache-control': "no-cache"
+            }
+        response = requests.request("POST", url, data=payload, headers=headers)
+        resp = (response.json())
+        fee = float(fee)
+        fee  = float(fee/100.0)
+        if((fee * float(database.get("restaurants/" + uid, "/delivery/split"))) > float(database.get("restaurants/" + uid, "/delivery/max"))):
+            fee = fee - float(database.get("restaurants/" + uid, "/delivery/max"))
+        else:
+            fee = fee * float(database.get("restaurants/" + uid, "/delivery/split"))
+        fee = round(fee,2)
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "delivFee", fee)
+        subTotal += fee
+        Tax = float(subTotal * 0.1)
+        Total = float(subTotal + float(Tax) + 0.5)
+    else:
+        subTotal = float(DBdata[dbItems]["linkTotal"])
+        subTotal += DBdata[dbItems]["discTotal"]
+        Tax = subTotal * 0.1
+        Total = float(subTotal) + float(Tax) + 0.50
     cardNum = rsp['gcard']
     cards = database.get("/restaurants/" + estName,"/giftcards/")
     menuItems = database.get("/restaurants/" + estName + "/menu/", "items")
@@ -2734,6 +2864,7 @@ def giftcardx():
                         database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
                         database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
                         database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
+                        database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", 0.0)
                         database.put("/log/" + uid + "/" + logYM, "/skus/-/numSold", 0)
                         database.put("/log/" + uid + "/" + logYM, "/skus/-/rev", 0)
                     logData = database.get("/log/" + uid + "/", logYM)
@@ -2795,6 +2926,7 @@ def giftcardx():
                         database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
                         database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
                         database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
+                        database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", 0.0)
                         database.put("/log/" + uid + "/" + logYM, "/skus/-/numSold", 0)
                         database.put("/log/" + uid + "/" + logYM, "/skus/-/rev", 0)
                     logData = database.get("/log/" + uid + "/", logYM)
@@ -2912,7 +3044,13 @@ def giftcardx():
                         subTotalStr = ('$' + format(subTotal, ',.2f'))
                         TotalStr = ('$' + format(Total, ',.2f'))
                         TaxStr = ('$' + format(Tax, ',.2f'))
-                        # print(TotalStr)
+                        #add delivery code
+                        if(DBdata[dbItems]["togo"] == "delivery"):
+                            client.messages.create(
+                                src=botNumber,
+                                dst=number,
+                                text="Your order is being prepared, we'll send you a tracking link when your order is on the way"
+                            )
                         itms = str(DBdata[dbItems]["finalOrder"])
                         itms = itms.replace("::", "\n-")
                         now = datetime.datetime.now(tz)
@@ -3232,10 +3370,8 @@ def CheckPaymentMethod():
                     }
                 response = requests.request("POST", url, data=payload, headers=headers)
                 resp = (response.json())
-                print(database.get("restaurants/" + uid, "/delivery/split"))
                 print(resp)
-                print(resp['fee'])
-                print(resp['duration'])
+                print(database.get("restaurants/" + uid, "/delivery/split"))
                 fee = resp['fee']
                 fee = float(fee)
                 fee  = float(fee/100.0)
@@ -3254,10 +3390,12 @@ def CheckPaymentMethod():
                 subTotalStr = ('$' + format(subTotal, ',.2f'))
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
-                print(delivStr)
+                delivStr = str(fee)
+                print(subTotal)
+                print(fee)
                 return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
                                        total=TotalStr,
-                                       CPN=disc, btn2=uid + "order", deliv=delivStr)
+                                       CPN=disc, btn2=uid + "order", deliv=str(fee))
             return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
                                    total=TotalStr,
                                    CPN=disc, btn2=uid + "order", deliv=delivStr)
@@ -3268,7 +3406,7 @@ def CheckPaymentMethod():
     except Exception:
         return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
                                total=TotalStr,
-                               CPN=disc, btn2=uid + "order", deliv=delivStr)
+                               CPN=disc, btn2=uid + "order", deliv=str("0.00"))
 
 
 @app.route('/' + uid + 'nextPay', methods=['POST'])
@@ -3752,6 +3890,7 @@ def nextPayment():
             database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
             database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
             database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
+            database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", 0.0)
             database.put("/log/" + uid + "/" + logYM, "/skus/-/numSold", 0)
             database.put("/log/" + uid + "/" + logYM, "/skus/-/rev", 0)
         logData = database.get("/log/" + uid + "/", logYM)
@@ -3813,6 +3952,7 @@ def nextPayment():
             database.put("/log/" + uid + "/" + logYM, "/retCustomers/", 0)
             database.put("/log/" + uid + "/" + logYM, "/CedarFees/", 0.0)
             database.put("/log/" + uid + "/" + logYM, "/totalRev/", 0.0)
+            database.put("/log/" + uid + "/" + logYM, "/postmatesFees/", 0.0)
             database.put("/log/" + uid + "/" + logYM, "/skus/-/numSold", 0)
             database.put("/log/" + uid + "/" + logYM, "/skus/-/rev", 0)
         logData = database.get("/log/" + uid + "/", logYM)

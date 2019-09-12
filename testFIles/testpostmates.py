@@ -1,7 +1,8 @@
 import requests
 import datetime
 
-d = datetime.datetime.utcnow() # <-- get time in UTC
+now = datetime.datetime.utcnow() # <-- get time in UTC
+d = now + datetime.timedelta(minutes = 10)
 dt = d.isoformat("T") + "Z"
 print(dt)
 url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
