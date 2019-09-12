@@ -796,12 +796,15 @@ def ipn():
                     itms = str(DBdata[dbItems]["finalOrder"])
                     itms = itms.replace("::", "\n-")
                     now = datetime.datetime.now(tz)
-                    writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
-                        DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
-                        DBdata[dbItems]["discStr"]) \
-                               + "\n" + str(DBdata[dbItems]["togo"]) + "\n" + str(
-                        DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(
-                        round((Total - subTotal), 2)) + "\nTotal " + TotalStr
+                    if(DBdata[dbItems]["delivFee"] != None and DBdata[dbItems]["togo"] == "delivery"):
+                        writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
+                            DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
+                            DBdata[dbItems]["discStr"]) + "\n" + str(DBdata[dbItems]["togo"]) +"fee $"+str(DBdata[dbItems]["delivFee"])+"\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(round((Total - subTotal), 2)) + "\nTotal " + TotalStr
+                    else:
+                        writeStr = "your order on " + str(now.strftime("%Y-%m-%d @ %H:%M")) + "\nNAME:" + str(
+                            DBdata[dbItems]["name"]) + "\n\nItems\n-" + str(itms) + "\n" + str(
+                            DBdata[dbItems]["discStr"]) \
+                                   + "\n" + str(DBdata[dbItems]["togo"])+"\n" + str(DBdata[dbItems]["time"]) + "\nSubtotal " + str(subTotalStr) + "\nTaxes and fees $" + str(round((Total - subTotal), 2)) + "\nTotal " + TotalStr
                     SUBJECT = "Your Order from " + estNameStr
                     message = 'Subject: {}\n\n{}'.format(SUBJECT, writeStr)
                     smtpObj.sendmail(sender, rec, message)
@@ -1606,7 +1609,7 @@ def addCpnResp():
         keyVal += 1
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/name/", name)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/descrip/", " ")
-        atabase.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/cat/", " ")
+        database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/cat/", " ")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sku/", "cpn-" + name)
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sizes/0/0/", "u")
         database.put("/restaurants/" + estName + "/menu/items/" + str(keyVal), "/sizes/0/1/", -1)
@@ -1770,7 +1773,8 @@ def getNameTime2():
     if (togo == "to-go"):
         return redirect(url_for('getTime'))
     elif(togo == "delivery"):
-        return redirect(url_for('getDelivery'))
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", "DELIVERY")
+        return redirect(url_for('getAddr'))
     else:
         return redirect(url_for('getTable'))
 
@@ -1886,7 +1890,8 @@ def getTimeZ():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     key = session.get('key', None)
     UUID = session.get('UUID', None)
-    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", "DELIVERY ASAP")
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", "DELIVERY")
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/delivTime/", "ASAP")
     return redirect(url_for('getAddr'))
 
 
@@ -1901,6 +1906,7 @@ def getTimeV():
     rsp = ((request.form))
     pickTime = "DELIVERY @" + str(rsp["time"])
     database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/time/", pickTime)
+    database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "/delivTime/", str(rsp["time"]))
     return redirect(url_for('getAddr'))
 
 @app.route('/'+uid+"address", methods=['GET'])
@@ -1921,6 +1927,7 @@ def getAddr2x():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     rsp = ((request.form))
     print(rsp)
+    print(rsp["addr"])
     key = session.get('key', None)
     UUID = session.get('UUID', None)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
@@ -1929,14 +1936,12 @@ def getAddr2x():
         return(render_template("getAddr.html", btn=uid+"address"))
     else:
         usrIndx = database.get("restaurants/" + uid+"/orders/"+str(key)+"/","userIndx")
-        addrs = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"/addrs/"+str(rsp["addrs"]))
+        addrD = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"/addrs/"+str(rsp["addr"]))
         delMethod = database.get("restaurants/" + uid, "/delivery/type")
-        usrIndx = database.get("restaurants/" + uid+"/orders/"+str(key)+"/","userIndx")
-        addrs = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"addrs")
+        database.put("/restaurants/" + estName + "/orders/" + str(key), "addrs", addrD)
         if(delMethod == "postmates"):
             url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
             addrP = database.get("restaurants/" + uid, "/address/")
-            addrD = addrs
             payload = {"dropoff_address":addrP,
                        "pickup_address":addrD}
             headers = {
@@ -1970,6 +1975,7 @@ def getAddr2x():
                 fee = round(fee,2)
                 delivDuration = resp['duration']
                 minAmt = float(database.get("restaurants/" + uid, "/delivery/minTick"))
+                database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "delivFee", fee)
                 return(render_template("dispQuote.html", btn=uid+"postmatesQuote",fee=str(fee), duration=str(delivDuration), minAmt=str(minAmt)))
             except Exception:
                 return redirect(url_for('getAddr'))
@@ -1987,15 +1993,20 @@ def getAddrX():
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     delMethod = database.get("restaurants/" + uid, "/delivery/type")
     usrIndx = database.get("restaurants/" + uid+"/orders/"+str(key)+"/","userIndx")
-    try:
-        addrs = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"addrs")
     if(delMethod == "postmates"):
         url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
-        addrP = database.get("restaurants/" + uid, "/address/")
         if(rsp["aptNos"] == ""):
             addrD = rsp["addr"]+","+rsp["city"]+","+rsp["state"]+","+str(rsp["zip"])
         else:
             addrD = rsp["aptNos"]+","+rsp["addr"]+","+rsp["city"]+","+rsp["state"]+","+str(rsp["zip"])
+        addrs = database.get("restaurants/" + uid + "/users/" + str(usrIndx),"addrs")
+        try:
+            print(len(addrs))
+            database.put("restaurants/" + uid + "/users/" + str(usrIndx),"/addrs/"+str(len(addrs))+"/",addrD)
+        except Exception:
+            database.put("restaurants/" + uid + "/users/" + str(usrIndx),"/addrs/"+str(0)+"/",addrD)
+        database.put("/restaurants/" + estName + "/orders/" + str(key), "addrs", addrD)
+        addrP = database.get("restaurants/" + uid, "/address/")
         payload = {"dropoff_address":addrP,
                    "pickup_address":addrD}
         headers = {
@@ -2029,7 +2040,7 @@ def getAddrX():
             fee = round(fee,2)
             delivDuration = resp['duration']
             minAmt = float(database.get("restaurants/" + uid, "/delivery/minTick"))
-            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "//", )
+            database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "delivFee", fee)
             return(render_template("dispQuote.html", btn=uid+"postmatesQuote",fee=str(fee), duration=str(delivDuration), minAmt=str(minAmt)))
         except Exception:
             return redirect(url_for('getAddr'))
@@ -2038,6 +2049,8 @@ def getAddrX():
 
 @app.route('/'+uid+"postmatesQuote", methods=['POST'])
 def getDelQuote():
+    key = session.get('key', None)
+    UUID = session.get('UUID', None)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W','cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
     request.parameter_storage_class = ImmutableOrderedMultiDict
@@ -2045,6 +2058,7 @@ def getDelQuote():
     if(rsp["deliv"] == "yes"):
         return redirect(url_for('order'))
     else:
+        database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "delivFee", 0)
         return redirect(url_for('getNameTime2'))
 
 @app.route('/' + uid + 'order1', methods=['GET'])
@@ -2076,13 +2090,9 @@ def order():
     request.parameter_storage_class = ImmutableOrderedMultiDict
     UUID = session.get('UUID', None)
     key = session.get('key', None)
-    # print(UUID, key, itmKey)
-    # print(rsp)
-    print(UUID)
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
                                                      'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
     database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
-    print(database.get("/restaurants/" + estName + "/orders/", str(key)))
     currentTotal = float(database.get("/restaurants/" + estName + "/orders/" + str(key), "/linkTotal"))
     DBdata = database.get("/restaurants/" + estName, "orders")
     subTotal = (DBdata[key]["linkTotal"])
@@ -2951,12 +2961,19 @@ def pay():
     if(DBdata[dbItems]["giftcard"] == 0):
         subTotal = float(DBdata[dbItems]["linkTotal"])
         subTotal += DBdata[dbItems]["discTotal"]
+        if(DBdata[dbItems]["delivFee"] != None and DBdata[dbItems]["togo"] == "delivery"):
+            subTotal += DBdata[dbItems]["delivFee"]
         Tax = subTotal * 0.1
         Total = float(subTotal) + float(Tax) + 0.50
         Total = round(Total, 2)
         print(Total)
     else:
-        Total = float(DBdata[dbItems]["linkTotal"])
+        subTotal = float(DBdata[dbItems]["linkTotal"])
+        subTotal += DBdata[dbItems]["discTotal"]
+        if(DBdata[dbItems]["delivFee"] != None and DBdata[dbItems]["togo"] == "delivery"):
+            subTotal += DBdata[dbItems]["delivFee"]
+        Tax = subTotal * 0.1
+        Total = float(subTotal) + float(Tax) + 0.50
         Total = round(Total, 2)
     return render_template("paymentFinal.html", Total=str(Total), btn="charge", token=stripeToken,back=uid + 'checkpayment')
 
@@ -3176,6 +3193,7 @@ def CheckPaymentMethod():
                 except Exception:
                     pass
     DBdata = database.get("/restaurants/" + estName, "orders")
+    delivStr =  ""
     subTotal = (DBdata[key]["linkTotal"])
     subTotal += DBdata[key]["discTotal"]
     disc = (DBdata[key]["discStr"])
@@ -3187,20 +3205,62 @@ def CheckPaymentMethod():
     delivFeeStr = ""
     try:
         if (DBdata[key]["kiosk"] == 0):
+            print(DBdata[key]["togo"])
             if(DBdata[key]["togo"] == "delivery"):
                 subTotal = (DBdata[key]["linkTotal"])
                 subTotal += DBdata[key]["discTotal"]
                 disc = (DBdata[key]["discStr"])
-                url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes" mnmk
+                url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
+                addrD = DBdata[key]["addrs"]
+                addrP = database.get("restaurants/" + uid, "/address/")
+                print(addrP)
+                payload = {"dropoff_address":addrP,
+                           "pickup_address":addrD}
+                headers = {
+                    'Content-Type': "application/x-www-form-urlencoded",
+                    'Authorization': "Basic ODcwZWFiYWUtN2JiMS00MzZjLWFmNGEtMzNmYTJmZTc2ODhlOg==",
+                    'User-Agent': "PostmanRuntime/7.16.3",
+                    'Accept': "*/*",
+                    'Cache-Control': "no-cache",
+                    'Postman-Token': "55cc61b2-a3aa-42f1-81a9-62467b9199b1,a5cb9e3d-7d0c-4834-9cde-6220fb9962a7",
+                    'Host': "api.postmates.com",
+                    'Accept-Encoding': "gzip, deflate",
+                    'Content-Length': "145",
+                    'Cookie': "__cfduid=d3e5bcc883cf1529ae363dbc64fe257f61567815844",
+                    'Connection': "keep-alive",
+                    'cache-control': "no-cache"
+                    }
+                response = requests.request("POST", url, data=payload, headers=headers)
+                resp = (response.json())
+                print(database.get("restaurants/" + uid, "/delivery/split"))
+                print(resp)
+                print(resp['fee'])
+                print(resp['duration'])
+                fee = resp['fee']
+                fee = float(fee)
+                fee  = float(fee/100.0)
+                if((fee * float(database.get("restaurants/" + uid, "/delivery/split"))) > float(database.get("restaurants/" + uid, "/delivery/max"))):
+                    fee = fee - float(database.get("restaurants/" + uid, "/delivery/max"))
+                else:
+                    fee = fee * float(database.get("restaurants/" + uid, "/delivery/split"))
+                fee = round(fee,2)
+                delivDuration = resp['duration']
+                minAmt = float(database.get("restaurants/" + uid, "/delivery/minTick"))
+                database.put("/restaurants/" + estName + "/orders/" + str(key) + "/", "delivFee", fee)
+                subTotal += fee
+                delivStr =  ('$' + format(fee, ',.2f'))
                 Tax = float(subTotal * 0.1)
                 Total = float(subTotal + float(Tax) + 0.5)
                 subTotalStr = ('$' + format(subTotal, ',.2f'))
                 TotalStr = ('$' + format(Total, ',.2f'))
                 TaxStr = ('$' + format(Tax, ',.2f'))
-                delivFeeStr = ""
+                print(delivStr)
+                return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
+                                       total=TotalStr,
+                                       CPN=disc, btn2=uid + "order", deliv=delivStr)
             return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
                                    total=TotalStr,
-                                   CPN=disc, btn2=uid + "order", deliv=delivFeeStr)
+                                   CPN=disc, btn2=uid + "order", deliv=delivStr)
         else:
             return render_template("paymentMethodKiosk.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
                                    total=TotalStr,
@@ -3208,7 +3268,7 @@ def CheckPaymentMethod():
     except Exception:
         return render_template("paymentMethod.html", btn=uid + "nextPay", subTotal=subTotalStr, tax=TaxStr,
                                total=TotalStr,
-                               CPN=disc, btn2=uid + "order")
+                               CPN=disc, btn2=uid + "order", deliv=delivStr)
 
 
 @app.route('/' + uid + 'nextPay', methods=['POST'])
