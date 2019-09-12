@@ -4,6 +4,7 @@ import datetime
 now = datetime.datetime.utcnow() # <-- get time in UTC
 d = now + datetime.timedelta(minutes = 10)
 dt = d.isoformat("T") + "Z"
+print(now)
 print(dt)
 url = "https://api.postmates.com/v1/customers/cus_MMAQ2VmJNZAVOV/delivery_quotes"
 addrP = "2421112, Sahalee Dr W, Sammamish, WA, 98074"

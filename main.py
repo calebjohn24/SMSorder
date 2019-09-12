@@ -4051,8 +4051,7 @@ def nextPayment():
 def mainPage():
     return redirect(url_for('loginPage'))
 
-
-@app.route("/restaurants/" + uid + "rbt1")
+@app.route("/" + uid + "rbt4813083403983494103934093480943109834093091341")
 def robotInit():
     currentTime = time.time()
     authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
@@ -4064,6 +4063,26 @@ def robotInit():
         return redirect(url_for('robotDeploy'))
     else:
         return redirect(url_for('loginPage'))
+
+@app.route("/" + uid + "rbt1", methods=['POST'])
+def robotDeployX():
+    rsp = ((request.form))
+    table = int(rsp["table"]) -1
+    robot = int(rsp['robot']) -1
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    database.put("/restaurants/" + uid + "/robots/" + str(robot) + "/",str(table), 1)
+    return redirect(url_for('robotDeploy'))
+
+@app.route("/" + uid + "rbt1", methods=['GET'])
+def robotDeploy():
+    authentication = firebase.FirebaseAuthentication('if7swrlQM4k9cBvm0dmWqO3QsI5zjbcdbstSgq1W',
+                                                     'cajohn0205@gmail.com', extra={'id': "d1ab1a95-ddb5-4ee4-83db-9179d37f8e78"})
+    database = firebase.FirebaseApplication("https://cedarchatbot.firebaseio.com/", authentication=authentication)
+    maxTables = len((database.get("/restaurants/" + uid, "/robots/0/")))
+    rbX = len((database.get("/restaurants/" + uid, "/robots/")))
+    return render_template("robotDeploy.html",max=maxTables, rbtNum=rbX,robotDeploy=str(uid + "rbt4813083403983494103934093480943109834093091341"))
 
 '''
 @app.errorhandler(500)
@@ -4085,7 +4104,6 @@ def not_found_error405(error):
 def not_found_error404(error):
     return redirect(url_for("loginRedo"))
 '''
-
 if __name__ == '__main__':
     try:
         app.secret_key = 'CedarKey02'
