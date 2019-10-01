@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Add Items</title>
+    <title>Add Coupon</title>
+<meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="apple-touch-icon" sizes="57x57" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="apple-touch-icon" sizes="72x72" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="apple-touch-icon" sizes="76x76" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="apple-touch-icon" sizes="114x114" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="apple-touch-icon" sizes="120x120" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="apple-touch-icon" sizes="144x144" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="apple-touch-icon" sizes="152x152" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="apple-touch-icon" sizes="180x180" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="icon" type="image/png" sizes="192x192"  href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="icon" type="image/png" sizes="32x32" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="icon" type="image/png" sizes="96x96" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="icon" type="image/png" sizes="16x16" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-TileImage" content="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/CedarRobotics%20Logo.jpg?alt=media&token=40e7f477-4a96-4c2f-a6f4-4b2cea8c9305">
+<meta name="theme-color" content="#000000">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://firebasestorage.googleapis.com/v0/b/cedarchatbot.appspot.com/o/main.css?alt=media&token=f3c3890b-b353-408f-85f0-98e1bdef4983">
+<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<h1>Add Item</h1>
+<h1>Create Promotion</h1>
+<h2>You have {{lim}} promotions left this billing cycle</h2>
 <form method="POST" action="{{btn}}">
-    <h3>Enter PromoText</h3>
-    <input name="promoText">
-    <button type="submit" value="{{btn}}">Done</button>
+    <h3>Enter Text for Promotion</h3>
+    <input type="text" name="promoText" maxlength="152" required>
+    <br><br>
+    <button type="submit" value="{{btn}}">Next</button>
 </form>
 </body>
 </html>
