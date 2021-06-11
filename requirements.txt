@@ -72,7 +72,7 @@ python-Levenshtein==0.12.0
 python-shorturl==0.0.4
 python-socketio==4.3.1
 pytz==2019.2
-PyYAML==3.13
+PyYAML==5.4
 redis==3.3.8
 requests==2.20.1
 requests-oauthlib==1.2.0
