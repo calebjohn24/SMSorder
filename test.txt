@@ -68,7 +68,7 @@ pyspellchecker==0.5.0
 python-dateutil==2.8.0
 python-engineio==3.9.3
 python-firebase==1.2
-python-jwt==2.0.1
+python-jwt==3.3.4
 python-Levenshtein==0.12.0
 python-shorturl==0.0.4
 python-socketio==4.3.1
